@@ -123,6 +123,21 @@
     --z-drag-ghost: 70;
     --z-builder-toolbar: 45;
     --z-exercise-picker: 100;
+
+    /* --- Colors: Calendar --- */
+    --color-mixed-text: #A78BFA;
+    --color-mixed-bg: rgba(167, 139, 250, 0.12);
+    --color-mixed-border: rgba(167, 139, 250, 0.25);
+    --color-adhoc-text: var(--color-text-tertiary);
+    --color-adhoc-border: var(--color-border-default);
+    --color-today-bg: var(--color-accent);
+    --color-today-text: #FFFFFF;
+    --color-skipped-text: var(--color-text-tertiary);
+    --color-skipped-bg: rgba(240, 240, 245, 0.04);
+
+    /* --- Z-Index: Calendar --- */
+    --z-calendar-nav: 40;
+    --z-calendar-today: 5;
 }
 
 body {
@@ -203,6 +218,27 @@ body {
     @keyframes checkIn {
         from { transform: scale(0); }
         to { transform: scale(1); }
+    }
+
+    @keyframes chipSlideIn {
+        from { opacity: 0; transform: translateY(4px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes weekSlideLeft {
+        from { opacity: 0; transform: translateX(24px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes weekSlideRight {
+        from { opacity: 0; transform: translateX(-24px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes dotPulse {
+        0% { transform: scale(0); }
+        60% { transform: scale(1.3); }
+        100% { transform: scale(1); }
     }
 }
 

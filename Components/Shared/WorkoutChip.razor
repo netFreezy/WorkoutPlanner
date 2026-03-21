@@ -1,0 +1,48 @@
+@using BlazorApp2.Data.Entities
+@using BlazorApp2.Data.Enums
+
+<div class="workout-chip @GetTypeClass() @GetStatusClass()"
+     style="--chip-index: @Index"
+     @onclick="() => OnClick.InvokeAsync(Workout)"
+     tabindex="0"
+     role="button"
+     aria-label="@GetAriaLabel()">
+    <span class="workout-chip__name">@Workout.DisplayName</span>
+    @if (Workout.RecurrenceRuleId != null)
+    {
+        <svg class="workout-chip__recurrence-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 8a6 6 0 0 1 10.5-4M14 8a6 6 0 0 1-10.5 4"/>
+            <path d="M14 2v4h-4M2 14v-4h4"/>
+        </svg>
+    }
+</div>
+
+@code {
+    [Parameter] public ScheduledWorkout Workout { get; set; } = null!;
+    [Parameter] public int Index { get; set; }
+    [Parameter] public EventCallback<ScheduledWorkout> OnClick { get; set; }
+
+    private string GetTypeClass()
+    {
+        var type = Services.SchedulingService.DetermineWorkoutType(Workout);
+        return type switch
+        {
+            WorkoutType.Strength => "workout-chip--strength",
+            WorkoutType.Endurance => "workout-chip--endurance",
+            WorkoutType.Mixed => "workout-chip--mixed",
+            WorkoutType.AdHoc => "workout-chip--adhoc",
+            _ => ""
+        };
+    }
+
+    private string GetStatusClass() =>
+        Workout.Status == WorkoutStatus.Skipped ? "workout-chip--skipped" : "";
+
+    private string GetAriaLabel()
+    {
+        var type = Services.SchedulingService.DetermineWorkoutType(Workout);
+        var recurring = Workout.RecurrenceRuleId != null ? ", recurring" : "";
+        var skipped = Workout.Status == WorkoutStatus.Skipped ? ", skipped" : "";
+        return $"{Workout.DisplayName}, {type}{recurring}{skipped}";
+    }
+}
