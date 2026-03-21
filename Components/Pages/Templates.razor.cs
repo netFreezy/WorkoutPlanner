@@ -45,11 +45,10 @@ public partial class Templates
         .Where(t => string.IsNullOrEmpty(activeTagFilter)
             || t.Tags.Contains(activeTagFilter));
 
-    private List<string> AllTags => allTemplates
+    private List<string> AllTags => [.. allTemplates
         .SelectMany(t => t.Tags)
         .Distinct()
-        .OrderBy(t => t)
-        .ToList();
+        .OrderBy(t => t)];
 
     private bool HasActiveFilters =>
         !string.IsNullOrEmpty(searchText) ||
@@ -103,7 +102,7 @@ public partial class Templates
         {
             Name = $"{source.Name} (copy)",
             Description = source.Description,
-            Tags = new List<string>(source.Tags),
+            Tags = [.. source.Tags],
             CreatedDate = DateTime.UtcNow
         };
 
