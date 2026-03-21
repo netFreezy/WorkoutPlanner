@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-21T15:15:32.281Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-21T15:23:10.079Z"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -47,6 +47,7 @@ Plan: 2 of 2
 
 *Updated after each plan completion*
 | Phase 01 P01 | 4min | 2 tasks | 25 files |
+| Phase 01 P02 | 4min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -60,6 +61,8 @@ Recent decisions affecting current work:
 - [Phase 01]: IDbContextFactory for Blazor Server thread safety (not scoped AddDbContext)
 - [Phase 01]: TPH with string discriminator for Exercise hierarchy, double for numeric types (not decimal), int seconds for durations
 - [Phase 01]: DeleteBehavior.Restrict on Exercise FKs, SetNull on optional group/recurrence FKs, Cascade on parent-child relationships
+- [Phase 01]: DataTestBase uses SqliteConnection with DataSource=:memory: kept open for test lifetime
+- [Phase 01]: DefaultItemExcludes added to main csproj for nested test project isolation
 
 ### Pending Todos
 
@@ -72,6 +75,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T15:15:32.278Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-03-21T15:23:10.076Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None

@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Entity model, enums, DbContext, fluent configurations, and initial migration
-- [ ] 01-02-PLAN.md — xunit test project with integration tests verifying all DATA requirements
+- [x] 01-02-PLAN.md — xunit test project with integration tests verifying all DATA requirements
 
 ### Phase 2: Exercise Library
 **Goal**: Users can browse, search, and filter a catalog of exercises and add their own custom exercises
