@@ -36,7 +36,7 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
 | xs | 4px | Icon gaps, inline padding, tag input pill spacing |
 | sm | 8px | Compact element spacing, between exercise rows |
 | md | 16px | Default element spacing, form group margins, card padding |
-| lg | 24px | Section padding, builder toolbar padding |
+| lg | 24px | Section padding, builder toolbar padding, template card padding |
 | xl | 32px | Layout gaps, page horizontal padding |
 | 2xl | 48px | Page vertical padding, major section breaks |
 | 3xl | 64px | Not used in this phase |
@@ -156,6 +156,15 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
 
 ---
 
+## Visual Hierarchy
+
+**Template list screen focal points:**
+- **Primary focal point:** The FAB ("Create Template") in the bottom-right corner. Its accent gradient, 56px size, and elevation shadow make it the highest-contrast element on the page and the first call to action for new users.
+- **Secondary focal point:** The first template card in the grid (top-left position). For returning users with existing templates, the top-left card draws the eye as the natural reading start point. The staggered `fadeSlideIn` animation reinforces this by revealing the top-left card first.
+- **Empty state focal point:** When no templates exist, the centered empty state illustration and "Create Template" ghost button become the sole focal point, directing new users to their first action.
+
+---
+
 ## Component Inventory
 
 ### Reused from Phase 2 (no changes)
@@ -179,7 +188,7 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
 - **Dimensions:** Min 320px wide (grid minmax), auto height
 - **Background:** `var(--color-bg-elevated)`
 - **Border:** `1px solid var(--color-border-subtle)`, radius `var(--radius-md)`
-- **Padding:** 20px
+- **Padding:** `var(--space-lg)` (24px)
 - **Content layout (top to bottom):**
   1. Template name -- `--font-size-body`, `--font-weight-semibold`, single line truncated
   2. Exercise preview -- up to 3 exercise names in `--font-size-label`, `--color-text-secondary`, each on its own line, truncated. If >3 exercises, show "+N more" in `--color-text-tertiary`
@@ -349,7 +358,7 @@ focus: border-color var(--color-accent), box-shadow 0 0 0 2px rgba(124,92,252,0.
   - Row border-bottom: `1px solid var(--color-border-subtle)`
 - **Footer (sticky at bottom of dialog):**
   - Left: "{N} selected" count in `--font-size-label`, `--color-text-secondary`
-  - Right: "Cancel" ghost button + "Add selected" accent gradient button (disabled when 0 selected)
+  - Right: "Close Picker" ghost button + "Add selected" accent gradient button (disabled when 0 selected)
 - **Checkbox style:** Same as ExerciseRow checkbox (18x18, accent fill when checked)
 
 #### 11. TagInput (`Components/Shared/TagInput.razor`)
@@ -369,7 +378,7 @@ focus: border-color var(--color-accent), box-shadow 0 0 0 2px rgba(124,92,252,0.
 - **Container:** Reuses Dialog.razor at default width (480px)
 - **Title:** "Delete Template"
 - **Body:** Confirmation text (see Copywriting Contract)
-- **Buttons:** "Cancel" ghost button + "Delete" destructive button
+- **Buttons:** "Keep Template" ghost button + "Delete Template" destructive button
 - **Destructive button style:**
 ```
 height: 44px
@@ -405,16 +414,17 @@ hover: background #DC2626 (darker red), box-shadow 0 0 12px rgba(239,68,68,0.30)
 | Error: exercise load failed | "Could not load exercises. Close this dialog and try again." |
 | Discard confirmation title | "Discard Changes" |
 | Discard confirmation body | "You have unsaved changes. Are you sure you want to discard them?" |
-| Discard confirmation buttons | "Keep Editing" (ghost) / "Discard" (destructive) |
+| Discard confirmation buttons | "Keep Editing" (ghost) / "Discard Changes" (destructive) |
 | Delete confirmation title | "Delete Template" |
 | Delete confirmation body | "Are you sure you want to delete \"{template name}\"? This action cannot be undone." |
-| Delete confirmation buttons | "Cancel" (ghost) / "Delete Template" (destructive) |
+| Delete confirmation buttons | "Keep Template" (ghost) / "Delete Template" (destructive) |
 | Duplicate toast | "Template duplicated as \"{new name}\"" |
 | Save toast | "Template saved" |
 | Delete toast | "Template deleted" |
 | Name validation | "Template name is required" (shown below name input in `--color-error`, `--font-size-label`) |
 | Exercise picker: no results | "No exercises match your search" |
 | Exercise picker: footer count | "{N} exercise(s) selected" |
+| Exercise picker: dismiss | "Close Picker" |
 | EMOM group label format | "EMOM {rounds}x{minutes}min" (e.g., "EMOM 5x2min") |
 | Superset group label | "SUPERSET" |
 | Duration estimate format | "~{N} min" (shown on template cards and detail view) |
@@ -470,7 +480,7 @@ hover: background #DC2626 (darker red), box-shadow 0 0 12px rgba(239,68,68,0.30)
 | Change type/muscle filter | Filter exercise list |
 | Click exercise row checkbox | Toggle selection |
 | Click "Add selected" | Add selected exercises to builder Working section at end, close dialog (D-08, D-19) |
-| Click "Cancel" | Close dialog without adding |
+| Click "Close Picker" | Close dialog without adding |
 
 ---
 
