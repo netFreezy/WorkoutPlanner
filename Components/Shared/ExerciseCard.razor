@@ -1,0 +1,18 @@
+<div class="exercise-card" tabindex="0" @onclick="() => OnClick.InvokeAsync(Exercise)" @onkeydown="HandleKeyDown">
+    <div class="exercise-card-name">@Exercise.Name</div>
+    <span class="type-tag @GetTypeTagClass()">@GetTypeLabel()</span>
+</div>
+
+@code {
+    [Parameter] public Exercise Exercise { get; set; } = null!;
+    [Parameter] public EventCallback<Exercise> OnClick { get; set; }
+
+    private string GetTypeTagClass() => Exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance";
+    private string GetTypeLabel() => Exercise is StrengthExercise ? "Strength" : "Endurance";
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == " ")
+            await OnClick.InvokeAsync(Exercise);
+    }
+}

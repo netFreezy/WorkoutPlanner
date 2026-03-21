@@ -1,0 +1,80 @@
+.exercise-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    cursor: pointer;
+    outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .exercise-card {
+        transition: transform var(--transition-normal),
+                    box-shadow var(--transition-normal),
+                    border-color var(--transition-normal),
+                    background-color var(--transition-normal);
+    }
+}
+
+.exercise-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-default);
+    background-color: var(--color-bg-glass-hover);
+}
+
+.exercise-card:hover .type-tag--strength {
+    box-shadow: var(--shadow-glow-strength);
+}
+
+.exercise-card:hover .type-tag--endurance {
+    box-shadow: var(--shadow-glow-endurance);
+}
+
+.exercise-card:active {
+    transform: translateY(0);
+    transition-duration: 100ms;
+}
+
+.exercise-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.exercise-card-name {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.type-tag {
+    display: inline-block;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-label);
+    padding: var(--space-xs) 10px;
+    border-radius: var(--radius-full);
+    line-height: var(--line-height-label);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .type-tag {
+        transition: box-shadow var(--transition-normal);
+    }
+}
+
+.type-tag--strength {
+    background: var(--color-strength-bg);
+    color: var(--color-strength-text);
+    border: 1px solid var(--color-strength-border);
+}
+
+.type-tag--endurance {
+    background: var(--color-endurance-bg);
+    color: var(--color-endurance-text);
+    border: 1px solid var(--color-endurance-border);
+}

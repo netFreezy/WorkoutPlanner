@@ -1,0 +1,50 @@
+<Dialog IsOpen="@IsOpen" Title="@(Exercise?.Name ?? "")" OnClose="@OnClose">
+    @if (Exercise is not null)
+    {
+        <div class="detail-fields">
+            <div class="detail-field">
+                <span class="detail-label">TYPE</span>
+                <span class="type-tag @GetTypeTagClass()">@GetTypeLabel()</span>
+            </div>
+
+            @if (Exercise is StrengthExercise se)
+            {
+                <div class="detail-field">
+                    <span class="detail-label">MUSCLE GROUP</span>
+                    <span class="detail-value">@FormatEnum(se.MuscleGroup)</span>
+                </div>
+                <div class="detail-field">
+                    <span class="detail-label">EQUIPMENT</span>
+                    <span class="detail-value">@FormatEnum(se.Equipment)</span>
+                </div>
+            }
+            else if (Exercise is EnduranceExercise ee)
+            {
+                <div class="detail-field">
+                    <span class="detail-label">ACTIVITY TYPE</span>
+                    <span class="detail-value">@FormatEnum(ee.ActivityType)</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Exercise.Description))
+            {
+                <div class="detail-field">
+                    <span class="detail-label">DESCRIPTION</span>
+                    <span class="detail-value detail-description">@Exercise.Description</span>
+                </div>
+            }
+        </div>
+    }
+</Dialog>
+
+@code {
+    [Parameter] public Exercise? Exercise { get; set; }
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private string GetTypeTagClass() => Exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance";
+    private string GetTypeLabel() => Exercise is StrengthExercise ? "Strength" : "Endurance";
+
+    private string FormatEnum<T>(T value) where T : Enum
+        => System.Text.RegularExpressions.Regex.Replace(value.ToString(), "(?<!^)([A-Z])", " $1");
+}

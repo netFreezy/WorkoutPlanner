@@ -1,0 +1,51 @@
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--color-accent-muted);
+    border: 1px solid rgba(124, 92, 252, 0.25);
+    border-radius: var(--radius-full);
+    padding: var(--space-xs) 12px;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-label);
+    color: var(--color-accent-hover);
+    line-height: var(--line-height-label);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .filter-chip {
+        animation: chipIn 200ms ease;
+        transition: background var(--transition-fast);
+    }
+}
+
+.filter-chip:hover {
+    background: rgba(124, 92, 252, 0.22);
+}
+
+.filter-chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-accent-hover);
+    padding: 0;
+    line-height: 0;
+    display: flex;
+    align-items: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .filter-chip-remove {
+        transition: color var(--transition-fast);
+    }
+}
+
+.filter-chip-remove:hover {
+    color: var(--color-text-primary);
+}
+
+@keyframes chipIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
