@@ -97,14 +97,15 @@
     --z-toast: 200;
 }
 
-html, body {
-    font-family: var(--font-family);
-    background: var(--color-bg-primary);
+body {
+    background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
-    margin: 0;
-    padding: 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    margin: 0;
 }
 
 /* Scrollbar styling */
@@ -114,20 +115,63 @@ html, body {
 ::-webkit-scrollbar-thumb { background: var(--color-border-subtle); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-border-default); }
 
+/* Global keyframe animations */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes fadeSlideIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dialogSlideIn {
+        from { opacity: 0; transform: translateY(16px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes chipIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fabIn {
+        from { opacity: 0; transform: scale(0) rotate(-90deg); }
+        to { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    @keyframes toastOut {
+        from { opacity: 1; transform: translateX(-50%) translateY(0); }
+        to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes shimmer {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(100%); }
+    }
+}
+
 h1:focus {
     outline: none;
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    outline: 1px solid var(--color-success-text);
 }
 
 .invalid {
-    outline: 1px solid #e50000;
+    outline: 1px solid var(--color-error);
 }
 
 .validation-message {
-    color: #e50000;
+    color: var(--color-error);
 }
 
 .blazor-error-boundary {
