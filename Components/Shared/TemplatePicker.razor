@@ -1,0 +1,83 @@
+@inject IDbContextFactory<AppDbContext> DbFactory
+
+<div class="template-picker">
+    <input class="template-picker__search"
+           type="text"
+           placeholder="Search templates..."
+           @bind="searchText"
+           @bind:event="oninput" />
+
+    <div class="template-picker__list">
+        @if (filteredTemplates.Any())
+        {
+            @foreach (var template in filteredTemplates)
+            {
+                var isSelected = SelectedTemplateId == template.Id;
+                <div class="template-picker__row @(isSelected ? "template-picker__row--selected" : "")"
+                     @onclick="() => SelectTemplate(template)"
+                     tabindex="0"
+                     role="option"
+                     aria-selected="@isSelected">
+                    <div class="template-picker__info">
+                        <span class="template-picker__name">@template.Name</span>
+                        <span class="template-picker__count">@template.Items.Count exercises</span>
+                    </div>
+                    <span class="template-picker__duration">~@EstimateDuration(template) min</span>
+                </div>
+            }
+        }
+        else if (allTemplates.Any())
+        {
+            <div class="template-picker__empty">No templates match your search</div>
+        }
+        else
+        {
+            <div class="template-picker__empty">
+                No templates yet.
+                <a href="/templates" class="template-picker__link">Create one first.</a>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int? SelectedTemplateId { get; set; }
+    [Parameter] public EventCallback<WorkoutTemplate> OnTemplateSelected { get; set; }
+
+    private List<WorkoutTemplate> allTemplates = new();
+    private string searchText = "";
+
+    private IEnumerable<WorkoutTemplate> filteredTemplates =>
+        string.IsNullOrWhiteSpace(searchText)
+            ? allTemplates
+            : allTemplates.Where(t => t.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = await DbFactory.CreateDbContextAsync();
+        allTemplates = await context.WorkoutTemplates
+            .Include(t => t.Items)
+            .OrderBy(t => t.Name)
+            .ToListAsync();
+    }
+
+    private async Task SelectTemplate(WorkoutTemplate template)
+    {
+        await OnTemplateSelected.InvokeAsync(template);
+    }
+
+    private int EstimateDuration(WorkoutTemplate template)
+    {
+        // Simple estimate: count items * 1.5 minutes for strength, actual duration for endurance
+        var total = template.Items.Sum(i =>
+        {
+            if (i.TargetDurationSeconds.HasValue)
+                return i.TargetDurationSeconds.Value / 60.0;
+            if (i.TargetSets.HasValue)
+                return i.TargetSets.Value * 1.5;
+            return 3.0; // default per exercise
+        });
+        var rounded = (int)(Math.Ceiling(total / 5.0) * 5);
+        return Math.Max(5, rounded);
+    }
+}

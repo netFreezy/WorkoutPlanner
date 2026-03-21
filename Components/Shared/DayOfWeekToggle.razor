@@ -1,0 +1,39 @@
+<div class="dow-toggle" role="group" aria-label="Days of week">
+    @foreach (var day in _days)
+    {
+        var isActive = Value.HasFlag(day.Flag);
+        <button class="dow-chip @(isActive ? "dow-chip--active" : "")"
+                type="button"
+                @onclick="() => ToggleDay(day.Flag)"
+                aria-pressed="@isActive"
+                aria-label="@day.FullName">
+            @day.Label
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter] public DaysOfWeek Value { get; set; }
+    [Parameter] public EventCallback<DaysOfWeek> ValueChanged { get; set; }
+
+    private record DayInfo(string Label, string FullName, DaysOfWeek Flag);
+
+    private static readonly DayInfo[] _days = new[]
+    {
+        new DayInfo("M", "Monday", DaysOfWeek.Monday),
+        new DayInfo("T", "Tuesday", DaysOfWeek.Tuesday),
+        new DayInfo("W", "Wednesday", DaysOfWeek.Wednesday),
+        new DayInfo("T", "Thursday", DaysOfWeek.Thursday),
+        new DayInfo("F", "Friday", DaysOfWeek.Friday),
+        new DayInfo("S", "Saturday", DaysOfWeek.Saturday),
+        new DayInfo("S", "Sunday", DaysOfWeek.Sunday),
+    };
+
+    private async Task ToggleDay(DaysOfWeek flag)
+    {
+        var newValue = Value ^ flag;
+        // Prevent deselecting the last active day
+        if (newValue == DaysOfWeek.None) return;
+        await ValueChanged.InvokeAsync(newValue);
+    }
+}

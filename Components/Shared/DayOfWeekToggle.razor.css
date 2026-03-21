@@ -1,0 +1,43 @@
+.dow-toggle {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+}
+
+.dow-chip {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    border: 1px solid var(--color-border-subtle);
+    background: transparent;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+
+.dow-chip:hover {
+    border-color: var(--color-border-default);
+    background: var(--color-bg-glass-hover);
+    color: var(--color-text-primary);
+}
+
+.dow-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.dow-chip--active {
+    background: var(--color-accent-muted);
+    border-color: rgba(124, 92, 252, 0.30);
+    color: var(--color-accent);
+}
+
+.dow-chip--active:hover {
+    background: rgba(124, 92, 252, 0.2);
+}
