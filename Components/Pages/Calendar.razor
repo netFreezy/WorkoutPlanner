@@ -1,0 +1,148 @@
+@page "/calendar"
+@rendermode InteractiveServer
+
+<PageTitle>Calendar</PageTitle>
+
+<div class="calendar-page">
+    @* --- Calendar Navigation Header --- *@
+    <div class="calendar-nav">
+        <div class="nav-arrows">
+            <button class="nav-btn" @onclick="() => NavigateWeek(-1)" aria-label="Previous week">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <button class="today-btn" @onclick="GoToToday">Today</button>
+            <button class="nav-btn" @onclick="() => NavigateWeek(1)" aria-label="Next week">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+        </div>
+
+        <span class="week-label">@GetWeekLabel()</span>
+
+        <div class="view-toggle">
+            <button class="view-toggle__btn @(!showMonthView ? "view-toggle__btn--active" : "")"
+                    @onclick="() => showMonthView = false">Week</button>
+            <button class="view-toggle__btn @(showMonthView ? "view-toggle__btn--active" : "")"
+                    @onclick="() => showMonthView = true">Month</button>
+        </div>
+    </div>
+
+    @* --- Weekly Grid --- *@
+    @if (!showMonthView)
+    {
+        @if (isLoading)
+        {
+            <div class="week-grid @weekAnimationClass">
+                @foreach (var dayName in DayNames)
+                {
+                    <div class="day-header">@dayName</div>
+                }
+                @for (int i = 0; i < 7; i++)
+                {
+                    <div class="day-cell skeleton-cell">
+                        <div class="skeleton-bar"></div>
+                        <div class="skeleton-bar skeleton-bar--short"></div>
+                    </div>
+                }
+            </div>
+        }
+        else if (weekWorkouts.Count == 0)
+        {
+            <div class="week-grid @weekAnimationClass">
+                @foreach (var dayName in DayNames)
+                {
+                    <div class="day-header">@dayName</div>
+                }
+                @for (int dayOffset = 0; dayOffset < 7; dayOffset++)
+                {
+                    var date = currentWeekStart.AddDays(dayOffset);
+                    var today = IsToday(date);
+                    <div class="day-cell @(today ? "day-cell--today" : "")">
+                        <div class="@(today ? "day-date day-date--today" : "day-date")">@date.Day</div>
+                        <button class="day-add-btn" @onclick="() => OpenScheduleDialog(date)" aria-label="Add workout on @date.ToString("MMM d")">+</button>
+                    </div>
+                }
+            </div>
+
+            <div class="empty-state">
+                <h2 class="empty-state__heading">Plan your week</h2>
+                <p class="empty-state__body">Schedule workouts from your templates to build your training plan.</p>
+                <button class="empty-state__action" @onclick="OpenFabScheduleDialog">Schedule Workout</button>
+            </div>
+        }
+        else
+        {
+            @* Desktop grid *@
+            <div class="week-grid week-grid--desktop @weekAnimationClass">
+                @foreach (var dayName in DayNames)
+                {
+                    <div class="day-header">@dayName</div>
+                }
+                @for (int dayOffset = 0; dayOffset < 7; dayOffset++)
+                {
+                    var date = currentWeekStart.AddDays(dayOffset);
+                    var today = IsToday(date);
+                    var dayWorkouts = GetWorkoutsForDay(date);
+                    <div class="day-cell @(today ? "day-cell--today" : "")">
+                        <div class="@(today ? "day-date day-date--today" : "day-date")">@date.Day</div>
+                        @{ var chipIndex = 0; }
+                        @foreach (var workout in dayWorkouts)
+                        {
+                            <WorkoutChip Workout="@workout" Index="@chipIndex" OnClick="OpenDetailDialog" />
+                            chipIndex++;
+                        }
+                        <button class="day-add-btn" @onclick="() => OpenScheduleDialog(date)" aria-label="Add workout on @date.ToString("MMM d")">+</button>
+                    </div>
+                }
+            </div>
+
+            @* Mobile day list *@
+            <div class="week-list--mobile @weekAnimationClass">
+                @for (int dayOffset = 0; dayOffset < 7; dayOffset++)
+                {
+                    var date = currentWeekStart.AddDays(dayOffset);
+                    var today = IsToday(date);
+                    var dayWorkouts = GetWorkoutsForDay(date);
+                    <div class="day-cell @(today ? "day-cell--today" : "")">
+                        <div class="day-header-mobile">
+                            <span class="day-header-mobile__label">@GetMobileDayLabel(date)</span>
+                            @if (today)
+                            {
+                                <span class="day-date day-date--today">@date.Day</span>
+                            }
+                        </div>
+                        @{ var mobileChipIndex = 0; }
+                        @foreach (var workout in dayWorkouts)
+                        {
+                            <WorkoutChip Workout="@workout" Index="@mobileChipIndex" OnClick="OpenDetailDialog" />
+                            mobileChipIndex++;
+                        }
+                        @if (dayWorkouts.Count == 0)
+                        {
+                            <span class="day-empty-label">Rest day</span>
+                        }
+                        <button class="day-add-btn" @onclick="() => OpenScheduleDialog(date)" aria-label="Add workout on @date.ToString("MMM d")">+</button>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        @* Month view placeholder -- implemented in Plan 04 *@
+        <div class="empty-state">
+            <h2 class="empty-state__heading">Monthly View</h2>
+            <p class="empty-state__body">Monthly calendar overview coming soon.</p>
+        </div>
+    }
+
+    @* --- FAB --- *@
+    <button class="fab" @onclick="OpenFabScheduleDialog" aria-label="Schedule Workout">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 5v14M5 12h14"/>
+        </svg>
+    </button>
+</div>
