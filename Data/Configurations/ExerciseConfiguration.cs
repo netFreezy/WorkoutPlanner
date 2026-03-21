@@ -1,4 +1,5 @@
 using BlazorApp2.Data.Entities;
+using BlazorApp2.Data.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,5 +18,21 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .HasMaxLength(200);
 
         builder.HasIndex(e => e.Name);
+    }
+}
+
+public class StrengthExerciseConfiguration : IEntityTypeConfiguration<StrengthExercise>
+{
+    public void Configure(EntityTypeBuilder<StrengthExercise> builder)
+    {
+        builder.HasData(ExerciseSeedData.GetStrengthExercises());
+    }
+}
+
+public class EnduranceExerciseConfiguration : IEntityTypeConfiguration<EnduranceExercise>
+{
+    public void Configure(EntityTypeBuilder<EnduranceExercise> builder)
+    {
+        builder.HasData(ExerciseSeedData.GetEnduranceExercises());
     }
 }
