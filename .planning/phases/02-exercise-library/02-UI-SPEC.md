@@ -50,11 +50,11 @@ Exceptions: FAB uses 56px diameter (nearest multiple of 4 to standard 56px FAB s
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Body | 16px | 400 (regular) | 1.5 | Card exercise name, dialog body text, form labels, descriptions |
-| Label | 12px | 500 (medium) | 1.33 | Type tags, filter chip text, form helper text, result count |
+| Label | 12px | 600 (semibold) | 1.33 | Type tags, filter chip text, form helper text, result count |
 | Heading | 20px | 600 (semibold) | 1.2 | Dialog titles, page title ("Exercise Library") |
 | Display | 28px | 600 (semibold) | 1.2 | Not used in this phase (reserved for future dashboard) |
 
-**Weights used:** 400 (regular) and 600 (semibold). 500 (medium) is used only on label-role elements (type tags, chips) for subtle visual distinction at small sizes.
+**Weights used:** 400 (regular) and 600 (semibold).
 
 ---
 
@@ -131,7 +131,7 @@ Accent reserved for: FAB, primary submit button in create dialog, active filter 
 | Card hover | `box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12)` |
 | Card transition | `box-shadow 0.2s ease` |
 | Card content | Exercise name (body size, semibold 600) + type tag below |
-| Type tag | 12px, 500 weight, pill shape (border-radius 12px), 4px vertical / 8px horizontal padding |
+| Type tag | 12px, 600 weight, pill shape (border-radius 12px), 4px vertical / 8px horizontal padding |
 | Click target | Entire card is clickable (cursor: pointer) |
 | Click action | Opens ExerciseDetailDialog (D-03) |
 
@@ -149,7 +149,7 @@ Accent reserved for: FAB, primary submit button in create dialog, active filter 
 | Filter logic | AND across categories (D-07) |
 | Active filter display | Chips appear below the filter bar row when any filter is active (D-08) |
 | Chip style | Background `#E0E0E0`, border-radius 16px, 8px horizontal / 4px vertical padding, 12px text |
-| Chip remove | Unicode multiplication sign (x) button inside chip, triggers filter clear |
+| Chip remove | Unicode multiplication sign (x) button inside chip, `aria-label="Remove filter"`, triggers filter clear |
 | Clear all | Text button "Clear all" appears when any filter is active, resets all filters |
 | Result count | "N exercises" label displayed below filters, above grid |
 
@@ -167,7 +167,7 @@ Accent reserved for: FAB, primary submit button in create dialog, active filter 
 | Border radius | 12px |
 | Padding | 24px |
 | Header | Exercise name (heading size, 20px semibold) + close button (top-right) |
-| Close button | Unicode multiplication sign, 24px, `#757575`, no border/background |
+| Close button | Unicode multiplication sign, 24px, `#757575`, no border/background, `aria-label="Close dialog"` |
 | Content layout | Vertical stack with 16px gaps |
 | Fields shown | Type tag, Muscle Group (strength) or Activity Type (endurance), Equipment (strength), Description |
 | Field labels | 12px, `#757575`, uppercase tracking 0.5px |
@@ -302,8 +302,10 @@ Accent reserved for: FAB, primary submit button in create dialog, active filter 
 |---------|---------------|
 | Dialog focus trap | On dialog open, focus moves to first focusable element in dialog. Tab cycles within dialog only. |
 | Dialog close on Escape | Pressing Escape key closes any open dialog |
+| Dialog close button | `aria-label="Close dialog"` on the Unicode multiplication sign button |
 | Card keyboard access | Cards are focusable (tabindex="0") and activate on Enter/Space |
 | Filter labels | Each select has a visible label or aria-label |
+| Filter chip remove button | `aria-label="Remove filter"` on each chip's Unicode multiplication sign button |
 | Search input | Has associated label (visually hidden if placeholder-only) |
 | FAB label | `aria-label="Add Exercise"` on the FAB button |
 | Toast role | `role="status"` with `aria-live="polite"` for screen reader announcement |
