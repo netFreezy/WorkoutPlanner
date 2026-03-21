@@ -5,14 +5,22 @@ using BlazorApp2.Data.Enums;
 using BlazorApp2.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 
 namespace BlazorApp2.Components.Pages;
 
-public partial class TemplateBuilder
+public partial class TemplateBuilder : IAsyncDisposable
 {
     [Inject] private IDbContextFactory<AppDbContext> DbFactory { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IJSRuntime JS { get; set; } = null!;
+
+    private IJSObjectReference? _jsModule;
+    private DotNetObjectReference<TemplateBuilder>? _dotNetRef;
+    private bool _sortableInitialized;
+    private int _lastItemCount;
 
     [Parameter] public int? Id { get; set; }
 
@@ -446,5 +454,117 @@ public partial class TemplateBuilder
     private void OnGroupParamsChanged()
     {
         State.PushUndo();
+    }
+
+    // --- SortableJS lifecycle ---
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule = await JS.InvokeAsync<IJSObjectReference>(
+                "import", "./js/template-builder.js");
+            _dotNetRef = DotNetObjectReference.Create(this);
+        }
+
+        // Initialize or refresh sortable when items exist
+        if (State.Items.Count > 0 && _jsModule != null && _dotNetRef != null)
+        {
+            if (!_sortableInitialized || _lastItemCount != State.Items.Count)
+            {
+                await _jsModule.InvokeVoidAsync("initSortable", _dotNetRef, ".exercise-list-sortable");
+                _sortableInitialized = true;
+                _lastItemCount = State.Items.Count;
+            }
+        }
+    }
+
+    [JSInvokable]
+    public void OnItemReordered(int oldIndex, int newIndex, string newSectionName)
+    {
+        if (oldIndex == newIndex && string.IsNullOrEmpty(newSectionName)) return;
+
+        State.PushUndo();
+
+        // Get the flat list of items in current display order (section-by-section,
+        // matching the DOM order that Plan 04 renders: WarmUp items, Working items, CoolDown items)
+        var orderedItems = State.Items
+            .OrderBy(i => i.SectionType) // WarmUp=0, Working=1, CoolDown=2
+            .ThenBy(i => i.Position)
+            .ToList();
+
+        if (oldIndex < 0 || oldIndex >= orderedItems.Count || newIndex < 0 || newIndex >= orderedItems.Count)
+            return;
+
+        // Move item in the flat list
+        var item = orderedItems[oldIndex];
+        orderedItems.RemoveAt(oldIndex);
+        orderedItems.Insert(newIndex, item);
+
+        // D-20: Update SectionType if the item was dragged across a section boundary.
+        // The JS interop passes the section name determined by scanning backwards from
+        // the drop position for the nearest section header's data-section attribute.
+        if (!string.IsNullOrEmpty(newSectionName))
+        {
+            var newSection = newSectionName switch
+            {
+                "WarmUp" => SectionType.WarmUp,
+                "CoolDown" => SectionType.CoolDown,
+                _ => SectionType.Working
+            };
+            item.SectionType = newSection;
+        }
+
+        // Recompact positions per section (each section starts at 0)
+        var sectionPositions = new Dictionary<SectionType, int>
+        {
+            { SectionType.WarmUp, 0 },
+            { SectionType.Working, 0 },
+            { SectionType.CoolDown, 0 }
+        };
+        foreach (var orderedItem in orderedItems)
+        {
+            orderedItem.Position = sectionPositions[orderedItem.SectionType]++;
+        }
+
+        // D-21: If cross-section drag emptied a WarmUp or CoolDown section,
+        // it will automatically disappear because GetVisibleSections() only
+        // shows sections that have items.
+
+        StateHasChanged();
+    }
+
+    // --- Keyboard shortcuts ---
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.CtrlKey && e.Key == "z" && !e.ShiftKey)
+        {
+            Undo();
+        }
+        else if (e.CtrlKey && e.Key == "z" && e.ShiftKey)
+        {
+            Redo();
+        }
+        else if (e.CtrlKey && e.Key == "Z") // Shift+Z sends uppercase Z
+        {
+            Redo();
+        }
+    }
+
+    // --- Dispose ---
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsModule != null)
+        {
+            try
+            {
+                await _jsModule.InvokeVoidAsync("destroySortable");
+                await _jsModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException) { }
+        }
+        _dotNetRef?.Dispose();
     }
 }

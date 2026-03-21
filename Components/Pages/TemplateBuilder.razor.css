@@ -199,6 +199,24 @@
     transform: scale(0.98);
 }
 
+/* --- Drag State Styles --- */
+::deep .drag-placeholder {
+    height: 56px;
+    background: var(--color-drag-placeholder);
+    border: 2px dashed var(--color-border-default);
+    border-radius: var(--radius-sm);
+    margin: var(--space-xs) 0;
+}
+
+::deep .drag-chosen {
+    opacity: 0.8;
+}
+
+::deep .drag-active {
+    opacity: 0.5;
+    border: 2px dashed var(--color-drag-active-border);
+}
+
 /* --- Responsive --- */
 @media (max-width: 640px) {
     .builder-page {

@@ -4,7 +4,7 @@
 
 <PageTitle>@(isEditing ? "Edit Template" : "New Template")</PageTitle>
 
-<div class="builder-page">
+<div class="builder-page" tabindex="0" @onkeydown="HandleKeyDown">
     <BuilderToolbar OnAddExercises="OpenExercisePicker"
                     OnSave="SaveTemplate"
                     OnDiscard="Discard"
@@ -41,7 +41,7 @@
 
         <TagInput Tags="State.Tags" OnTagsChanged="OnTagsChanged" />
 
-        <div class="exercise-list">
+        <div class="exercise-list exercise-list-sortable">
             @if (State.Items.Count == 0)
             {
                 <div class="builder-empty">
@@ -60,8 +60,10 @@
             {
                 @foreach (var sectionType in GetVisibleSections())
                 {
-                    <SectionHeader Section="@sectionType"
-                                   ExerciseCount="@(State.Items.Count(i => i.SectionType == sectionType))" />
+                    <div data-section="@sectionType" class="section-header">
+                        <SectionHeader Section="@sectionType"
+                                       ExerciseCount="@(State.Items.Count(i => i.SectionType == sectionType))" />
+                    </div>
 
                     @foreach (var entry in GetSectionEntries(sectionType))
                     {
@@ -73,7 +75,7 @@
                                 <div class="group-exercises">
                                     @foreach (var gi in entry.Items)
                                     {
-                                        <ExerciseRow Item="gi" OnTargetChanged="OnTargetChanged"
+                                        <ExerciseRow @key="gi.LocalId" Item="gi" OnTargetChanged="OnTargetChanged"
                                                      OnRemove="RemoveExercise" OnSelectionChanged="OnSelectionChanged" />
                                     }
                                 </div>
@@ -83,7 +85,7 @@
                         {
                             @foreach (var item in entry.Items)
                             {
-                                <ExerciseRow Item="item" OnTargetChanged="OnTargetChanged"
+                                <ExerciseRow @key="item.LocalId" Item="item" OnTargetChanged="OnTargetChanged"
                                              OnRemove="RemoveExercise" OnSelectionChanged="OnSelectionChanged" />
                             }
                         }
