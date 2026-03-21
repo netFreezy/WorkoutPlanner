@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-21T16:51:27.449Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-21T17:00:39.231Z"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 02 (exercise-library) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 3 of 4
 | Phase 01 P02 | 4min | 2 tasks | 9 files |
 | Phase 02 P01 | 6min | 2 tasks | 8 files |
 | Phase 02 P02 | 5min | 2 tasks | 16 files |
+| Phase 02 P03 | 5min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,10 @@ Recent decisions affecting current work:
 - [Phase 02]: Dark premium theme using CSS custom properties as design tokens in :root, per UI-SPEC contract
 - [Phase 02]: Client-side filtering: load all exercises once, filter in-memory via LINQ (50 items, no DB round-trips on filter change)
 - [Phase 02]: Pure CSS dialog component with backdrop-filter blur, no JavaScript interop
+- [Phase 02]: EditForm with DataAnnotationsValidator for form validation (Blazor-native, no JS)
+- [Phase 02]: ExerciseFormModel view model decouples form state from EF Core entity hierarchy
+- [Phase 02]: CancellationTokenSource in Toast for overlapping notification handling
+- [Phase 02]: Clear all filters after exercise creation so new exercise is always visible
 
 ### Pending Todos
 
@@ -81,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:51:27.445Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-21T17:00:39.228Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

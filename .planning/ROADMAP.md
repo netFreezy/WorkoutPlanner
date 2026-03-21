@@ -46,12 +46,12 @@ Plans:
   1. User can browse a pre-loaded catalog of ~50 exercises spanning both strength and endurance types
   2. User can search exercises by name and filter by type (strength/endurance), muscle group, and equipment
   3. User can create a custom exercise with name, type, muscle group, equipment, and optional notes, and it appears in the catalog immediately
-**Plans:** 4 plans
+**Plans:** 3/4 plans executed
 
 Plans:
 - [x] 02-01-PLAN.md — Seed ~50 exercises into database via EF Core HasData migration + data-layer tests
 - [x] 02-02-PLAN.md — Exercise library page with card grid, search/filter, detail dialog, and navigation bar
-- [ ] 02-03-PLAN.md — Custom exercise creation dialog with polymorphic form, FAB trigger, and success toast
+- [x] 02-03-PLAN.md — Custom exercise creation dialog with polymorphic form, FAB trigger, and success toast
 - [ ] 02-04-PLAN.md — Premium dark-mode design system: CSS tokens, Inter font, glassmorphism, card animations, tag glow, frosted dialogs
 
 ### Phase 3: Workout Templates
@@ -140,7 +140,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation | 2/2 | Complete |  |
-| 2. Exercise Library | 0/4 | In Progress | - |
+| 2. Exercise Library | 3/4 | In Progress|  |
 | 3. Workout Templates | 0/? | Not started | - |
 | 4. Calendar & Scheduling | 0/? | Not started | - |
 | 5. Session Tracking | 0/? | Not started | - |
