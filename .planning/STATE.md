@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-21T20:21:35.363Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-03-21T20:26:50.506Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 15
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 04 (calendar-scheduling) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: 2 of 4
 | Phase 03 P04 | 4min | 2 tasks | 7 files |
 | Phase 03 P05 | 4min | 2 tasks | 6 files |
 | Phase 04 P01 | 7min | 2 tasks | 12 files |
+| Phase 04 P03 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 03]: SortableJS loaded as global script; DOM revert pattern for Blazor compatibility; cross-section detection via backward data-section scan
 - [Phase 04]: TestDbContextFactory creates new contexts per call sharing same SQLite connection for service testing
 - [Phase 04]: GenerateOccurrences is static pure method for testability without DB dependency
+- [Phase 04]: wasOpen pattern reused for ScheduleDialog open detection and form reset
+- [Phase 04]: DayOfWeekToggle prevents deselecting last active day to avoid DaysOfWeek.None (no occurrences)
 
 ### Pending Todos
 
@@ -107,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T20:21:35.360Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-21T20:26:50.503Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None
