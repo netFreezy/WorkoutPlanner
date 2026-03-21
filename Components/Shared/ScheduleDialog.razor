@@ -1,0 +1,211 @@
+@using BlazorApp2.Services
+
+@inject SchedulingService SchedulingService
+@inject MaterializationService MaterializationService
+
+<Dialog IsOpen="@IsOpen" Title="@(EditWorkout != null ? "Edit Schedule" : "Schedule Workout")" OnClose="@HandleClose">
+    <div class="schedule-dialog__body">
+
+        @* Field 1: Workout type toggle *@
+        <div class="type-toggle">
+            <button type="button"
+                    class="type-toggle__btn @(!isAdHoc ? "type-toggle__btn--active" : "")"
+                    @onclick="() => isAdHoc = false">
+                From Template
+            </button>
+            <button type="button"
+                    class="type-toggle__btn @(isAdHoc ? "type-toggle__btn--active" : "")"
+                    @onclick="() => isAdHoc = true">
+                Ad-hoc
+            </button>
+        </div>
+
+        @* Field 2a: TemplatePicker (when not ad-hoc) *@
+        @if (!isAdHoc)
+        {
+            <TemplatePicker SelectedTemplateId="selectedTemplateId"
+                            OnTemplateSelected="HandleTemplateSelected" />
+        }
+        else
+        {
+            @* Field 2b: Ad-hoc name input *@
+            <div class="form-field">
+                <label class="field-label">Workout Name</label>
+                <input type="text"
+                       class="schedule-input"
+                       placeholder="e.g., Rest day yoga, Mobility session"
+                       @bind="adHocName" />
+            </div>
+        }
+
+        @* Field 3: Date input *@
+        <div class="form-field">
+            <label class="field-label">Date</label>
+            <input type="date"
+                   class="schedule-input"
+                   @bind="scheduledDate" />
+        </div>
+
+        @* Field 4: Repeat toggle *@
+        <label class="toggle-row">
+            <div class="toggle-switch @(isRecurring ? "toggle-switch--on" : "")"
+                 @onclick="() => { isRecurring = !isRecurring; }">
+                <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">Repeat</span>
+        </label>
+
+        @* Recurrence options (shown when recurring) *@
+        @if (isRecurring)
+        {
+            <div class="recurrence-options">
+                <div class="frequency-options">
+                    <label class="radio-option" @onclick="() => frequencyType = FrequencyType.Weekly">
+                        <div class="radio-circle @(frequencyType == FrequencyType.Weekly ? "radio-circle--selected" : "")"></div>
+                        <span>Weekly</span>
+                    </label>
+                    <label class="radio-option" @onclick="() => frequencyType = FrequencyType.Daily">
+                        <div class="radio-circle @(frequencyType == FrequencyType.Daily ? "radio-circle--selected" : "")"></div>
+                        <span>Every X days</span>
+                    </label>
+                </div>
+
+                @if (frequencyType == FrequencyType.Weekly)
+                {
+                    <DayOfWeekToggle Value="selectedDays" ValueChanged="days => selectedDays = days" />
+                }
+                else
+                {
+                    <div class="interval-row">
+                        <span>Every</span>
+                        <input type="number"
+                               class="interval-input"
+                               min="1"
+                               max="30"
+                               @bind="interval" />
+                        <span>days</span>
+                    </div>
+                }
+            </div>
+        }
+
+        @* Footer *@
+        <div class="schedule-footer">
+            <button type="button" class="btn-ghost" @onclick="HandleClose">
+                Discard
+            </button>
+            <button type="button"
+                    class="btn-primary"
+                    @onclick="HandleSchedule"
+                    disabled="@(!IsValid)">
+                @(EditWorkout != null ? "Update Schedule" : "Schedule")
+            </button>
+        </div>
+    </div>
+</Dialog>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnScheduled { get; set; }
+    [Parameter] public DateTime? PrefilledDate { get; set; }
+    [Parameter] public ScheduledWorkout? EditWorkout { get; set; }
+
+    private bool isAdHoc;
+    private int? selectedTemplateId;
+    private string? selectedTemplateName;
+    private string? adHocName;
+    private DateTime scheduledDate = DateTime.UtcNow.Date;
+    private bool isRecurring;
+    private FrequencyType frequencyType = FrequencyType.Weekly;
+    private DaysOfWeek selectedDays = DaysOfWeek.Monday;
+    private int interval = 2;
+    private bool wasOpen;
+
+    private bool IsValid =>
+        isAdHoc ? !string.IsNullOrWhiteSpace(adHocName) : selectedTemplateId != null;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen && !wasOpen)
+        {
+            // Dialog just opened -- initialize state
+            if (EditWorkout != null)
+            {
+                // Edit mode: pre-fill from existing workout
+                isAdHoc = EditWorkout.WorkoutTemplateId == null;
+                selectedTemplateId = EditWorkout.WorkoutTemplateId;
+                selectedTemplateName = EditWorkout.WorkoutTemplate?.Name;
+                adHocName = EditWorkout.AdHocName;
+                scheduledDate = EditWorkout.ScheduledDate;
+                isRecurring = EditWorkout.RecurrenceRuleId != null;
+                if (EditWorkout.RecurrenceRule != null)
+                {
+                    frequencyType = EditWorkout.RecurrenceRule.FrequencyType;
+                    selectedDays = EditWorkout.RecurrenceRule.DaysOfWeek;
+                    interval = EditWorkout.RecurrenceRule.Interval;
+                }
+            }
+            else
+            {
+                // New schedule: reset form
+                isAdHoc = false;
+                selectedTemplateId = null;
+                selectedTemplateName = null;
+                adHocName = null;
+                scheduledDate = PrefilledDate ?? DateTime.UtcNow.Date;
+                isRecurring = false;
+                frequencyType = FrequencyType.Weekly;
+                interval = 2;
+
+                // Pre-select the day of week matching the scheduled date
+                selectedDays = MaterializationService.ToDaysOfWeek(scheduledDate.DayOfWeek);
+                if (selectedDays == DaysOfWeek.None)
+                    selectedDays = DaysOfWeek.Monday;
+            }
+        }
+        wasOpen = IsOpen;
+    }
+
+    private void HandleTemplateSelected(WorkoutTemplate template)
+    {
+        selectedTemplateId = template.Id;
+        selectedTemplateName = template.Name;
+    }
+
+    private async Task HandleSchedule()
+    {
+        // Validation
+        if (!isAdHoc && selectedTemplateId == null) return;
+        if (isAdHoc && string.IsNullOrWhiteSpace(adHocName)) return;
+
+        RecurrenceRule? recurrence = null;
+        if (isRecurring)
+        {
+            recurrence = new RecurrenceRule
+            {
+                WorkoutTemplateId = isAdHoc ? null : selectedTemplateId,
+                AdHocName = isAdHoc ? adHocName : null,
+                FrequencyType = frequencyType,
+                Interval = frequencyType == FrequencyType.Daily ? interval : 1,
+                DaysOfWeek = frequencyType == FrequencyType.Weekly ? selectedDays : DaysOfWeek.None,
+                StartDate = scheduledDate
+            };
+        }
+
+        await SchedulingService.ScheduleWorkoutAsync(
+            isAdHoc ? null : selectedTemplateId,
+            isAdHoc ? adHocName : null,
+            scheduledDate,
+            recurrence
+        );
+
+        await OnScheduled.InvokeAsync();
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+}
