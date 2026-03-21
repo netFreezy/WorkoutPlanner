@@ -64,12 +64,12 @@ Plans:
   3. User can group 2+ exercises into a superset with a visual connector, and define EMOM blocks with exercise count, minute window, and rounds
   4. User can designate exercises as warm-up or cool-down sections that are visually separated from working sets
   5. User can view a list of saved templates and open any template for editing
-**Plans:** 5 plans
+**Plans:** 3/5 plans executed
 
 Plans:
 - [x] 03-01-PLAN.md — Tags property, JSON converter, migration, TemplateBuilderState model, unit tests
 - [x] 03-02-PLAN.md — Template list page with search/tag filter, cards, detail dialog, delete, duplicate
-- [ ] 03-03-PLAN.md — Template builder with exercise picker, inline targets, save/load, NavigationLock
+- [x] 03-03-PLAN.md — Template builder with exercise picker, inline targets, save/load, NavigationLock
 - [ ] 03-04-PLAN.md — Section management (warm-up/working/cool-down) and superset/EMOM grouping
 - [ ] 03-05-PLAN.md — Drag-and-drop reordering via SortableJS interop and keyboard undo/redo
 
@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 |-------|----------------|--------|-----------|
 | 1. Data Foundation | 2/2 | Complete |  |
 | 2. Exercise Library | 3/4 | In Progress|  |
-| 3. Workout Templates | 0/5 | Not started | - |
+| 3. Workout Templates | 3/5 | In Progress|  |
 | 4. Calendar & Scheduling | 0/? | Not started | - |
 | 5. Session Tracking | 0/? | Not started | - |
 | 6. Analytics | 0/? | Not started | - |

@@ -27,7 +27,7 @@
 ### Workout Templates
 
 - [x] **TMPL-01**: Template builder — create named templates with ordered exercise list
-- [ ] **TMPL-02**: Reorderable exercises within templates (drag-and-drop or move up/down)
+- [x] **TMPL-02**: Reorderable exercises within templates (drag-and-drop or move up/down)
 - [x] **TMPL-03**: Strength targets per exercise: target sets, reps, weight
 - [x] **TMPL-04**: Endurance targets per exercise: target distance, duration, pace, HR zone
 - [x] **TMPL-05**: Superset grouping — visually group 2+ exercises with connector
@@ -114,7 +114,7 @@
 | EXER-02 | Phase 2 | Complete |
 | EXER-03 | Phase 2 | Complete |
 | TMPL-01 | Phase 3 | Complete |
-| TMPL-02 | Phase 3 | Pending |
+| TMPL-02 | Phase 3 | Complete |
 | TMPL-03 | Phase 3 | Complete |
 | TMPL-04 | Phase 3 | Complete |
 | TMPL-05 | Phase 3 | Complete |
