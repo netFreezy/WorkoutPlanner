@@ -1,0 +1,11 @@
+@* Stub for Task 1 build - replaced in Task 2 *@
+<div class="exercise-row">
+    <span>@Item.ExerciseName</span>
+</div>
+
+@code {
+    [Parameter] public BuilderItem Item { get; set; } = null!;
+    [Parameter] public EventCallback<BuilderItem> OnTargetChanged { get; set; }
+    [Parameter] public EventCallback<BuilderItem> OnRemove { get; set; }
+    [Parameter] public EventCallback OnSelectionChanged { get; set; }
+}

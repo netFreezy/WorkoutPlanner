@@ -1,0 +1,64 @@
+.tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    min-height: 36px;
+    padding: var(--space-xs);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-input-bg);
+    align-items: center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    cursor: text;
+}
+
+.tag-input-container.focused {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.20);
+}
+
+.tag-pill {
+    background: var(--color-accent-muted);
+    border: 1px solid rgba(124, 92, 252, 0.30);
+    border-radius: var(--radius-full);
+    padding: 4px 8px;
+    font-size: var(--font-size-label);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    line-height: var(--line-height-label);
+    white-space: nowrap;
+}
+
+.tag-remove {
+    background: transparent;
+    border: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast);
+}
+
+.tag-remove:hover {
+    color: var(--color-text-primary);
+}
+
+.tag-text-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    min-width: 80px;
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    color: var(--color-text-primary);
+    padding: 2px var(--space-xs);
+}
+
+.tag-text-input::placeholder {
+    color: var(--color-text-tertiary);
+}

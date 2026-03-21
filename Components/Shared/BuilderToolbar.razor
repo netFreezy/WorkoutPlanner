@@ -1,0 +1,72 @@
+<div class="builder-toolbar">
+    <div class="toolbar-left">
+        <button class="toolbar-btn ghost-btn" @onclick="OnAddExercises">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Add exercises
+        </button>
+        @if (!HasWarmUp)
+        {
+            <button class="toolbar-btn ghost-btn" @onclick="OnAddWarmUp">Add warm-up</button>
+        }
+        @if (!HasCoolDown)
+        {
+            <button class="toolbar-btn ghost-btn" @onclick="OnAddCoolDown">Add cool-down</button>
+        }
+    </div>
+    <div class="toolbar-center">
+        @if (SelectedCount >= 2)
+        {
+            <button class="toolbar-btn ghost-btn" @onclick="OnGroupSuperset">Group as superset</button>
+            <button class="toolbar-btn ghost-btn" @onclick="OnGroupEmom">Group as EMOM</button>
+        }
+        @if (CanUngroup)
+        {
+            <button class="toolbar-btn ghost-btn" @onclick="OnUngroup">Ungroup</button>
+        }
+    </div>
+    <div class="toolbar-right">
+        <button class="toolbar-icon-btn" @onclick="OnUndo" disabled="@(!CanUndo)" aria-label="Undo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+        </button>
+        <button class="toolbar-icon-btn" @onclick="OnRedo" disabled="@(!CanRedo)" aria-label="Redo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.13-9.36L23 10"/>
+            </svg>
+        </button>
+        <button class="toolbar-btn discard-text-btn" @onclick="OnDiscard">Discard</button>
+        <button class="toolbar-btn save-btn" @onclick="OnSave">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save Template
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnAddExercises { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnDiscard { get; set; }
+    [Parameter] public EventCallback OnUndo { get; set; }
+    [Parameter] public EventCallback OnRedo { get; set; }
+    [Parameter] public bool CanUndo { get; set; }
+    [Parameter] public bool CanRedo { get; set; }
+    [Parameter] public bool HasUnsavedChanges { get; set; }
+    [Parameter] public int SelectedCount { get; set; }
+    [Parameter] public bool HasWarmUp { get; set; }
+    [Parameter] public bool HasCoolDown { get; set; }
+    [Parameter] public EventCallback OnAddWarmUp { get; set; }
+    [Parameter] public EventCallback OnAddCoolDown { get; set; }
+    [Parameter] public EventCallback OnGroupSuperset { get; set; }
+    [Parameter] public EventCallback OnGroupEmom { get; set; }
+    [Parameter] public EventCallback OnUngroup { get; set; }
+    [Parameter] public bool CanUngroup { get; set; }
+}

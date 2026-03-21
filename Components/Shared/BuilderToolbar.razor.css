@@ -1,0 +1,159 @@
+.builder-toolbar {
+    position: sticky;
+    top: 60px;
+    background: rgba(18, 18, 26, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-subtle);
+    height: 52px;
+    padding: 0 var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: var(--z-builder-toolbar);
+    margin: 0 calc(-1 * var(--space-xl));
+}
+
+.toolbar-left,
+.toolbar-center,
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.toolbar-left {
+    flex: 1;
+}
+
+.toolbar-center {
+    flex: 1;
+    justify-content: center;
+}
+
+.toolbar-right {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* --- Ghost Button --- */
+.ghost-btn {
+    background: transparent;
+    color: var(--color-accent);
+    border: none;
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    white-space: nowrap;
+}
+
+.ghost-btn:hover {
+    background: var(--color-accent-muted);
+}
+
+/* --- Icon Button --- */
+.toolbar-icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-tertiary);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.toolbar-icon-btn:hover:not(:disabled) {
+    color: var(--color-text-primary);
+    background: var(--color-bg-glass-hover);
+}
+
+.toolbar-icon-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* --- Discard Button --- */
+.discard-text-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    white-space: nowrap;
+}
+
+.discard-text-btn:hover {
+    color: var(--color-error);
+}
+
+/* --- Save Button --- */
+.save-btn {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    border: none;
+    color: white;
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    height: 36px;
+    padding: 0 var(--space-lg);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    white-space: nowrap;
+}
+
+.save-btn:hover {
+    box-shadow: var(--shadow-glow-accent);
+}
+
+.save-btn:active {
+    transform: scale(0.97);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .builder-toolbar {
+        padding: 0 var(--space-md);
+        height: auto;
+        min-height: 52px;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        padding-top: var(--space-xs);
+        padding-bottom: var(--space-xs);
+    }
+
+    .toolbar-center {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: flex-start;
+    }
+
+    .ghost-btn {
+        font-size: var(--font-size-label);
+        padding: var(--space-xs) var(--space-sm);
+    }
+}
+
+@media (max-width: 640px) {
+    .builder-toolbar {
+        margin: 0 calc(-1 * var(--space-md));
+    }
+}

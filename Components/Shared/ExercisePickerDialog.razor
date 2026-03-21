@@ -1,0 +1,15 @@
+@* Stub for Task 1 build - replaced in Task 2 *@
+@if (IsOpen)
+{
+    <Dialog IsOpen="@IsOpen" Title="Add Exercises" OnClose="@HandleClose">
+        <p>Loading...</p>
+    </Dialog>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<List<Exercise>> OnExercisesSelected { get; set; }
+
+    private async Task HandleClose() => await OnClose.InvokeAsync();
+}

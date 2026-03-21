@@ -1,0 +1,55 @@
+<div class="tag-input-container @(isFocused ? "focused" : "")">
+    @foreach (var tag in Tags)
+    {
+        <span class="tag-pill">
+            @tag
+            <button class="tag-remove" @onclick="() => RemoveTag(tag)" @onclick:stopPropagation="true" aria-label="@($"Remove {tag}")">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </span>
+    }
+    <input type="text" class="tag-text-input" placeholder="@(Tags.Count == 0 ? "Add tags..." : "")"
+           @bind="tagInputValue" @bind:event="oninput"
+           @onkeydown="HandleTagKeyDown"
+           @onfocus="() => isFocused = true"
+           @onblur="() => isFocused = false" />
+</div>
+
+@code {
+    [Parameter] public List<string> Tags { get; set; } = new();
+    [Parameter] public EventCallback<List<string>> OnTagsChanged { get; set; }
+
+    private string tagInputValue = "";
+    private bool isFocused;
+
+    private async Task HandleTagKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            var trimmed = tagInputValue.Trim();
+            if (!string.IsNullOrEmpty(trimmed) && !Tags.Contains(trimmed, StringComparer.OrdinalIgnoreCase))
+            {
+                Tags.Add(trimmed);
+                tagInputValue = "";
+                await OnTagsChanged.InvokeAsync(Tags);
+            }
+            else
+            {
+                tagInputValue = "";
+            }
+        }
+        else if (e.Key == "Backspace" && string.IsNullOrEmpty(tagInputValue) && Tags.Count > 0)
+        {
+            Tags.RemoveAt(Tags.Count - 1);
+            await OnTagsChanged.InvokeAsync(Tags);
+        }
+    }
+
+    private async Task RemoveTag(string tag)
+    {
+        Tags.Remove(tag);
+        await OnTagsChanged.InvokeAsync(Tags);
+    }
+}
