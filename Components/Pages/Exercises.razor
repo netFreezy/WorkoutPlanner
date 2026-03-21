@@ -1,0 +1,95 @@
+@page "/exercises"
+@rendermode InteractiveServer
+
+<PageTitle>Exercise Library</PageTitle>
+
+<div class="exercises-page">
+    <h1 class="page-title">Exercise Library</h1>
+
+    <div class="filter-bar">
+        <div class="filter-bar-row">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" class="search-input" placeholder="Search exercises..."
+                       @bind="searchText" @bind:event="oninput" aria-label="Search exercises" />
+            </div>
+            <div class="filter-selects">
+                <select class="filter-select" @bind="selectedType" aria-label="All Types">
+                    <option value="">All Types</option>
+                    <option value="Strength">Strength</option>
+                    <option value="Endurance">Endurance</option>
+                </select>
+                <select class="filter-select" @bind="selectedMuscleGroup" aria-label="All Muscle Groups">
+                    <option value="">All Muscle Groups</option>
+                    @foreach (var mg in Enum.GetValues<MuscleGroup>())
+                    {
+                        <option value="@mg">@FormatEnumName(mg)</option>
+                    }
+                </select>
+                <select class="filter-select" @bind="selectedEquipment" aria-label="All Equipment">
+                    <option value="">All Equipment</option>
+                    @foreach (var eq in Enum.GetValues<Equipment>())
+                    {
+                        <option value="@eq">@FormatEnumName(eq)</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (HasActiveFilters)
+        {
+            <div class="filter-chips">
+                @if (!string.IsNullOrEmpty(selectedType))
+                {
+                    <FilterChip Label="@($"Type: {selectedType}")" OnRemove="@(() => { selectedType = ""; })" />
+                }
+                @if (selectedMuscleGroup.HasValue)
+                {
+                    <FilterChip Label="@($"Muscle: {FormatEnumName(selectedMuscleGroup.Value)}")" OnRemove="@(() => { selectedMuscleGroup = null; })" />
+                }
+                @if (selectedEquipment.HasValue)
+                {
+                    <FilterChip Label="@($"Equipment: {FormatEnumName(selectedEquipment.Value)}")" OnRemove="@(() => { selectedEquipment = null; })" />
+                }
+                <button class="clear-all-btn" @onclick="ClearAllFilters">Clear all</button>
+            </div>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <p class="status-message">Loading exercises...</p>
+    }
+    else if (allExercises.Count == 0)
+    {
+        <div class="empty-state">
+            <h2>No exercises yet</h2>
+            <p>Your exercise library is empty. Add your first exercise to get started.</p>
+        </div>
+    }
+    else if (!FilteredExercises.Any())
+    {
+        <div class="empty-state">
+            <h2>No matches found</h2>
+            <p>No exercises match your current filters. <button class="link-btn" @onclick="ClearAllFilters">Clear all filters</button></p>
+        </div>
+    }
+    else
+    {
+        <p class="result-count">@FilteredExercises.Count() @(FilteredExercises.Count() == 1 ? "exercise" : "exercises")</p>
+        <div class="exercise-grid">
+            @{ var index = 0; }
+            @foreach (var exercise in FilteredExercises)
+            {
+                <div style="--card-index: @(index < 10 ? index : 10)">
+                    <ExerciseCard Exercise="@exercise" OnClick="@ShowDetail" />
+                </div>
+                index++;
+            }
+        </div>
+    }
+
+    <ExerciseDetailDialog IsOpen="@(selectedExercise is not null)"
+                          Exercise="@selectedExercise"
+                          OnClose="@CloseDetail" />
+</div>
