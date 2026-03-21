@@ -32,11 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. WorkoutTemplate with ordered TemplateItems, grouping constructs (superset/EMOM), and section types (warm-up/working/cool-down) round-trips through the database
   4. ScheduledWorkout with RecurrenceRule and WorkoutLog with planned-vs-actual separation (strength SetLog, endurance EnduranceLog) persist and retrieve correctly
   5. EF Core migrations apply cleanly to a fresh SQLite database
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Entity model, enums, DbContext, fluent configurations, and initial migration
+- [ ] 01-02-PLAN.md — xunit test project with integration tests verifying all DATA requirements
 
 ### Phase 2: Exercise Library
 **Goal**: Users can browse, search, and filter a catalog of exercises and add their own custom exercises
@@ -136,7 +136,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation | 0/? | Not started | - |
+| 1. Data Foundation | 0/2 | Planning complete | - |
 | 2. Exercise Library | 0/? | Not started | - |
 | 3. Workout Templates | 0/? | Not started | - |
 | 4. Calendar & Scheduling | 0/? | Not started | - |
