@@ -195,7 +195,7 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
   3. Bottom row (flex, space-between, align-center):
      - Left: exercise count badge (`--font-size-label`, `--color-text-tertiary`)
      - Right: tag chips (max 3 visible, `--font-size-label`, pill style)
-- **Tag chips on card:** Background `var(--color-bg-glass)`, border `1px solid var(--color-border-subtle)`, radius `var(--radius-full)`, padding `2px 8px`, font `--font-size-label`
+- **Tag chips on card:** Background `var(--color-bg-glass)`, border `1px solid var(--color-border-subtle)`, radius `var(--radius-full)`, padding `4px 8px`, font `--font-size-label`
 - **Hover:** Same pattern as ExerciseCard -- `translateY(-2px)`, `--shadow-md`, border brightens to `--color-border-default`
 - **Click:** Opens template detail view (D-05)
 - **Animation:** Staggered `fadeSlideIn` via `--card-index` (same as ExerciseCard)
@@ -251,7 +251,7 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
   - "Undo" icon button -- ghost, SVG arrow-left icon
   - "Redo" icon button -- ghost, SVG arrow-right icon
   - "Discard" text button -- `--color-text-secondary`, hover `--color-error`
-  - "Save" primary button -- accent gradient (matches submit-btn from Phase 2), 36px height, padding `0 var(--space-lg)`
+  - "Save Template" primary button -- accent gradient (matches submit-btn from Phase 2), 36px height, padding `0 var(--space-lg)`
 
 Ghost button style:
 ```
@@ -367,7 +367,7 @@ focus: border-color var(--color-accent), box-shadow 0 0 0 2px rgba(124,92,252,0.
   - Background: `var(--color-accent-muted)`
   - Border: `1px solid var(--color-accent)` at 30% opacity
   - Radius: `var(--radius-full)`
-  - Padding: `2px 8px`
+  - Padding: `4px 8px`
   - Font: `--font-size-label`, `--color-text-primary`
   - Remove "x" button: 12px icon, `--color-text-tertiary`, hover `--color-text-primary`
 - **Text input:** Inline, no border, transparent background, min-width 80px, flex 1, font `--font-size-body`
