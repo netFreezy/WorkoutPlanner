@@ -1,0 +1,140 @@
+.type-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: var(--space-md);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-input-bg);
+    padding: 3px;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 0 var(--space-md);
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    font-family: var(--font-family);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.toggle-btn:hover:not(.toggle-btn--active) {
+    color: var(--color-text-primary);
+}
+
+.toggle-btn--active {
+    background: var(--color-accent);
+    color: #FFFFFF;
+    font-weight: var(--font-weight-semibold);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-label {
+    display: block;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    letter-spacing: var(--letter-spacing-label);
+    margin-bottom: 6px;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    color: var(--color-text-primary);
+    background: var(--color-input-bg);
+    box-sizing: border-box;
+}
+
+.form-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.20);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .form-input,
+    .form-textarea {
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+}
+
+/* Blazor validation CSS classes */
+.form-input.invalid,
+.form-textarea.invalid,
+.form-input.modified.invalid,
+.form-textarea.modified.invalid {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px var(--color-error-bg);
+}
+
+.validation-message {
+    color: var(--color-error);
+    font-size: var(--font-size-label);
+    margin-top: var(--space-xs);
+}
+
+.submit-btn {
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--space-md);
+    background: linear-gradient(135deg, var(--color-accent) 0%, #A78BFA 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-top: var(--space-sm);
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-accent-hover) 0%, #C4B5FD 100%);
+    box-shadow: var(--shadow-glow-accent);
+}
+
+.submit-btn:active:not(:disabled) {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: saturate(0.5);
+}
+
+.submit-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Select dropdown option styling */
+.form-input option {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+}

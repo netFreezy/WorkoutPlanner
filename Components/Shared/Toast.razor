@@ -1,0 +1,34 @@
+@if (IsVisible)
+{
+    <div class="toast" role="status" aria-live="polite">
+        @Message
+    </div>
+}
+
+@code {
+    private bool IsVisible;
+    private string Message = "";
+    private CancellationTokenSource? _cts;
+
+    public async Task ShowAsync(string message)
+    {
+        // Cancel any existing timer
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+
+        Message = message;
+        IsVisible = true;
+        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(3000, _cts.Token);
+            IsVisible = false;
+            StateHasChanged();
+        }
+        catch (TaskCanceledException)
+        {
+            // New toast was triggered, ignore
+        }
+    }
+}

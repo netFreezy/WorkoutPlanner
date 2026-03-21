@@ -1,6 +1,8 @@
+using BlazorApp2.Components.Shared;
 using BlazorApp2.Data;
 using BlazorApp2.Data.Entities;
 using BlazorApp2.Data.Enums;
+using BlazorApp2.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,6 +68,39 @@ public partial class Exercises
     private void CloseDetail()
     {
         selectedExercise = null;
+    }
+
+    private bool showCreateDialog;
+    private Toast toast = null!;
+
+    private void OpenCreateDialog()
+    {
+        showCreateDialog = true;
+    }
+
+    private void CloseCreateDialog()
+    {
+        showCreateDialog = false;
+    }
+
+    private async Task HandleExerciseCreated(Exercise exercise)
+    {
+        // Save to database
+        using var context = DbFactory.CreateDbContext();
+        context.Exercises.Add(exercise);
+        await context.SaveChangesAsync();
+
+        // Close dialog
+        showCreateDialog = false;
+
+        // Reload exercises to include the new one
+        await LoadExercisesAsync();
+
+        // Clear filters so the new exercise is visible (per RESEARCH.md Pitfall 5)
+        ClearAllFilters();
+
+        // Show success toast
+        await toast.ShowAsync($"{exercise.Name} added to library");
     }
 
     private static string FormatEnumName<T>(T value) where T : Enum

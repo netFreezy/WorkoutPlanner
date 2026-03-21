@@ -1,0 +1,123 @@
+@using BlazorApp2.Models
+
+<Dialog IsOpen="@IsOpen" Title="Add Exercise" OnClose="@OnCancel">
+    <EditForm Model="@model" OnValidSubmit="@HandleSubmit" FormName="exerciseForm">
+        <DataAnnotationsValidator />
+
+        <!-- Type toggle (D-11) -->
+        <div class="type-toggle">
+            <button type="button"
+                    class="toggle-btn @(model.IsStrength ? "toggle-btn--active" : "")"
+                    @onclick="@(() => model.IsStrength = true)">
+                Strength
+            </button>
+            <button type="button"
+                    class="toggle-btn @(!model.IsStrength ? "toggle-btn--active" : "")"
+                    @onclick="@(() => model.IsStrength = false)">
+                Endurance
+            </button>
+        </div>
+
+        <!-- Shared fields -->
+        <div class="form-group">
+            <label class="form-label" for="exerciseName">Name</label>
+            <InputText id="exerciseName" class="form-input" @bind-Value="model.Name" />
+            <ValidationMessage For="@(() => model.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="exerciseDescription">Description</label>
+            <InputTextArea id="exerciseDescription" class="form-textarea" @bind-Value="model.Description" />
+        </div>
+
+        <!-- Strength-specific fields (D-11) -->
+        @if (model.IsStrength)
+        {
+            <div class="form-group">
+                <label class="form-label" for="muscleGroup">Muscle Group</label>
+                <InputSelect id="muscleGroup" class="form-input" @bind-Value="model.MuscleGroup">
+                    @foreach (var mg in Enum.GetValues<MuscleGroup>())
+                    {
+                        <option value="@mg">@FormatEnumName(mg)</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="equipment">Equipment</label>
+                <InputSelect id="equipment" class="form-input" @bind-Value="model.Equipment">
+                    @foreach (var eq in Enum.GetValues<Equipment>())
+                    {
+                        <option value="@eq">@FormatEnumName(eq)</option>
+                    }
+                </InputSelect>
+            </div>
+        }
+        else
+        {
+            <!-- Endurance-specific fields (D-11) -->
+            <div class="form-group">
+                <label class="form-label" for="activityType">Activity Type</label>
+                <InputSelect id="activityType" class="form-input" @bind-Value="model.ActivityType">
+                    @foreach (var at in Enum.GetValues<ActivityType>())
+                    {
+                        <option value="@at">@FormatEnumName(at)</option>
+                    }
+                </InputSelect>
+            </div>
+        }
+
+        <button type="submit" class="submit-btn" disabled="@isSaving">
+            @(isSaving ? "Adding..." : "Add Exercise")
+        </button>
+    </EditForm>
+</Dialog>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<Exercise> OnExerciseCreated { get; set; }
+
+    private ExerciseFormModel model = new();
+    private bool isSaving;
+
+    private async Task HandleSubmit()
+    {
+        isSaving = true;
+        await OnExerciseCreated.InvokeAsync(CreateExerciseFromModel());
+        model = new(); // Reset form
+        isSaving = false;
+    }
+
+    private Exercise CreateExerciseFromModel()
+    {
+        if (model.IsStrength)
+        {
+            return new StrengthExercise
+            {
+                Name = model.Name,
+                Description = model.Description,
+                MuscleGroup = model.MuscleGroup,
+                Equipment = model.Equipment,
+            };
+        }
+        else
+        {
+            return new EnduranceExercise
+            {
+                Name = model.Name,
+                Description = model.Description,
+                ActivityType = model.ActivityType,
+            };
+        }
+    }
+
+    private void OnCancel()
+    {
+        model = new(); // Reset form
+        OnClose.InvokeAsync();
+    }
+
+    private static string FormatEnumName<T>(T value) where T : Enum
+        => System.Text.RegularExpressions.Regex.Replace(value.ToString(), "(?<!^)([A-Z])", " $1");
+}
