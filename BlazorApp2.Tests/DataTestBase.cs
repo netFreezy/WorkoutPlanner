@@ -7,6 +7,7 @@ namespace BlazorApp2.Tests;
 public class DataTestBase : IDisposable
 {
     private readonly SqliteConnection _connection;
+    protected SqliteConnection Connection => _connection;
     protected readonly AppDbContext Context;
 
     public DataTestBase()
