@@ -40,7 +40,7 @@
 - [x] **SCHED-02**: Monthly calendar overview with color-coded dots for workout types
 - [x] **SCHED-03**: Schedule workouts from templates or ad-hoc on specific dates
 - [x] **SCHED-04**: Recurrence rules: every Monday, every other day, 3x/week on specific days
-- [x] **SCHED-05**: Rest day awareness — flag conflicts when scheduling same muscle group on consecutive days
+- [ ] **SCHED-05**: Rest day awareness — flag conflicts when scheduling same muscle group on consecutive days (deferred per D-14)
 - [x] **SCHED-06**: Materialize scheduled workout rows from recurrence rules (rolling window)
 
 ### Session Tracking
@@ -124,7 +124,7 @@
 | SCHED-02 | Phase 4 | Complete |
 | SCHED-03 | Phase 4 | Complete |
 | SCHED-04 | Phase 4 | Complete |
-| SCHED-05 | Phase 4 | Complete |
+| SCHED-05 | Deferred | Deferred per D-14 — future phase |
 | SCHED-06 | Phase 4 | Complete |
 | SESS-01 | Phase 5 | Pending |
 | SESS-02 | Phase 5 | Pending |

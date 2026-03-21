@@ -42,7 +42,7 @@ patterns-established:
   - "Calendar week navigation: currentWeekStart + direction * 7 days pattern"
   - "Mobile responsive: separate markup blocks for desktop grid vs mobile list with CSS display toggle"
 
-requirements-completed: [SCHED-01, SCHED-05]
+requirements-completed: [SCHED-01]
 
 # Metrics
 duration: 4min
