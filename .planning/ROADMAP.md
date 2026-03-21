@@ -71,7 +71,7 @@ Plans:
 - [x] 03-02-PLAN.md — Template list page with search/tag filter, cards, detail dialog, delete, duplicate
 - [x] 03-03-PLAN.md — Template builder with exercise picker, inline targets, save/load, NavigationLock
 - [x] 03-04-PLAN.md — Section management (warm-up/working/cool-down) and superset/EMOM grouping
-- [ ] 03-05-PLAN.md — Drag-and-drop reordering via SortableJS interop and keyboard undo/redo
+- [x] 03-05-PLAN.md — Drag-and-drop reordering via SortableJS interop and keyboard undo/redo
 
 ### Phase 4: Calendar & Scheduling
 **Goal**: Users can schedule workouts on a calendar with recurrence rules and see their training week at a glance
