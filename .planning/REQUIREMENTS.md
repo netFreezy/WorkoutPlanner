@@ -37,7 +37,7 @@
 ### Calendar & Scheduling
 
 - [x] **SCHED-01**: Weekly calendar view (primary) showing scheduled workouts with type indicators
-- [ ] **SCHED-02**: Monthly calendar overview with color-coded dots for workout types
+- [x] **SCHED-02**: Monthly calendar overview with color-coded dots for workout types
 - [x] **SCHED-03**: Schedule workouts from templates or ad-hoc on specific dates
 - [x] **SCHED-04**: Recurrence rules: every Monday, every other day, 3x/week on specific days
 - [x] **SCHED-05**: Rest day awareness — flag conflicts when scheduling same muscle group on consecutive days
@@ -121,7 +121,7 @@
 | TMPL-06 | Phase 3 | Complete |
 | TMPL-07 | Phase 3 | Complete |
 | SCHED-01 | Phase 4 | Complete |
-| SCHED-02 | Phase 4 | Pending |
+| SCHED-02 | Phase 4 | Complete |
 | SCHED-03 | Phase 4 | Complete |
 | SCHED-04 | Phase 4 | Complete |
 | SCHED-05 | Phase 4 | Complete |

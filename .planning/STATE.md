@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-21T20:28:46.663Z"
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-03-21T20:37:23.453Z"
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -60,6 +60,7 @@ Plan: 4 of 4
 | Phase 04 P01 | 7min | 2 tasks | 12 files |
 | Phase 04 P03 | 3min | 2 tasks | 6 files |
 | Phase 04 P02 | 4min | 2 tasks | 7 files |
+| Phase 04 P04 | 5min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,8 @@ Recent decisions affecting current work:
 - [Phase 04]: DayOfWeekToggle prevents deselecting last active day to avoid DaysOfWeek.None (no occurrences)
 - [Phase 04]: Dual rendering approach (desktop 7-col CSS Grid + mobile single-column day list) for calendar responsive layout
 - [Phase 04]: WorkoutChip uses DetermineWorkoutType static method for type-colored left border, reusable across views
+- [Phase 04]: Used window.calendarDrag global namespace for calendar-drag.js (SortableJS loaded globally)
+- [Phase 04]: WorkoutChip wrapped in div with data-workout-id for SortableJS drag targeting without interfering with click events
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T20:28:46.660Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-21T20:37:23.449Z
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None
