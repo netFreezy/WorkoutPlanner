@@ -1,0 +1,12 @@
+## Runtime database
+workoutplanner.db
+workoutplanner.db-shm
+workoutplanner.db-wal
+
+## Build outputs
+bin/
+obj/
+
+## IDE
+.vs/
+*.user
