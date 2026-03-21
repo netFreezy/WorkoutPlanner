@@ -1,0 +1,33 @@
+@using BlazorApp2.Data.Enums
+@using BlazorApp2.Models
+
+<div class="group-bracket group-bracket--@GetGroupClass()">
+    <span class="group-label">@GetGroupLabel()</span>
+    <div class="bracket-line"></div>
+    @if (Group.GroupType == GroupType.EMOM)
+    {
+        <div class="emom-params">
+            <input type="number" class="emom-input" value="@Group.Rounds" min="1"
+                   @onchange="e => { Group.Rounds = int.TryParse(e.Value?.ToString(), out var v) ? v : 1; OnParamsChanged.InvokeAsync(); }" />
+            <span class="emom-separator">x</span>
+            <input type="number" class="emom-input" value="@Group.MinuteWindow" min="1"
+                   @onchange="e => { Group.MinuteWindow = int.TryParse(e.Value?.ToString(), out var v) ? v : 1; OnParamsChanged.InvokeAsync(); }" />
+            <span class="emom-unit">min</span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public BuilderGroup Group { get; set; } = null!;
+    [Parameter] public int ItemCount { get; set; }
+    [Parameter] public EventCallback OnParamsChanged { get; set; }
+
+    private string GetGroupClass() => Group.GroupType == GroupType.Superset ? "superset" : "emom";
+
+    private string GetGroupLabel() => Group.GroupType switch
+    {
+        GroupType.Superset => "SUPERSET",
+        GroupType.EMOM => $"EMOM {Group.Rounds ?? 1}x{Group.MinuteWindow ?? 1}min",
+        _ => ""
+    };
+}

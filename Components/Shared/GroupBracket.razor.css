@@ -1,0 +1,75 @@
+.group-bracket {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 12px;
+    margin-left: -12px;
+}
+
+.group-label {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+}
+
+.bracket-line {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 0;
+    width: 3px;
+    border-radius: 2px;
+    animation: bracketDraw 300ms ease;
+    transform-origin: top;
+}
+
+/* Superset styling */
+.group-bracket--superset .group-label {
+    color: var(--color-accent);
+}
+
+.group-bracket--superset .bracket-line {
+    background: var(--color-group-superset);
+}
+
+/* EMOM styling */
+.group-bracket--emom .group-label {
+    color: var(--color-emom-text);
+}
+
+.group-bracket--emom .bracket-line {
+    background: var(--color-group-emom);
+}
+
+/* EMOM parameter inputs */
+.emom-params {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+.emom-input {
+    width: 40px;
+    height: 28px;
+    text-align: center;
+    font-size: var(--font-size-label);
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: 4px;
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.emom-input:focus {
+    border-color: var(--color-emom-text);
+}
+
+.emom-separator,
+.emom-unit {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+}

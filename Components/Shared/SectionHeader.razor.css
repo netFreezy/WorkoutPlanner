@@ -1,0 +1,57 @@
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    height: 36px;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: var(--space-sm);
+    animation: sectionExpand 300ms ease;
+}
+
+.section-border {
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+}
+
+.section-label {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-label);
+}
+
+.section-count {
+    margin-left: auto;
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+}
+
+/* Warm-up section */
+.section-header--warmup .section-border {
+    background: var(--color-warmup-text);
+}
+
+.section-header--warmup .section-label {
+    color: var(--color-warmup-text);
+}
+
+/* Working section */
+.section-header--working .section-border {
+    background: var(--color-text-secondary);
+}
+
+.section-header--working .section-label {
+    color: var(--color-text-secondary);
+}
+
+/* Cool-down section */
+.section-header--cooldown .section-border {
+    background: var(--color-cooldown-text);
+}
+
+.section-header--cooldown .section-label {
+    color: var(--color-cooldown-text);
+}

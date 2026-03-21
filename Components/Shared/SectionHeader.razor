@@ -1,0 +1,26 @@
+@using BlazorApp2.Data.Enums
+
+<div class="section-header section-header--@GetSectionClass()">
+    <div class="section-border"></div>
+    <span class="section-label">@GetSectionLabel()</span>
+    <span class="section-count">@ExerciseCount exercise(s)</span>
+</div>
+
+@code {
+    [Parameter] public SectionType Section { get; set; }
+    [Parameter] public int ExerciseCount { get; set; }
+
+    private string GetSectionClass() => Section switch
+    {
+        SectionType.WarmUp => "warmup",
+        SectionType.CoolDown => "cooldown",
+        _ => "working"
+    };
+
+    private string GetSectionLabel() => Section switch
+    {
+        SectionType.WarmUp => "WARM-UP",
+        SectionType.CoolDown => "COOL-DOWN",
+        _ => "WORKING"
+    };
+}
