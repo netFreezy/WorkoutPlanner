@@ -1,0 +1,12 @@
+@* Stub - fully implemented in Task 2 *@
+@if (IsOpen)
+{
+    <div>Delete @TemplateName?</div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public string TemplateName { get; set; } = "";
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+}

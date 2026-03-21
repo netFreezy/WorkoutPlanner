@@ -1,0 +1,43 @@
+<div class="template-card" tabindex="0" style="--card-index: @Index" @onclick="() => OnClick.InvokeAsync(Template)" @onkeydown="HandleKeyDown">
+    <div class="template-card-header">
+        <div class="template-card-name">@Template.Name</div>
+        @if (!string.IsNullOrEmpty(EstimatedDuration))
+        {
+            <span class="duration-badge">@EstimatedDuration</span>
+        }
+    </div>
+
+    <div class="exercise-preview">
+        @foreach (var item in Template.Items.OrderBy(i => i.Position).Take(3))
+        {
+            <div class="exercise-preview-item">@item.Exercise.Name</div>
+        }
+        @if (Template.Items.Count > 3)
+        {
+            <div class="exercise-preview-more">+@(Template.Items.Count - 3) more</div>
+        }
+    </div>
+
+    <div class="template-card-footer">
+        <span class="exercise-count">@Template.Items.Count @(Template.Items.Count == 1 ? "exercise" : "exercises")</span>
+        <div class="tag-chips">
+            @foreach (var tag in Template.Tags.Take(3))
+            {
+                <span class="tag-chip">@tag</span>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public WorkoutTemplate Template { get; set; } = null!;
+    [Parameter] public EventCallback<WorkoutTemplate> OnClick { get; set; }
+    [Parameter] public int Index { get; set; }
+    [Parameter] public string EstimatedDuration { get; set; } = "";
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == " ")
+            await OnClick.InvokeAsync(Template);
+    }
+}

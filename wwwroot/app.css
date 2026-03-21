@@ -95,6 +95,34 @@
     --z-dialog-overlay: 100;
     --z-dialog-panel: 110;
     --z-toast: 200;
+
+    /* --- Colors: Sections --- */
+    --color-warmup-bg: rgba(251, 191, 36, 0.10);
+    --color-warmup-text: #FBBF24;
+    --color-warmup-border: rgba(251, 191, 36, 0.25);
+    --color-cooldown-bg: rgba(99, 102, 241, 0.10);
+    --color-cooldown-text: #818CF8;
+    --color-cooldown-border: rgba(99, 102, 241, 0.25);
+
+    /* --- Colors: Grouping --- */
+    --color-group-superset: rgba(124, 92, 252, 0.50);
+    --color-group-emom: rgba(236, 72, 153, 0.50);
+    --color-emom-bg: rgba(236, 72, 153, 0.10);
+    --color-emom-text: #F472B6;
+    --color-emom-border: rgba(236, 72, 153, 0.25);
+
+    /* --- Colors: Drag --- */
+    --color-drag-placeholder: rgba(124, 92, 252, 0.08);
+    --color-drag-active-border: rgba(124, 92, 252, 0.40);
+
+    /* --- Colors: Selection --- */
+    --color-selection-bg: rgba(124, 92, 252, 0.08);
+    --color-selection-border: rgba(124, 92, 252, 0.30);
+
+    /* --- Z-Index: Builder --- */
+    --z-drag-ghost: 70;
+    --z-builder-toolbar: 45;
+    --z-exercise-picker: 100;
 }
 
 body {
@@ -155,6 +183,26 @@ body {
     @keyframes shimmer {
         from { transform: translateX(-100%); }
         to { transform: translateX(100%); }
+    }
+
+    @keyframes rowSlideIn {
+        from { opacity: 0; transform: translateX(-12px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes sectionExpand {
+        from { opacity: 0; max-height: 0; }
+        to { opacity: 1; max-height: 500px; }
+    }
+
+    @keyframes bracketDraw {
+        from { transform: scaleY(0); }
+        to { transform: scaleY(1); }
+    }
+
+    @keyframes checkIn {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
     }
 }
 

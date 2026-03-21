@@ -1,0 +1,15 @@
+@* Stub - fully implemented in Task 2 *@
+@if (IsOpen && Template is not null)
+{
+    <div>@Template.Name</div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public WorkoutTemplate? Template { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<WorkoutTemplate> OnEdit { get; set; }
+    [Parameter] public EventCallback<WorkoutTemplate> OnDuplicate { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
+    [Parameter] public string EstimatedDuration { get; set; } = "";
+}

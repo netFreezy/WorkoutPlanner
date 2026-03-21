@@ -1,0 +1,99 @@
+@page "/templates"
+@rendermode InteractiveServer
+
+<PageTitle>Workout Templates</PageTitle>
+
+<div class="templates-page">
+    <h1 class="page-title">Workout Templates</h1>
+
+    <div class="filter-bar">
+        <div class="filter-bar-row">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" class="search-input" placeholder="Search templates..."
+                       @bind="searchText" @bind:event="oninput" aria-label="Search templates" />
+            </div>
+        </div>
+
+        @if (AllTags.Any())
+        {
+            <div class="tag-filter-row">
+                @foreach (var tag in AllTags)
+                {
+                    <button class="tag-filter-chip @(activeTagFilter == tag ? "tag-filter-chip--active" : "")"
+                            @onclick="@(() => { activeTagFilter = activeTagFilter == tag ? null : tag; })">
+                        @tag
+                    </button>
+                }
+            </div>
+        }
+
+        @if (HasActiveFilters)
+        {
+            <div class="filter-chips">
+                @if (!string.IsNullOrEmpty(searchText))
+                {
+                    <FilterChip Label="@($"Search: {searchText}")" OnRemove="@(() => { searchText = ""; })" />
+                }
+                @if (!string.IsNullOrEmpty(activeTagFilter))
+                {
+                    <FilterChip Label="@($"Tag: {activeTagFilter}")" OnRemove="@(() => { activeTagFilter = null; })" />
+                }
+                <button class="clear-all-btn" @onclick="ClearAllFilters">Clear all</button>
+            </div>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <p class="status-message">Loading templates...</p>
+    }
+    else if (allTemplates.Count == 0)
+    {
+        <div class="empty-state">
+            <h2>No templates yet</h2>
+            <p>Create your first workout template to start building your training plan.</p>
+            <button class="ghost-btn" @onclick="NavigateToNew">Create Template</button>
+        </div>
+    }
+    else if (!FilteredTemplates.Any())
+    {
+        <div class="empty-state">
+            <h2>No matching templates</h2>
+            <p>No templates match your current filters. <button class="link-btn" @onclick="ClearAllFilters">Clear all filters</button></p>
+        </div>
+    }
+    else
+    {
+        <p class="result-count">@FilteredTemplates.Count() @(FilteredTemplates.Count() == 1 ? "template" : "templates")</p>
+        <div class="template-grid">
+            @{ var index = 0; }
+            @foreach (var template in FilteredTemplates)
+            {
+                var t = template;
+                <TemplateCard Template="@t" OnClick="@ShowDetail" Index="@(index % 10)"
+                              EstimatedDuration="@GetEstimatedDuration(t)" />
+                index++;
+            }
+        </div>
+    }
+
+    <button class="fab" @onclick="NavigateToNew" aria-label="Create Template">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <TemplateDetailDialog IsOpen="@(selectedTemplate is not null)"
+                          Template="@selectedTemplate"
+                          OnClose="@CloseDetail"
+                          OnEdit="@(t => NavigateToEdit(t.Id))"
+                          OnDuplicate="@DuplicateTemplate"
+                          OnDelete="@ConfirmDelete"
+                          EstimatedDuration="@(selectedTemplate is not null ? GetEstimatedDuration(selectedTemplate) : "")" />
+
+    <DeleteConfirmationDialog IsOpen="@showDeleteConfirm"
+                               TemplateName="@(selectedTemplate?.Name ?? "")"
+                               OnConfirm="@DeleteTemplate"
+                               OnCancel="@CancelDelete" />
+
+    <Toast @ref="toast" />
+</div>
