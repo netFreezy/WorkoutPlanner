@@ -20,12 +20,11 @@ A single system where you plan, log, and analyze both strength and endurance tra
 - ✓ Workout template model with grouping/ordering — Validated in Phase 01: data-foundation
 - ✓ Scheduling with recurrence rules — Validated in Phase 01: data-foundation
 - ✓ Session logging with planned-vs-actual tracking — Validated in Phase 01: data-foundation
+- ✓ Exercise library — Validated in Phase 02: exercise-library
+- ✓ Workout templates — Validated in Phase 03: workout-templates
+- ✓ Calendar scheduler — weekly and monthly views, scheduling with recurrence, materialization — Validated in Phase 04: calendar-scheduling (SCHED-05 conflict detection deferred)
 
 ### Active
-
-- [ ] Exercise library — searchable, filterable catalog of exercises with type discriminator (strength/endurance), metadata (muscle group, equipment, activity type), and ability to add custom exercises
-- [ ] Workout templates — reusable blueprints with ordered exercise list, support for both strength targets (sets/reps/weight) and endurance targets (distance/duration/pace/HR zone), plus superset and EMOM grouping constructs
-- [ ] Calendar scheduler — weekly view (primary) and monthly overview, schedule workouts with recurrence rules (every Monday, every other day, 3x/week on specific days), rest day awareness and conflict detection
 - [ ] Session tracker — open today's workout, log as you go; strength: tap through sets with weight/reps, previous performance shown inline; endurance: timer/stopwatch with distance/pace entry after; mark exercises completed/partial/skipped
 - [ ] Workout logging — separation between planned and actual; strength log entries: actual sets with reps and weight per set; endurance log entries: actual distance, duration, pace, optional HR data; tracks adherence and deviation
 - [ ] Analytics dashboard — volume trends over time (total sets, weight lifted per week), PR tracking with automatic detection, streak and consistency metrics (X/Y planned workouts completed), endurance pace trends and distance per week
@@ -88,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-21 after Phase 03 completion — Workout template system complete (create/edit/duplicate/delete, exercise picker, inline targets, sections, grouping, drag-and-drop, tags)*
+*Last updated: 2026-03-21 after Phase 04 completion — Calendar & scheduling complete (weekly grid, monthly mini-calendar, schedule dialog, recurrence materialization, drag-to-reschedule)*
