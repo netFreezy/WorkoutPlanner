@@ -60,7 +60,7 @@ Phase 4 usage:
 - **Display:** Not used in this phase (calendar header uses Heading)
 - **Heading:** Page title ("Calendar"), dialog titles ("Schedule Workout", "Workout Details")
 - **Body:** Workout chip labels, template names in picker, recurrence summary text, exercise previews in detail dialog
-- **Label:** Day headers (MON, TUE, ...), date numbers, navigation labels ("Today"), recurrence option labels, "Repeat" toggle label, monthly dot dates, workout count badges, status indicators
+- **Label:** Day headers (MON, TUE, ...), date numbers, navigation labels ("Today"), recurrence option labels, "Repeat" toggle label, monthly dot dates, workout count badges, status indicators, monthly mini day-of-week headers, monthly mini today circle date number
 
 ---
 
@@ -229,7 +229,7 @@ hover: background var(--color-accent-muted)
 **Month label format:** "March 2026" in `--font-size-heading`, `--font-weight-semibold`
 
 **View toggle:**
-Two-segment pill toggle. Container: `background: var(--color-bg-glass)`, `border: 1px solid var(--color-border-subtle)`, `border-radius: var(--radius-full)`, padding 2px.
+Two-segment pill toggle. Container: `background: var(--color-bg-glass)`, `border: 1px solid var(--color-border-subtle)`, `border-radius: var(--radius-full)`, `padding: var(--space-xs)`.
 Each segment:
 ```
 padding: var(--space-xs) var(--space-md)
@@ -357,7 +357,7 @@ background: var(--color-bg-glass)
 border: 1px solid var(--color-border-subtle)
 border-left: 3px solid var(--color-strength-text)  /* type-specific, see below */
 border-radius: var(--radius-sm)
-padding: 6px 8px
+padding: var(--space-xs) var(--space-sm)
 font-size: var(--font-size-label)
 font-weight: var(--font-weight-regular)
 color: var(--color-text-primary)
@@ -421,7 +421,7 @@ Previous/next month arrows (same style as calendar nav arrows, 28x28 smaller var
 
 **Day-of-week header row:**
 ```
-font-size: 11px  /* slightly smaller than label for compact grid */
+font-size: var(--font-size-label)
 font-weight: var(--font-weight-semibold)
 color: var(--color-text-tertiary)
 text-align: center
@@ -438,7 +438,7 @@ display: flex
 flex-direction: column
 align-items: center
 justify-content: center
-gap: 2px
+gap: var(--space-xs)
 cursor: pointer
 border-radius: var(--radius-sm)
 transition: background-color var(--transition-fast)
@@ -449,16 +449,16 @@ color: var(--color-text-primary)
 **Date cell states:**
 - Default: transparent background
 - Hover: `background: var(--color-bg-glass-hover)`
-- Today: date number in accent circle (same style as weekly, but 20x20, font-size 11px)
+- Today: date number in accent circle (same style as weekly, but 20x20, `font-size: var(--font-size-label)`)
 - Current week highlight: `background: var(--color-accent-muted)`, `border: 1px solid rgba(124, 92, 252, 0.15)`
 - Days outside current month: `color: var(--color-text-tertiary)`, `opacity: 0.4`
 
 **Workout type dots (below each date number):**
 ```
 display: flex
-gap: 3px
+gap: var(--space-xs)
 justify-content: center
-margin-top: 2px
+margin-top: var(--space-xs)
 ```
 Each dot:
 ```
@@ -541,7 +541,7 @@ transition: all var(--transition-fast)
 - Label text in `--font-size-body`, `--color-text-secondary`
 
 **Footer:**
-- Left: "Cancel" ghost text button
+- Left: "Discard" ghost text button
 - Right: "Schedule" primary button (accent gradient, same as "Save Template" from Phase 3)
 
 **Primary button style (accent gradient):**
@@ -682,6 +682,7 @@ hover: background var(--color-error-bg)
 | View toggle labels | "Week" / "Month" |
 | Today button | "Today" |
 | Workout detail: ad-hoc note | "Ad-hoc workout" |
+| Dialog dismiss (ScheduleDialog footer) | "Discard" |
 
 ---
 
@@ -716,7 +717,7 @@ hover: background var(--color-error-bg)
 | Select "Every X days" frequency | Show interval number input. Default value: 2. |
 | Click day-of-week chip | Toggle that day on/off (multi-select, maps to DaysOfWeek flags). At least one day must be selected (prevent deselect of last active day). |
 | Click "Schedule" | Validate (template or name required, date required). Save ScheduledWorkout. If recurring, save RecurrenceRule and trigger materialization. Toast confirmation. Close dialog. Refresh calendar. |
-| Click "Cancel" | Close dialog, no changes. |
+| Click "Discard" | Close dialog, no changes. |
 
 ### Workout Detail Dialog
 
