@@ -207,7 +207,7 @@ Inherited from Phase 2/3/4. All base tokens already in `wwwroot/app.css` `:root`
 - **Background:** `var(--color-bg-primary)` with bottom border `1px solid var(--color-border-subtle)`
 - **Layout:** Flex row, space-between, align-center
 - **Left group:** Back arrow (same style as calendar nav arrows, 36x36) + Workout name in `--font-size-heading`, `--font-weight-semibold`, truncated with ellipsis
-- **Right group:** Elapsed time in `--font-size-body`, `--color-text-secondary` (format: "12:34" mm:ss, or "1:12:34" h:mm:ss) + "Abandon" ghost text button in `--color-error`
+- **Right group:** Elapsed time in `--font-size-body`, `--color-text-secondary` (format: "12:34" mm:ss, or "1:12:34" h:mm:ss) + "Abandon Session" ghost text button in `--color-error`
 
 **Back arrow SVG:** 16x16, stroke-width 2, `<path d="M19 12H5M5 12l7 7M5 12l7-7"/>` (arrow left). Navigates to `/calendar`.
 
@@ -280,7 +280,7 @@ transition: all var(--transition-fast)
 
 Badge dimensions:
 ```
-padding: var(--space-xs) 10px
+padding: var(--space-xs) var(--space-sm)
 border-radius: var(--radius-full)
 font-size: var(--font-size-label)
 font-weight: var(--font-weight-semibold)
@@ -307,7 +307,7 @@ Expand/collapse animation: `exerciseExpand` / CSS transition on max-height with 
 2. Previous performance drawer (D-04, D-07)
 3. Set rows (strength) OR endurance input fields
 4. Add set button (strength only, D-03)
-5. Exercise status buttons (Complete / Partial / Skip) -- D-10
+5. Exercise status buttons (Complete / Partial / Skip Exercise) -- D-10
 
 #### 5. SetRow (inline in SessionExerciseItem.razor)
 - **Purpose:** Single set entry row for strength exercises (D-01, D-02)
@@ -344,9 +344,9 @@ transition: background-color var(--transition-fast), border-color var(--transiti
 
   Type label dimensions:
   ```
-  padding: 2px 8px
+  padding: var(--space-xs) var(--space-sm)
   border-radius: var(--radius-full)
-  font-size: 10px
+  font-size: var(--font-size-label)
   font-weight: var(--font-weight-semibold)
   letter-spacing: var(--letter-spacing-label)
   text-transform: uppercase
@@ -506,7 +506,7 @@ Format per session row: "Mar 15 -- 5.2 km in 26:14 (5:03/km)"
 Max 3 sessions shown. If no previous data: "No previous data" in `--font-size-label`, `--color-text-tertiary`, italic.
 
 #### 8. ExerciseStatusButtons (inline in SessionExerciseItem.razor)
-- **Purpose:** Mark exercise as Complete, Partial, or Skip (D-10)
+- **Purpose:** Mark exercise as Complete, Partial, or Skip Exercise (D-10)
 - **Layout:** Flex row, gap `var(--space-sm)`, full width, justify-content stretch
 - **Position:** Bottom of expanded exercise panel
 
@@ -539,7 +539,7 @@ transition: all var(--transition-fast)
 - Active (selected): `background: var(--color-exercise-partial-text)`, `color: var(--color-text-inverse)`, `border-color: var(--color-exercise-partial-text)`
 - Icon: Half-circle SVG 14x14
 
-**Skip button:**
+**Skip Exercise button:**
 - Default: `background: transparent`, `border: 1px solid var(--color-border-subtle)`, `color: var(--color-text-tertiary)`
 - Hover: `background: var(--color-bg-glass-hover)`
 - Active (selected): `background: var(--color-text-tertiary)`, `color: var(--color-text-inverse)`, `border-color: var(--color-text-tertiary)`
@@ -661,7 +661,7 @@ animation: summarySlideUp 350ms cubic-bezier(0.4, 0, 0.2, 1) both
 
 **Footer:**
 - "Keep Going" ghost button (left)
-- "Abandon" destructive button (right)
+- "Abandon Session" destructive button (right)
 
 ---
 
@@ -685,14 +685,14 @@ animation: summarySlideUp 350ms cubic-bezier(0.4, 0, 0.2, 1) both
 | Session resumed toast | "Session resumed -- picking up where you left off" |
 | Abandon confirmation title | "Abandon Session?" |
 | Abandon confirmation body | "Your logged sets will be saved. The session will be marked as partial with whatever progress you've made." |
-| Abandon confirmation buttons | "Keep Going" / "Abandon" |
+| Abandon confirmation buttons | "Keep Going" / "Abandon Session" |
 | Progress bar label | "{N}/{M} exercises" |
 | Previous drawer toggle | "Previous" |
 | Previous drawer empty | "No previous data" |
 | Add set button | "+ Add Set" |
 | Exercise status: Complete | "Complete" |
 | Exercise status: Partial | "Partial" |
-| Exercise status: Skip | "Skip" |
+| Exercise status: Skip | "Skip Exercise" |
 | Exercise status badge: pending | "Pending" |
 | Exercise status badge: complete (strength) | "{completed}/{total} sets" |
 | Exercise status badge: complete (endurance) | "Done" |
@@ -727,7 +727,7 @@ animation: summarySlideUp 350ms cubic-bezier(0.4, 0, 0.2, 1) both
 | Endurance: Pace auto-calc | "Auto-calculated" |
 | Endurance: Planned target prefix | "Target:" |
 | Session list: Start button | "Start Session" |
-| Header: Abandon button | "Abandon" |
+| Header: Abandon button | "Abandon Session" |
 
 ---
 
@@ -757,12 +757,12 @@ animation: summarySlideUp 350ms cubic-bezier(0.4, 0, 0.2, 1) both
 | Fill endurance fields | Update values in memory. Pace auto-calculates from distance/duration (D-06). |
 | Tap "Complete" on exercise | Mark as Complete. Persist endurance data if endurance exercise. Collapse exercise (200ms delay). Auto-expand next pending exercise. Update progress bar segment. |
 | Tap "Partial" on exercise | Mark as Partial. Same collapse/expand behavior. Progress bar segment shows amber. |
-| Tap "Skip" on exercise | Mark as Skipped. Collapse, expand next. Progress bar segment shows gray at 0.4 opacity. |
-| Tap "Abandon" in header | Open AbandonSessionDialog. |
+| Tap "Skip Exercise" on exercise | Mark as Skipped. Collapse, expand next. Progress bar segment shows gray at 0.4 opacity. |
+| Tap "Abandon Session" in header | Open AbandonSessionDialog. |
 | Confirm abandon | Set CompletedAt=now on WorkoutLog. Mark ScheduledWorkout as Completed (with partial data, D-16). Navigate to `/calendar`. Toast "Session complete". |
 | All exercises have status | Show "Finish Session" button at bottom of exercise list with `pulseGlow` animation to draw attention. |
 | Tap "Finish Session" | Navigate to SessionSummary overlay. |
-| Back arrow in header | Same as "Abandon" flow -- open confirmation dialog since session is in progress. |
+| Back arrow in header | Same as "Abandon Session" flow -- open confirmation dialog since session is in progress. |
 
 ### Session Summary
 
