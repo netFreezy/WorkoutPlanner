@@ -60,7 +60,7 @@
                 {
                     var date = currentWeekStart.AddDays(dayOffset);
                     var today = IsToday(date);
-                    <div class="day-cell @(today ? "day-cell--today" : "")">
+                    <div class="day-cell @(today ? "day-cell--today" : "")" data-day="@date.ToString("yyyy-MM-dd")">
                         <div class="@(today ? "day-date day-date--today" : "day-date")">@date.Day</div>
                         <button class="day-add-btn" @onclick="() => OpenScheduleDialog(date)" aria-label="Add workout on @date.ToString("MMM d")">+</button>
                     </div>
@@ -86,12 +86,14 @@
                     var date = currentWeekStart.AddDays(dayOffset);
                     var today = IsToday(date);
                     var dayWorkouts = GetWorkoutsForDay(date);
-                    <div class="day-cell @(today ? "day-cell--today" : "")">
+                    <div class="day-cell @(today ? "day-cell--today" : "")" data-day="@date.ToString("yyyy-MM-dd")">
                         <div class="@(today ? "day-date day-date--today" : "day-date")">@date.Day</div>
                         @{ var chipIndex = 0; }
                         @foreach (var workout in dayWorkouts)
                         {
-                            <WorkoutChip Workout="@workout" Index="@chipIndex" OnClick="OpenDetailDialog" />
+                            <div class="workout-chip-wrapper" data-workout-id="@workout.Id">
+                                <WorkoutChip Workout="@workout" Index="@chipIndex" OnClick="OpenDetailDialog" />
+                            </div>
                             chipIndex++;
                         }
                         <button class="day-add-btn" @onclick="() => OpenScheduleDialog(date)" aria-label="Add workout on @date.ToString("MMM d")">+</button>
@@ -132,11 +134,10 @@
     }
     else
     {
-        @* Month view placeholder -- implemented in Plan 04 *@
-        <div class="empty-state">
-            <h2 class="empty-state__heading">Monthly View</h2>
-            <p class="empty-state__body">Monthly calendar overview coming soon.</p>
-        </div>
+        @* Monthly mini-calendar *@
+        <MonthlyMiniCalendar DisplayMonth="currentDisplayMonth"
+                             SelectedWeekStart="currentWeekStart"
+                             OnDateClicked="HandleMonthDateClicked" />
     }
 
     @* --- FAB --- *@
@@ -146,3 +147,18 @@
         </svg>
     </button>
 </div>
+
+@* --- Dialogs --- *@
+<ScheduleDialog IsOpen="showScheduleDialog"
+                OnClose="() => { showScheduleDialog = false; editWorkout = null; }"
+                OnScheduled="HandleScheduled"
+                PrefilledDate="scheduleDialogDate"
+                EditWorkout="editWorkout" />
+
+<WorkoutDetailDialog IsOpen="showDetailDialog"
+                     OnClose="() => { showDetailDialog = false; }"
+                     Workout="selectedWorkout"
+                     OnWorkoutChanged="HandleWorkoutChanged"
+                     OnEditRequested="OpenEditFromDetail" />
+
+<Toast @ref="toast" />

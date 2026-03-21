@@ -341,6 +341,26 @@
     }
 }
 
+/* --- Drag-to-Reschedule States --- */
+.day-cell--drag-over {
+    background: var(--color-drag-placeholder, rgba(124, 92, 252, 0.08));
+    outline: 2px dashed rgba(124, 92, 252, 0.4);
+    outline-offset: -2px;
+}
+
+.workout-chip--dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.workout-chip--sortable {
+    cursor: grab;
+}
+
+.workout-chip-wrapper {
+    cursor: grab;
+}
+
 /* --- Mobile Day List (hidden by default) --- */
 .week-list--mobile {
     display: none;

@@ -1,7 +1,9 @@
+using BlazorApp2.Components.Shared;
 using BlazorApp2.Data.Entities;
 using BlazorApp2.Data.Enums;
 using BlazorApp2.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace BlazorApp2.Components.Pages;
 
@@ -9,6 +11,7 @@ public partial class Calendar : IDisposable
 {
     [Inject] private SchedulingService SchedulingService { get; set; } = null!;
     [Inject] private MaterializationService MaterializationService { get; set; } = null!;
+    [Inject] private IJSRuntime JS { get; set; } = null!;
 
     private DateTime currentWeekStart;
     private List<ScheduledWorkout> weekWorkouts = new();
@@ -17,19 +20,35 @@ public partial class Calendar : IDisposable
     private bool showMonthView = false;
     private string weekAnimationClass = "";
 
-    // Dialog state (wired in Plan 03)
+    // Dialog state
     private bool showScheduleDialog = false;
     private DateTime? scheduleDialogDate = null;
     private ScheduledWorkout? selectedWorkout = null;
     private bool showDetailDialog = false;
+    private ScheduledWorkout? editWorkout = null;
+    private Toast? toast;
+    private DateTime currentDisplayMonth;
+
+    // Drag-to-reschedule
+    private DotNetObjectReference<Calendar>? dotNetRef;
 
     private static readonly string[] DayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
     protected override async Task OnInitializedAsync()
     {
         currentWeekStart = MaterializationService.GetMondayOfWeek(DateTime.UtcNow);
+        currentDisplayMonth = new DateTime(currentWeekStart.Year, currentWeekStart.Month, 1);
         await MaterializationService.MaterializeAllAsync();
         await LoadWeekData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!isLoading && !showMonthView)
+        {
+            dotNetRef ??= DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("calendarDrag.init", dotNetRef);
+        }
     }
 
     private async Task LoadWeekData()
@@ -76,6 +95,7 @@ public partial class Calendar : IDisposable
 
     private void OpenScheduleDialog(DateTime date)
     {
+        editWorkout = null;
         scheduleDialogDate = date;
         showScheduleDialog = true;
     }
@@ -88,9 +108,62 @@ public partial class Calendar : IDisposable
 
     private void OpenFabScheduleDialog()
     {
+        editWorkout = null;
         scheduleDialogDate = DateTime.UtcNow.Date;
         showScheduleDialog = true;
     }
 
-    public void Dispose() { }
+    private async Task HandleScheduled()
+    {
+        showScheduleDialog = false;
+        editWorkout = null;
+        await LoadWeekData();
+        if (toast != null)
+            await toast.ShowAsync("Workout scheduled");
+    }
+
+    private async Task HandleWorkoutChanged()
+    {
+        showDetailDialog = false;
+        await LoadWeekData();
+    }
+
+    private async Task HandleMonthDateClicked(DateTime date)
+    {
+        showMonthView = false;
+        currentWeekStart = MaterializationService.GetMondayOfWeek(date);
+        await LoadWeekData();
+    }
+
+    private void OpenEditFromDetail(ScheduledWorkout workout)
+    {
+        showDetailDialog = false;
+        editWorkout = workout;
+        scheduleDialogDate = workout.ScheduledDate;
+        showScheduleDialog = true;
+    }
+
+    private async Task HandleDragReschedule(int workoutId, DateTime newDate)
+    {
+        await SchedulingService.RescheduleWorkoutAsync(workoutId, newDate);
+        await LoadWeekData();
+        var dayName = newDate.ToString("dddd");
+        if (toast != null)
+            await toast.ShowAsync($"Workout moved to {dayName}");
+    }
+
+    [JSInvokable]
+    public async Task OnWorkoutDropped(int workoutId, string newDateStr)
+    {
+        if (DateTime.TryParse(newDateStr, out var newDate))
+        {
+            await HandleDragReschedule(workoutId, newDate);
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        dotNetRef?.Dispose();
+    }
 }
