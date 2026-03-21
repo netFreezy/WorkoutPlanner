@@ -1,6 +1,77 @@
-@* Stub for Task 1 build - replaced in Task 2 *@
-<div class="exercise-row">
-    <span>@Item.ExerciseName</span>
+<div class="exercise-row @(Item.IsSelected ? "selected" : "")">
+    <label class="exercise-checkbox">
+        <input type="checkbox" @bind="Item.IsSelected" @bind:after="() => OnSelectionChanged.InvokeAsync()" />
+        <span class="checkbox-visual @(Item.IsSelected ? "checked" : "")">
+            @if (Item.IsSelected)
+            {
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            }
+        </span>
+    </label>
+
+    <span class="drag-handle" aria-label="Drag to reorder">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="9" cy="6" r="1.5"/>
+            <circle cx="15" cy="6" r="1.5"/>
+            <circle cx="9" cy="12" r="1.5"/>
+            <circle cx="15" cy="12" r="1.5"/>
+            <circle cx="9" cy="18" r="1.5"/>
+            <circle cx="15" cy="18" r="1.5"/>
+        </svg>
+    </span>
+
+    <span class="position-number">@(Item.Position + 1)</span>
+
+    <span class="exercise-name">@Item.ExerciseName</span>
+
+    <span class="type-tag @(Item.IsStrength ? "type-tag--strength" : "type-tag--endurance")">
+        @(Item.IsStrength ? "Strength" : "Endurance")
+    </span>
+
+    @if (Item.IsStrength)
+    {
+        <div class="target-fields strength-targets">
+            <input type="number" class="compact-input" style="width:48px" placeholder="Sets"
+                   value="@Item.TargetSets"
+                   @onchange="e => { Item.TargetSets = ParseNullableInt(e); OnTargetChanged.InvokeAsync(Item); }" />
+            <span class="target-separator">x</span>
+            <input type="number" class="compact-input" style="width:48px" placeholder="Reps"
+                   value="@Item.TargetReps"
+                   @onchange="e => { Item.TargetReps = ParseNullableInt(e); OnTargetChanged.InvokeAsync(Item); }" />
+            <span class="target-separator">@@</span>
+            <input type="number" class="compact-input" style="width:64px" placeholder="kg" step="0.5"
+                   value="@Item.TargetWeight"
+                   @onchange="e => { Item.TargetWeight = ParseNullableDouble(e); OnTargetChanged.InvokeAsync(Item); }" />
+        </div>
+    }
+    else
+    {
+        <div class="target-fields endurance-targets">
+            <input type="number" class="compact-input" style="width:64px" placeholder="km" step="0.1"
+                   value="@Item.TargetDistance"
+                   @onchange="e => { Item.TargetDistance = ParseNullableDouble(e); OnTargetChanged.InvokeAsync(Item); }" />
+            <span class="target-separator">/</span>
+            <input type="number" class="compact-input" style="width:64px" placeholder="sec"
+                   value="@Item.TargetDurationSeconds"
+                   @onchange="e => { Item.TargetDurationSeconds = ParseNullableInt(e); OnTargetChanged.InvokeAsync(Item); }" />
+            <span class="target-separator">/</span>
+            <input type="number" class="compact-input" style="width:64px" placeholder="min/km" step="0.1"
+                   value="@Item.TargetPace"
+                   @onchange="e => { Item.TargetPace = ParseNullableDouble(e); OnTargetChanged.InvokeAsync(Item); }" />
+            <span class="target-separator">/</span>
+            <input type="number" class="compact-input" style="width:40px" placeholder="Z"
+                   value="@Item.TargetHeartRateZone"
+                   @onchange="e => { Item.TargetHeartRateZone = ParseNullableInt(e); OnTargetChanged.InvokeAsync(Item); }" />
+        </div>
+    }
+
+    <button class="remove-btn" @onclick="() => OnRemove.InvokeAsync(Item)" aria-label="Remove exercise">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+    </button>
 </div>
 
 @code {
@@ -8,4 +79,10 @@
     [Parameter] public EventCallback<BuilderItem> OnTargetChanged { get; set; }
     [Parameter] public EventCallback<BuilderItem> OnRemove { get; set; }
     [Parameter] public EventCallback OnSelectionChanged { get; set; }
+
+    private int? ParseNullableInt(ChangeEventArgs e) =>
+        int.TryParse(e.Value?.ToString(), out var v) ? v : null;
+
+    private double? ParseNullableDouble(ChangeEventArgs e) =>
+        double.TryParse(e.Value?.ToString(), out var v) ? v : null;
 }

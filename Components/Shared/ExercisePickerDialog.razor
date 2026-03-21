@@ -1,15 +1,112 @@
-@* Stub for Task 1 build - replaced in Task 2 *@
-@if (IsOpen)
-{
-    <Dialog IsOpen="@IsOpen" Title="Add Exercises" OnClose="@HandleClose">
-        <p>Loading...</p>
-    </Dialog>
-}
+<Dialog IsOpen="@IsOpen" Title="Add Exercises" OnClose="@HandleClose">
+    <div class="picker-content">
+        <div class="picker-search">
+            <div class="picker-search-wrapper">
+                <svg class="picker-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="picker-search-input" placeholder="Search exercises..."
+                       @bind="searchText" @bind:event="oninput" />
+            </div>
+        </div>
+        <div class="picker-filters">
+            <select class="picker-filter-select" @bind="selectedType">
+                <option value="">All Types</option>
+                <option value="Strength">Strength</option>
+                <option value="Endurance">Endurance</option>
+            </select>
+        </div>
+        <div class="picker-list">
+            @foreach (var exercise in FilteredExercises)
+            {
+                <div class="picker-row @(selectedIds.Contains(exercise.Id) ? "selected" : "")"
+                     @onclick="() => ToggleSelection(exercise.Id)">
+                    <span class="picker-checkbox @(selectedIds.Contains(exercise.Id) ? "checked" : "")">
+                        @if (selectedIds.Contains(exercise.Id))
+                        {
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        }
+                    </span>
+                    <span class="picker-exercise-name">@exercise.Name</span>
+                    <span class="type-tag @(exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance")">
+                        @(exercise is StrengthExercise ? "Strength" : "Endurance")
+                    </span>
+                </div>
+            }
+            @if (!FilteredExercises.Any())
+            {
+                <p class="picker-empty">No exercises match your search</p>
+            }
+        </div>
+        <div class="picker-footer">
+            <span class="picker-count">@selectedIds.Count exercise(s) selected</span>
+            <div class="picker-footer-buttons">
+                <button class="picker-close-btn" @onclick="HandleClose">Close Picker</button>
+                <button class="picker-add-btn" @onclick="AddSelected" disabled="@(selectedIds.Count == 0)">Add selected</button>
+            </div>
+        </div>
+    </div>
+</Dialog>
 
 @code {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback<List<Exercise>> OnExercisesSelected { get; set; }
 
-    private async Task HandleClose() => await OnClose.InvokeAsync();
+    [Inject] private IDbContextFactory<AppDbContext> DbFactory { get; set; } = null!;
+
+    private List<Exercise> allExercises = new();
+    private string searchText = "";
+    private string selectedType = "";
+    private HashSet<int> selectedIds = new();
+    private bool wasOpen;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsOpen && !wasOpen)
+        {
+            // Dialog just opened - load exercises
+            using var context = DbFactory.CreateDbContext();
+            allExercises = await context.Exercises
+                .OrderBy(e => e.Name)
+                .ToListAsync();
+            selectedIds.Clear();
+            searchText = "";
+            selectedType = "";
+        }
+        wasOpen = IsOpen;
+    }
+
+    private IEnumerable<Exercise> FilteredExercises => allExercises
+        .Where(e => string.IsNullOrEmpty(searchText)
+            || e.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+        .Where(e => string.IsNullOrEmpty(selectedType)
+            || (selectedType == "Strength" && e is StrengthExercise)
+            || (selectedType == "Endurance" && e is EnduranceExercise));
+
+    private void ToggleSelection(int id)
+    {
+        if (!selectedIds.Remove(id))
+        {
+            selectedIds.Add(id);
+        }
+    }
+
+    private async Task AddSelected()
+    {
+        var selected = allExercises.Where(e => selectedIds.Contains(e.Id)).ToList();
+        await OnExercisesSelected.InvokeAsync(selected);
+        selectedIds.Clear();
+    }
+
+    private async Task HandleClose()
+    {
+        selectedIds.Clear();
+        searchText = "";
+        selectedType = "";
+        await OnClose.InvokeAsync();
+    }
 }

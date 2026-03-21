@@ -1,0 +1,207 @@
+.exercise-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 56px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .exercise-row {
+        animation: rowSlideIn 200ms ease both;
+    }
+}
+
+.exercise-row:hover {
+    border-color: var(--color-border-default);
+}
+
+.exercise-row.selected {
+    background: var(--color-selection-bg);
+    border-color: var(--color-selection-border);
+}
+
+/* --- Checkbox --- */
+.exercise-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.exercise-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-visual {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-border-default);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.checkbox-visual.checked {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* --- Drag Handle --- */
+.drag-handle {
+    color: var(--color-text-tertiary);
+    cursor: grab;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color var(--transition-fast);
+}
+
+.drag-handle:hover {
+    color: var(--color-text-secondary);
+}
+
+/* --- Position Number --- */
+.position-number {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    width: 20px;
+    text-align: right;
+    flex-shrink: 0;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* --- Exercise Name --- */
+.exercise-name {
+    font-size: var(--font-size-body);
+    color: var(--color-text-primary);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+/* --- Type Tag --- */
+.type-tag {
+    display: inline-block;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-label);
+    padding: var(--space-xs) 10px;
+    border-radius: var(--radius-full);
+    line-height: var(--line-height-label);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.type-tag--strength {
+    background: var(--color-strength-bg);
+    color: var(--color-strength-text);
+    border: 1px solid var(--color-strength-border);
+}
+
+.type-tag--endurance {
+    background: var(--color-endurance-bg);
+    color: var(--color-endurance-text);
+    border: 1px solid var(--color-endurance-border);
+}
+
+/* --- Target Fields --- */
+.target-fields {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-shrink: 0;
+}
+
+.compact-input {
+    height: 32px;
+    padding: 0 var(--space-sm);
+    border: 1px solid var(--color-input-border);
+    border-radius: 6px;
+    font-size: var(--font-size-label);
+    font-family: var(--font-family);
+    color: var(--color-text-primary);
+    background: var(--color-input-bg);
+    text-align: center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    box-sizing: border-box;
+}
+
+.compact-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.15);
+}
+
+.compact-input::placeholder {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-label);
+}
+
+/* Hide number spinners for cleaner look */
+.compact-input::-webkit-inner-spin-button,
+.compact-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.compact-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.target-separator {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    padding: 0 2px;
+    flex-shrink: 0;
+}
+
+/* --- Remove Button --- */
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.remove-btn:hover {
+    color: var(--color-error);
+    background: var(--color-error-bg);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .exercise-row {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        padding: var(--space-sm);
+    }
+
+    .target-fields {
+        flex-basis: 100%;
+        padding-left: calc(18px + 24px + 20px + var(--space-sm) * 3);
+        margin-top: var(--space-xs);
+    }
+
+    .drag-handle {
+        display: none;
+    }
+}
