@@ -52,7 +52,7 @@ Plans:
 - [x] 02-01-PLAN.md — Seed ~50 exercises into database via EF Core HasData migration + data-layer tests
 - [x] 02-02-PLAN.md — Exercise library page with card grid, search/filter, detail dialog, and navigation bar
 - [x] 02-03-PLAN.md — Custom exercise creation dialog with polymorphic form, FAB trigger, and success toast
-- [ ] 02-04-PLAN.md — Premium dark-mode design system: CSS tokens, Inter font, glassmorphism, card animations, tag glow, frosted dialogs
+- [x] 02-04-PLAN.md — Premium dark-mode design system: CSS tokens, Inter font, glassmorphism, card animations, tag glow, frosted dialogs
 
 ### Phase 3: Workout Templates
 **Goal**: Users can build reusable workout blueprints with ordered exercises, type-appropriate targets, grouping constructs, and warm-up/cool-down sections

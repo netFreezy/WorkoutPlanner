@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-21T17:00:39.231Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-21T17:09:48.595Z"
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 4 of 4
 | Phase 02 P01 | 6min | 2 tasks | 8 files |
 | Phase 02 P02 | 5min | 2 tasks | 16 files |
 | Phase 02 P03 | 5min | 2 tasks | 8 files |
+| Phase 02 P04 | 6min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 02]: ExerciseFormModel view model decouples form state from EF Core entity hierarchy
 - [Phase 02]: CancellationTokenSource in Toast for overlapping notification handling
 - [Phase 02]: Clear all filters after exercise creation so new exercise is always visible
+- [Phase 02]: Global keyframes in app.css inside prefers-reduced-motion rather than duplicated per component
+- [Phase 02]: Card stagger via --card-index CSS variable on ExerciseCard, modulo 10 cap
 
 ### Pending Todos
 
@@ -86,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T17:00:39.228Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-03-21T17:09:48.591Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
