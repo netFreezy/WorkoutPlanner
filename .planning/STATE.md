@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-03-21T17:19:06.244Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-21T18:55:45.237Z"
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 11
+  completed_plans: 7
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** A single system where you plan, log, and analyze both strength and endurance training side by side
-**Current focus:** Phase 02 — exercise-library
+**Current focus:** Phase 03 — workout-templates
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (workout-templates) — EXECUTING
+Plan: 2 of 5
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Plan: Not started
 | Phase 02 P02 | 5min | 2 tasks | 16 files |
 | Phase 02 P03 | 5min | 2 tasks | 8 files |
 | Phase 02 P04 | 6min | 2 tasks | 10 files |
+| Phase 03 P01 | 5min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Clear all filters after exercise creation so new exercise is always visible
 - [Phase 02]: Global keyframes in app.css inside prefers-reduced-motion rather than duplicated per component
 - [Phase 02]: Card stagger via --card-index CSS variable on ExerciseCard, modulo 10 cap
+- [Phase 03]: ValueComparer added for List<string> Tags to ensure EF Core change tracking works correctly with collection value converters
+- [Phase 03]: TemplateBuilderState uses JSON snapshot serialization for undo/redo (excludes UI-only IsSelected property)
+- [Phase 03]: Duration estimation: EMOM groups use rounds*minuteWindow, strength sets*1.5, endurance durationSeconds/60 or default 10, rounded to nearest 5, minimum 5
 
 ### Pending Todos
 
@@ -89,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T17:09:48.591Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-03-21T18:55:45.233Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None

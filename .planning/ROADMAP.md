@@ -67,7 +67,7 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Tags property, JSON converter, migration, TemplateBuilderState model, unit tests
+- [x] 03-01-PLAN.md — Tags property, JSON converter, migration, TemplateBuilderState model, unit tests
 - [ ] 03-02-PLAN.md — Template list page with search/tag filter, cards, detail dialog, delete, duplicate
 - [ ] 03-03-PLAN.md — Template builder with exercise picker, inline targets, save/load, NavigationLock
 - [ ] 03-04-PLAN.md — Section management (warm-up/working/cool-down) and superset/EMOM grouping

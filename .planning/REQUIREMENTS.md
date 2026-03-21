@@ -26,13 +26,13 @@
 
 ### Workout Templates
 
-- [ ] **TMPL-01**: Template builder — create named templates with ordered exercise list
+- [x] **TMPL-01**: Template builder — create named templates with ordered exercise list
 - [ ] **TMPL-02**: Reorderable exercises within templates (drag-and-drop or move up/down)
-- [ ] **TMPL-03**: Strength targets per exercise: target sets, reps, weight
-- [ ] **TMPL-04**: Endurance targets per exercise: target distance, duration, pace, HR zone
-- [ ] **TMPL-05**: Superset grouping — visually group 2+ exercises with connector
-- [ ] **TMPL-06**: EMOM grouping — N exercises, M-minute window per round, R rounds
-- [ ] **TMPL-07**: Warm-up and cool-down sections separate from working sets
+- [x] **TMPL-03**: Strength targets per exercise: target sets, reps, weight
+- [x] **TMPL-04**: Endurance targets per exercise: target distance, duration, pace, HR zone
+- [x] **TMPL-05**: Superset grouping — visually group 2+ exercises with connector
+- [x] **TMPL-06**: EMOM grouping — N exercises, M-minute window per round, R rounds
+- [x] **TMPL-07**: Warm-up and cool-down sections separate from working sets
 
 ### Calendar & Scheduling
 
@@ -113,13 +113,13 @@
 | EXER-01 | Phase 2 | Complete |
 | EXER-02 | Phase 2 | Complete |
 | EXER-03 | Phase 2 | Complete |
-| TMPL-01 | Phase 3 | Pending |
+| TMPL-01 | Phase 3 | Complete |
 | TMPL-02 | Phase 3 | Pending |
-| TMPL-03 | Phase 3 | Pending |
-| TMPL-04 | Phase 3 | Pending |
-| TMPL-05 | Phase 3 | Pending |
-| TMPL-06 | Phase 3 | Pending |
-| TMPL-07 | Phase 3 | Pending |
+| TMPL-03 | Phase 3 | Complete |
+| TMPL-04 | Phase 3 | Complete |
+| TMPL-05 | Phase 3 | Complete |
+| TMPL-06 | Phase 3 | Complete |
+| TMPL-07 | Phase 3 | Complete |
 | SCHED-01 | Phase 4 | Pending |
 | SCHED-02 | Phase 4 | Pending |
 | SCHED-03 | Phase 4 | Pending |
