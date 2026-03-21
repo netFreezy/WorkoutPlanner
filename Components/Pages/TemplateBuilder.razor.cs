@@ -28,6 +28,9 @@ public partial class TemplateBuilder
 
     private int SelectedCount => State.Items.Count(i => i.IsSelected);
     private bool HasSelection => SelectedCount > 0;
+    private bool HasWarmUp => State.Items.Any(i => i.SectionType == SectionType.WarmUp);
+    private bool HasCoolDown => State.Items.Any(i => i.SectionType == SectionType.CoolDown);
+    private bool CanUngroup => State.Items.Any(i => i.IsSelected && i.GroupLocalId != null);
 
     protected override async Task OnInitializedAsync()
     {
@@ -303,6 +306,145 @@ public partial class TemplateBuilder
         showExercisePicker = false;
     }
 
-    // Stub callbacks for Plan 04/05 features (grouping, sections)
-    private void NoOp() { }
+    // --- Section and grouping rendering ---
+
+    private record SectionEntry(BuilderGroup? Group, List<BuilderItem> Items);
+
+    private List<SectionEntry> GetSectionEntries(SectionType sectionType)
+    {
+        var entries = new List<SectionEntry>();
+        var sectionItems = State.Items
+            .Where(i => i.SectionType == sectionType)
+            .OrderBy(i => i.Position)
+            .ToList();
+        var renderedGroupIds = new HashSet<string>();
+
+        foreach (var item in sectionItems)
+        {
+            if (item.GroupLocalId != null && !renderedGroupIds.Contains(item.GroupLocalId))
+            {
+                renderedGroupIds.Add(item.GroupLocalId);
+                var group = State.Groups.FirstOrDefault(g => g.LocalId == item.GroupLocalId);
+                var groupItems = sectionItems.Where(i => i.GroupLocalId == item.GroupLocalId).ToList();
+                if (group != null)
+                {
+                    entries.Add(new SectionEntry(group, groupItems));
+                }
+            }
+            else if (item.GroupLocalId == null)
+            {
+                entries.Add(new SectionEntry(null, new List<BuilderItem> { item }));
+            }
+        }
+
+        return entries;
+    }
+
+    // --- Section management ---
+
+    private List<SectionType> GetVisibleSections()
+    {
+        var sections = new List<SectionType>();
+        if (State.Items.Any(i => i.SectionType == SectionType.WarmUp))
+            sections.Add(SectionType.WarmUp);
+        sections.Add(SectionType.Working);
+        if (State.Items.Any(i => i.SectionType == SectionType.CoolDown))
+            sections.Add(SectionType.CoolDown);
+        return sections;
+    }
+
+    private async Task AddWarmUpSection()
+    {
+        var selected = State.Items.Where(i => i.IsSelected).ToList();
+        if (selected.Count == 0)
+        {
+            await toast.ShowAsync("Select exercises first, then click Add warm-up to move them.");
+            return;
+        }
+        State.PushUndo();
+        foreach (var item in selected)
+        {
+            item.SectionType = SectionType.WarmUp;
+            item.IsSelected = false;
+        }
+    }
+
+    private async Task AddCoolDownSection()
+    {
+        var selected = State.Items.Where(i => i.IsSelected).ToList();
+        if (selected.Count == 0)
+        {
+            await toast.ShowAsync("Select exercises first, then click Add cool-down to move them.");
+            return;
+        }
+        State.PushUndo();
+        foreach (var item in selected)
+        {
+            item.SectionType = SectionType.CoolDown;
+            item.IsSelected = false;
+        }
+    }
+
+    // --- Grouping ---
+
+    private void GroupAsSuperset()
+    {
+        var selected = State.Items.Where(i => i.IsSelected).ToList();
+        if (selected.Count < 2) return;
+        State.PushUndo();
+        var group = new BuilderGroup { GroupType = GroupType.Superset };
+        State.Groups.Add(group);
+        foreach (var item in selected)
+        {
+            item.GroupLocalId = group.LocalId;
+            item.IsSelected = false;
+        }
+    }
+
+    private void GroupAsEmom()
+    {
+        var selected = State.Items.Where(i => i.IsSelected).ToList();
+        if (selected.Count < 2) return;
+        State.PushUndo();
+        var group = new BuilderGroup
+        {
+            GroupType = GroupType.EMOM,
+            Rounds = 5,
+            MinuteWindow = 1
+        };
+        State.Groups.Add(group);
+        foreach (var item in selected)
+        {
+            item.GroupLocalId = group.LocalId;
+            item.IsSelected = false;
+        }
+    }
+
+    private void UngroupSelected()
+    {
+        var selected = State.Items.Where(i => i.IsSelected).ToList();
+        if (selected.Count == 0) return;
+        State.PushUndo();
+        var groupIdsToCheck = selected
+            .Select(i => i.GroupLocalId)
+            .Where(g => g != null)
+            .Distinct()
+            .ToList();
+        foreach (var item in selected)
+        {
+            item.GroupLocalId = null;
+            item.IsSelected = false;
+        }
+        // Remove groups that have no items left
+        foreach (var groupId in groupIdsToCheck)
+        {
+            if (!State.Items.Any(i => i.GroupLocalId == groupId))
+                State.Groups.RemoveAll(g => g.LocalId == groupId);
+        }
+    }
+
+    private void OnGroupParamsChanged()
+    {
+        State.PushUndo();
+    }
 }

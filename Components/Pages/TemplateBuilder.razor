@@ -14,14 +14,14 @@
                     CanRedo="State.CanRedo"
                     HasUnsavedChanges="State.HasUnsavedChanges"
                     SelectedCount="SelectedCount"
-                    HasWarmUp="false"
-                    HasCoolDown="false"
-                    OnAddWarmUp="NoOp"
-                    OnAddCoolDown="NoOp"
-                    OnGroupSuperset="NoOp"
-                    OnGroupEmom="NoOp"
-                    OnUngroup="NoOp"
-                    CanUngroup="false" />
+                    HasWarmUp="@HasWarmUp"
+                    HasCoolDown="@HasCoolDown"
+                    OnAddWarmUp="AddWarmUpSection"
+                    OnAddCoolDown="AddCoolDownSection"
+                    OnGroupSuperset="GroupAsSuperset"
+                    OnGroupEmom="GroupAsEmom"
+                    OnUngroup="UngroupSelected"
+                    CanUngroup="@CanUngroup" />
 
     <div class="builder-content">
         <input type="text" class="template-name-input" placeholder="Template name"
@@ -58,12 +58,36 @@
             }
             else
             {
-                @foreach (var item in State.Items.OrderBy(i => i.Position))
+                @foreach (var sectionType in GetVisibleSections())
                 {
-                    <ExerciseRow Item="item"
-                                 OnTargetChanged="OnTargetChanged"
-                                 OnRemove="RemoveExercise"
-                                 OnSelectionChanged="OnSelectionChanged" />
+                    <SectionHeader Section="@sectionType"
+                                   ExerciseCount="@(State.Items.Count(i => i.SectionType == sectionType))" />
+
+                    @foreach (var entry in GetSectionEntries(sectionType))
+                    {
+                        @if (entry.Group != null)
+                        {
+                            <div class="group-container">
+                                <GroupBracket Group="@entry.Group" ItemCount="@entry.Items.Count"
+                                              OnParamsChanged="OnGroupParamsChanged" />
+                                <div class="group-exercises">
+                                    @foreach (var gi in entry.Items)
+                                    {
+                                        <ExerciseRow Item="gi" OnTargetChanged="OnTargetChanged"
+                                                     OnRemove="RemoveExercise" OnSelectionChanged="OnSelectionChanged" />
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var item in entry.Items)
+                            {
+                                <ExerciseRow Item="item" OnTargetChanged="OnTargetChanged"
+                                             OnRemove="RemoveExercise" OnSelectionChanged="OnSelectionChanged" />
+                            }
+                        }
+                    }
                 }
             }
         </div>
