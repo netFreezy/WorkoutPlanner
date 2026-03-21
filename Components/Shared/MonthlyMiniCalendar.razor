@@ -1,0 +1,143 @@
+@using BlazorApp2.Data.Entities
+@using BlazorApp2.Data.Enums
+@using BlazorApp2.Services
+
+@inject SchedulingService SchedulingService
+
+<div class="monthly-calendar">
+    <div class="monthly-header">
+        <button class="monthly-nav-btn" @onclick="PreviousMonth" aria-label="Previous month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        <span class="monthly-month-label">@DisplayMonth.ToString("MMMM yyyy")</span>
+        <button class="monthly-nav-btn" @onclick="NextMonth" aria-label="Next month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="monthly-dow-header">
+        <span>M</span>
+        <span>T</span>
+        <span>W</span>
+        <span>T</span>
+        <span>F</span>
+        <span>S</span>
+        <span>S</span>
+    </div>
+
+    <div class="monthly-grid">
+        @foreach (var cell in calendarCells)
+        {
+            var isOutside = cell.Date.Month != DisplayMonth.Month;
+            var isToday = cell.Date.Date == DateTime.UtcNow.Date;
+            var isCurrentWeek = SelectedWeekStart.HasValue &&
+                cell.Date.Date >= SelectedWeekStart.Value.Date &&
+                cell.Date.Date < SelectedWeekStart.Value.Date.AddDays(7);
+
+            var cellClass = "monthly-cell";
+            if (isOutside) cellClass += " monthly-cell--outside";
+            if (isToday) cellClass += " monthly-cell--today";
+            if (isCurrentWeek) cellClass += " monthly-cell--current-week";
+
+            <div class="@cellClass" @onclick="() => OnDateClicked.InvokeAsync(cell.Date)">
+                <span class="monthly-date">@cell.Date.Day</span>
+                @if (cell.Types.Count > 0)
+                {
+                    <div class="monthly-dots">
+                        @foreach (var type in cell.Types.Take(3))
+                        {
+                            <span class="monthly-dot monthly-dot--@type.ToString().ToLower()"></span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public DateTime DisplayMonth { get; set; }
+    [Parameter] public EventCallback<DateTime> OnDateClicked { get; set; }
+    [Parameter] public DateTime? SelectedWeekStart { get; set; }
+
+    private List<MonthCell> calendarCells = new();
+    private Dictionary<DateTime, List<WorkoutType>> dotData = new();
+    private DateTime loadedMonth;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var monthKey = new DateTime(DisplayMonth.Year, DisplayMonth.Month, 1);
+        if (monthKey != loadedMonth)
+        {
+            loadedMonth = monthKey;
+            await LoadMonthData();
+        }
+    }
+
+    private async Task LoadMonthData()
+    {
+        var monthStart = new DateTime(DisplayMonth.Year, DisplayMonth.Month, 1);
+        var workouts = await SchedulingService.GetWorkoutsForMonthAsync(monthStart);
+
+        dotData = workouts
+            .GroupBy(sw => sw.ScheduledDate.Date)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(sw => SchedulingService.DetermineWorkoutType(sw))
+                      .Distinct()
+                      .OrderBy(t => t)
+                      .ToList()
+            );
+
+        GenerateCalendarCells();
+    }
+
+    private void GenerateCalendarCells()
+    {
+        calendarCells.Clear();
+        var monthStart = new DateTime(DisplayMonth.Year, DisplayMonth.Month, 1);
+
+        // Find the Monday of the week containing the first day of the month
+        var gridStart = monthStart;
+        while (gridStart.DayOfWeek != DayOfWeek.Monday)
+        {
+            gridStart = gridStart.AddDays(-1);
+        }
+
+        // Determine if we need 5 or 6 rows
+        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+        var lastDaySunday = monthEnd;
+        while (lastDaySunday.DayOfWeek != DayOfWeek.Sunday)
+        {
+            lastDaySunday = lastDaySunday.AddDays(1);
+        }
+
+        var totalDays = (lastDaySunday - gridStart).Days + 1;
+        var cellCount = totalDays < 36 ? 35 : 42;
+
+        for (int i = 0; i < cellCount; i++)
+        {
+            var date = gridStart.AddDays(i);
+            var types = dotData.TryGetValue(date.Date, out var t) ? t : new List<WorkoutType>();
+            calendarCells.Add(new MonthCell(date, types));
+        }
+    }
+
+    private async Task PreviousMonth()
+    {
+        DisplayMonth = DisplayMonth.AddMonths(-1);
+        await LoadMonthData();
+    }
+
+    private async Task NextMonth()
+    {
+        DisplayMonth = DisplayMonth.AddMonths(1);
+        await LoadMonthData();
+    }
+
+    private record MonthCell(DateTime Date, List<WorkoutType> Types);
+}

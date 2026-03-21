@@ -1,0 +1,210 @@
+/* Wider panel for workout detail */
+::deep .dialog-panel {
+    max-width: 560px;
+    width: min(560px, 92vw);
+}
+
+.workout-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.status-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-label);
+}
+
+.status-badge--skipped {
+    color: var(--color-text-tertiary);
+}
+
+.workout-name--skipped {
+    text-decoration: line-through;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-body);
+    color: var(--color-text-primary);
+}
+
+.detail-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+}
+
+.detail-recurrence {
+    color: var(--color-text-secondary);
+}
+
+.detail-type {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-label);
+}
+
+.detail-type-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+}
+
+.detail-divider {
+    height: 1px;
+    background: var(--color-border-subtle);
+    margin: var(--space-md) 0;
+}
+
+.exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.exercise-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.exercise-name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+}
+
+.exercise-position {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    min-width: 20px;
+}
+
+.exercise-target {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+}
+
+.exercise-more {
+    font-size: var(--font-size-label);
+    color: var(--color-accent);
+    cursor: pointer;
+    padding-top: var(--space-xs);
+    background: none;
+    border: none;
+    font-family: var(--font-family);
+    text-align: left;
+}
+
+.exercise-more:hover {
+    text-decoration: underline;
+}
+
+.group-label {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-label);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
+    display: inline-block;
+}
+
+.group-label--superset {
+    color: var(--color-strength-text);
+    background: rgba(96, 165, 250, 0.1);
+}
+
+.group-label--emom {
+    color: var(--color-endurance-text);
+    background: rgba(52, 211, 153, 0.1);
+}
+
+.adhoc-note {
+    font-style: italic;
+    font-size: var(--font-size-body);
+    color: var(--color-text-tertiary);
+    margin: 0;
+}
+
+.detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-subtle);
+    flex-wrap: wrap;
+}
+
+.btn-ghost {
+    height: 40px;
+    padding: 0 var(--space-md);
+    background: transparent;
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.btn-ghost:hover {
+    border-color: var(--color-border-default);
+    color: var(--color-text-primary);
+    background: var(--color-bg-glass-hover);
+}
+
+.btn-ghost:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn-destructive {
+    background: none;
+    border: none;
+    color: var(--color-error);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+}
+
+.btn-destructive:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-destructive:focus-visible {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+}
+
+@media (max-width: 479px) {
+    ::deep .dialog-panel {
+        width: 95vw;
+    }
+
+    .detail-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-ghost,
+    .btn-destructive {
+        width: 100%;
+        text-align: center;
+    }
+}

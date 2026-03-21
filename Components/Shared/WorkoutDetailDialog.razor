@@ -1,0 +1,292 @@
+@using BlazorApp2.Data.Entities
+@using BlazorApp2.Data.Enums
+@using BlazorApp2.Services
+
+@inject SchedulingService SchedulingService
+
+<Dialog IsOpen="@IsOpen" Title="@(Workout?.DisplayName ?? "")" OnClose="@OnClose">
+    @if (Workout is not null)
+    {
+        <div class="workout-detail-content">
+            @* Status badge + skipped name styling *@
+            @if (Workout.Status == WorkoutStatus.Skipped)
+            {
+                <div class="status-badge status-badge--skipped">
+                    <span class="workout-name--skipped">@Workout.DisplayName</span>
+                    <span>Skipped</span>
+                </div>
+            }
+
+            @* Date row *@
+            <div class="detail-row">
+                <svg class="detail-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span>@Workout.ScheduledDate.ToString("dddd, MMMM d, yyyy")</span>
+            </div>
+
+            @* Recurrence summary *@
+            @if (Workout.RecurrenceRule != null)
+            {
+                <div class="detail-row detail-recurrence">
+                    <svg class="detail-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/>
+                        <path d="M20 4v4h-4M4 20v-4h4"/>
+                    </svg>
+                    <span>@GetRecurrenceSummary(Workout.RecurrenceRule)</span>
+                </div>
+            }
+
+            @* Type indicator *@
+            @{
+                var workoutType = SchedulingService.DetermineWorkoutType(Workout);
+                var typeColor = GetTypeColor(workoutType);
+                var typeLabel = GetTypeLabel(workoutType);
+            }
+            <div class="detail-type">
+                <span class="detail-type-dot" style="background: @typeColor"></span>
+                <span style="color: @typeColor">@typeLabel</span>
+            </div>
+
+            @* Exercise preview (template-based) *@
+            @if (Workout.WorkoutTemplate != null && Workout.WorkoutTemplate.Items.Any())
+            {
+                <div class="detail-divider"></div>
+
+                <div class="exercise-list">
+                    @{
+                        var orderedItems = Workout.WorkoutTemplate.Items
+                            .OrderBy(i => i.Position)
+                            .ToList();
+                        var displayItems = showAllExercises ? orderedItems : orderedItems.Take(5).ToList();
+                        var remainingCount = orderedItems.Count - 5;
+                        var processedIds = new HashSet<int>();
+                        var position = 1;
+                    }
+
+                    @foreach (var item in displayItems)
+                    {
+                        if (processedIds.Contains(item.Id))
+                        {
+                            continue;
+                        }
+
+                        @if (item.TemplateGroupId.HasValue && Workout.WorkoutTemplate.Groups.Any())
+                        {
+                            var group = Workout.WorkoutTemplate.Groups.FirstOrDefault(g => g.Id == item.TemplateGroupId.Value);
+                            if (group is not null)
+                            {
+                                var groupItems = displayItems.Where(i => i.TemplateGroupId == group.Id).ToList();
+
+                                <div class="group-label @(group.GroupType == GroupType.Superset ? "group-label--superset" : "group-label--emom")">
+                                    @if (group.GroupType == GroupType.Superset)
+                                    {
+                                        <span>SUPERSET</span>
+                                    }
+                                    else
+                                    {
+                                        <span>EMOM @(group.Rounds)x@(group.MinuteWindow)min</span>
+                                    }
+                                </div>
+
+                                @foreach (var groupItem in groupItems)
+                                {
+                                    processedIds.Add(groupItem.Id);
+                                    <div class="exercise-item">
+                                        <div class="exercise-name">
+                                            <span class="exercise-position">@position</span>
+                                            <span>@groupItem.Exercise.Name</span>
+                                        </div>
+                                        @{
+                                            var groupTarget = GetTargetSummary(groupItem);
+                                        }
+                                        @if (!string.IsNullOrEmpty(groupTarget))
+                                        {
+                                            <span class="exercise-target">@groupTarget</span>
+                                        }
+                                    </div>
+                                    position++;
+                                }
+                                continue;
+                            }
+                        }
+
+                        processedIds.Add(item.Id);
+                        <div class="exercise-item">
+                            <div class="exercise-name">
+                                <span class="exercise-position">@position</span>
+                                <span>@item.Exercise.Name</span>
+                            </div>
+                            @{
+                                var target = GetTargetSummary(item);
+                            }
+                            @if (!string.IsNullOrEmpty(target))
+                            {
+                                <span class="exercise-target">@target</span>
+                            }
+                        </div>
+                        position++;
+                    }
+
+                    @if (!showAllExercises && remainingCount > 0)
+                    {
+                        <button class="exercise-more" @onclick="() => showAllExercises = true">
+                            +@remainingCount more exercises
+                        </button>
+                    }
+                </div>
+            }
+
+            @* Ad-hoc note *@
+            @if (Workout.WorkoutTemplateId == null)
+            {
+                <p class="adhoc-note">Ad-hoc workout</p>
+            }
+
+            @* Footer actions *@
+            <div class="detail-footer">
+                @if (Workout.RecurrenceRuleId == null)
+                {
+                    @* One-off workout actions *@
+                    <button class="btn-ghost" @onclick="HandleEditDate">Edit Date</button>
+                    <button class="btn-destructive" @onclick="() => showRemoveConfirm = true">Remove</button>
+                }
+                else
+                {
+                    @* Recurring workout actions *@
+                    <button class="btn-ghost" @onclick="HandleSkip">Skip This One</button>
+                    <button class="btn-ghost" @onclick="HandleEditSchedule">Edit Schedule</button>
+                    <button class="btn-destructive" @onclick="() => showRemoveAllConfirm = true">Remove All</button>
+                }
+            </div>
+        </div>
+    }
+</Dialog>
+
+@* Remove single workout confirmation *@
+<DeleteConfirmationDialog IsOpen="@showRemoveConfirm"
+                           TemplateName="@GetRemoveTitle()"
+                           OnConfirm="HandleRemoveConfirm"
+                           OnCancel="() => showRemoveConfirm = false" />
+
+@* Remove recurring schedule confirmation *@
+<DeleteConfirmationDialog IsOpen="@showRemoveAllConfirm"
+                           TemplateName="@GetRemoveAllTitle()"
+                           OnConfirm="HandleRemoveAllConfirm"
+                           OnCancel="() => showRemoveAllConfirm = false" />
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public ScheduledWorkout? Workout { get; set; }
+    [Parameter] public EventCallback OnWorkoutChanged { get; set; }
+    [Parameter] public EventCallback<ScheduledWorkout> OnEditRequested { get; set; }
+
+    private bool showAllExercises = false;
+    private bool showRemoveConfirm = false;
+    private bool showRemoveAllConfirm = false;
+
+    private bool wasOpen = false;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen && !wasOpen)
+        {
+            showAllExercises = false;
+            showRemoveConfirm = false;
+            showRemoveAllConfirm = false;
+        }
+        wasOpen = IsOpen;
+    }
+
+    private string GetRecurrenceSummary(RecurrenceRule rule)
+    {
+        if (rule.FrequencyType == FrequencyType.Daily)
+            return $"Every {rule.Interval} days";
+
+        var dayNames = new List<string>();
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Monday)) dayNames.Add("Monday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Tuesday)) dayNames.Add("Tuesday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Wednesday)) dayNames.Add("Wednesday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Thursday)) dayNames.Add("Thursday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Friday)) dayNames.Add("Friday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Saturday)) dayNames.Add("Saturday");
+        if (rule.DaysOfWeek.HasFlag(DaysOfWeek.Sunday)) dayNames.Add("Sunday");
+        return $"Every {string.Join(", ", dayNames)}";
+    }
+
+    private string GetTargetSummary(TemplateItem item)
+    {
+        if (item.TargetSets.HasValue && item.TargetReps.HasValue)
+        {
+            var weight = item.TargetWeight.HasValue ? $" @ {item.TargetWeight}kg" : "";
+            return $"{item.TargetSets}x{item.TargetReps}{weight}";
+        }
+        var parts = new List<string>();
+        if (item.TargetDistance.HasValue) parts.Add($"{item.TargetDistance}km");
+        if (item.TargetDurationSeconds.HasValue)
+        {
+            var ts = TimeSpan.FromSeconds(item.TargetDurationSeconds.Value);
+            parts.Add(ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"));
+        }
+        return parts.Any() ? string.Join(" / ", parts) : "";
+    }
+
+    private string GetTypeColor(WorkoutType type) => type switch
+    {
+        WorkoutType.Strength => "var(--color-strength-text)",
+        WorkoutType.Endurance => "var(--color-endurance-text)",
+        WorkoutType.Mixed => "var(--color-mixed-text)",
+        _ => "var(--color-text-tertiary)"
+    };
+
+    private string GetTypeLabel(WorkoutType type) => type switch
+    {
+        WorkoutType.Strength => "Strength",
+        WorkoutType.Endurance => "Endurance",
+        WorkoutType.Mixed => "Mixed",
+        _ => "Ad-hoc"
+    };
+
+    private string GetRemoveTitle() => $"Remove \"{Workout?.DisplayName}\" from {Workout?.ScheduledDate.ToString("MMM d")}?";
+
+    private string GetRemoveAllTitle() => "Remove recurring schedule and all future occurrences? Past completed workouts are not affected.";
+
+    private async Task HandleSkip()
+    {
+        if (Workout == null) return;
+        await SchedulingService.SkipWorkoutAsync(Workout.Id);
+        await OnWorkoutChanged.InvokeAsync();
+    }
+
+    private void HandleEditDate()
+    {
+        if (Workout == null) return;
+        OnEditRequested.InvokeAsync(Workout);
+    }
+
+    private void HandleEditSchedule()
+    {
+        if (Workout == null) return;
+        OnEditRequested.InvokeAsync(Workout);
+    }
+
+    private async Task HandleRemoveConfirm()
+    {
+        if (Workout == null) return;
+        showRemoveConfirm = false;
+        await SchedulingService.RemoveWorkoutAsync(Workout.Id);
+        await OnWorkoutChanged.InvokeAsync();
+    }
+
+    private async Task HandleRemoveAllConfirm()
+    {
+        if (Workout == null || !Workout.RecurrenceRuleId.HasValue) return;
+        showRemoveAllConfirm = false;
+        await SchedulingService.RemoveRecurringAsync(Workout.RecurrenceRuleId.Value);
+        await OnWorkoutChanged.InvokeAsync();
+    }
+}
