@@ -40,14 +40,14 @@ created: 2026-03-21
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 01-01-01 | 01 | 1 | DATA-01 | integration | `dotnet test --filter "FullyQualifiedName~DbContextFactoryTests"` | ❌ W0 | ⬜ pending |
 | 01-01-02 | 01 | 1 | DATA-02 | integration | `dotnet test --filter "FullyQualifiedName~ExerciseHierarchyTests"` | ❌ W0 | ⬜ pending |
-| 01-01-03 | 01 | 1 | DATA-03 | integration | `dotnet test --filter "FullyQualifiedName~TemplateItemOrderTests"` | ❌ W0 | ⬜ pending |
-| 01-01-04 | 01 | 1 | DATA-04 | integration | `dotnet test --filter "FullyQualifiedName~TemplateGroupTests"` | ❌ W0 | ⬜ pending |
-| 01-01-05 | 01 | 1 | DATA-05 | integration | `dotnet test --filter "FullyQualifiedName~SectionTypeTests"` | ❌ W0 | ⬜ pending |
-| 01-01-06 | 01 | 1 | DATA-06 | integration | `dotnet test --filter "FullyQualifiedName~ScheduledWorkoutTests"` | ❌ W0 | ⬜ pending |
-| 01-01-07 | 01 | 1 | DATA-07 | integration | `dotnet test --filter "FullyQualifiedName~RecurrenceRuleTests"` | ❌ W0 | ⬜ pending |
-| 01-01-08 | 01 | 1 | DATA-08 | integration | `dotnet test --filter "FullyQualifiedName~WorkoutLogTests"` | ❌ W0 | ⬜ pending |
-| 01-01-09 | 01 | 1 | DATA-09 | integration | `dotnet test --filter "FullyQualifiedName~SetLogTests"` | ❌ W0 | ⬜ pending |
-| 01-01-10 | 01 | 1 | DATA-10 | integration | `dotnet test --filter "FullyQualifiedName~EnduranceLogTests"` | ❌ W0 | ⬜ pending |
+| 01-01-03 | 01 | 1 | DATA-03 | integration | `dotnet test --filter "FullyQualifiedName~TemplateTests"` | ❌ W0 | ⬜ pending |
+| 01-01-04 | 01 | 1 | DATA-04 | integration | `dotnet test --filter "FullyQualifiedName~TemplateTests"` | ❌ W0 | ⬜ pending |
+| 01-01-05 | 01 | 1 | DATA-05 | integration | `dotnet test --filter "FullyQualifiedName~TemplateTests"` | ❌ W0 | ⬜ pending |
+| 01-01-06 | 01 | 1 | DATA-06 | integration | `dotnet test --filter "FullyQualifiedName~ScheduleTests"` | ❌ W0 | ⬜ pending |
+| 01-01-07 | 01 | 1 | DATA-07 | integration | `dotnet test --filter "FullyQualifiedName~ScheduleTests"` | ❌ W0 | ⬜ pending |
+| 01-01-08 | 01 | 1 | DATA-08 | integration | `dotnet test --filter "FullyQualifiedName~LogTests"` | ❌ W0 | ⬜ pending |
+| 01-01-09 | 01 | 1 | DATA-09 | integration | `dotnet test --filter "FullyQualifiedName~LogTests"` | ❌ W0 | ⬜ pending |
+| 01-01-10 | 01 | 1 | DATA-10 | integration | `dotnet test --filter "FullyQualifiedName~LogTests"` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
