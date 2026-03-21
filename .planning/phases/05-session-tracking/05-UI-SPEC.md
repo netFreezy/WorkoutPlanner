@@ -33,7 +33,7 @@ Inherited from Phase 2. All tokens already defined in `wwwroot/app.css` `:root`.
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| xs | 4px | Icon gaps, set row internal padding, type label padding, progress segment gaps |
+| xs | 4px | Icon gaps, set row internal padding, type label padding |
 | sm | 8px | Compact element spacing, gap between set rows, exercise list item gaps |
 | md | 16px | Default element spacing, exercise card padding, form field margins |
 | lg | 24px | Section padding, session header padding, summary screen section margins |
@@ -224,7 +224,7 @@ font-variant-numeric: tabular-nums  /* prevents layout shift as digits change */
 - **Height:** 8px total bar + 24px label area = 32px total
 - **Background:** `var(--color-bg-primary)` with bottom padding `var(--space-sm)`
 - **Label:** "3/5 exercises" right-aligned, `--font-size-label`, `--color-text-secondary`
-- **Bar:** Flex row of segments, gap 2px, `border-radius: var(--radius-full)`, overflow hidden
+- **Bar:** Flex row of segments, gap: 0, `border-radius: var(--radius-full)`, overflow hidden
 
 **Segment:**
 ```
@@ -357,7 +357,7 @@ transition: background-color var(--transition-fast), border-color var(--transiti
 
 - **Weight input:** Compact number input, width 72px, pre-filled from `PlannedWeight`. Same `compact-input` style from ExerciseRow.razor.css (height 32px, centered text, hidden spinners). Placeholder shows planned value in `--color-text-tertiary`.
 - **"kg" label:** `--font-size-label`, `--color-text-tertiary`, flex-shrink 0
-- **"x" separator:** `--font-size-label`, `--color-text-tertiary`, padding 0 2px
+- **"x" separator:** `--font-size-label`, `--color-text-tertiary`, flex-shrink: 0 (spacing provided by parent flex gap)
 - **Reps input:** Compact number input, width 56px, pre-filled from `PlannedReps`. Same `compact-input` style.
 - **Checkmark button:** Circular, 36x36, accent when completed, glass when pending.
 
