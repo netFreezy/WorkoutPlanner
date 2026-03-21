@@ -83,11 +83,13 @@ Plans:
   3. User can schedule a workout from a template (or ad-hoc) on a specific date, and set recurrence rules (every Monday, every other day, 3x/week on specific days)
   4. Recurring workouts materialize as concrete scheduled rows for a rolling window -- "what's scheduled this week?" is a simple date query
   5. User sees a conflict warning when scheduling the same muscle group on consecutive days
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Schema change for ad-hoc workouts, MaterializationService, SchedulingService, and tests
+- [ ] 04-02-PLAN.md — Calendar page with weekly grid, WorkoutChip component, navigation, and nav link
+- [ ] 04-03-PLAN.md — ScheduleDialog with template picker, ad-hoc input, and recurrence configuration
+- [ ] 04-04-PLAN.md — MonthlyMiniCalendar, WorkoutDetailDialog, dialog wiring, and drag-to-reschedule
 
 ### Phase 5: Session Tracking
 **Goal**: Users can log workouts in real time with type-appropriate inputs, previous performance context, and full resilience against connection loss
@@ -145,7 +147,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 1. Data Foundation | 2/2 | Complete |  |
 | 2. Exercise Library | 3/4 | In Progress|  |
 | 3. Workout Templates | 3/5 | In Progress|  |
-| 4. Calendar & Scheduling | 0/? | Not started | - |
+| 4. Calendar & Scheduling | 0/4 | Not started | - |
 | 5. Session Tracking | 0/? | Not started | - |
 | 6. Analytics | 0/? | Not started | - |
 | 7. Quality of Life | 0/? | Not started | - |
