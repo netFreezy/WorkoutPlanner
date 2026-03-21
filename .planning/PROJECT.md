@@ -15,6 +15,11 @@ A single system where you plan, log, and analyze both strength and endurance tra
 - ✓ Blazor Server app scaffold with .NET 10 — existing
 - ✓ Interactive server rendering configured — existing
 - ✓ Layout system with navigation — existing
+- ✓ SQLite database with EF Core — Validated in Phase 01: data-foundation
+- ✓ Exercise type hierarchy (strength/endurance TPH) — Validated in Phase 01: data-foundation
+- ✓ Workout template model with grouping/ordering — Validated in Phase 01: data-foundation
+- ✓ Scheduling with recurrence rules — Validated in Phase 01: data-foundation
+- ✓ Session logging with planned-vs-actual tracking — Validated in Phase 01: data-foundation
 
 ### Active
 
@@ -59,10 +64,10 @@ A single system where you plan, log, and analyze both strength and endurance tra
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| SQLite with EF Core for data | Zero setup, easy backup, sufficient for single-user personal app | — Pending |
-| Strength/endurance type discriminator on Exercise entity | Allows shared library while preserving type-specific metadata and logging shapes | — Pending |
-| Planned vs. logged separation in data model | Enables adherence tracking and deviation analysis — see what you intended vs. what happened | — Pending |
-| Superset/EMOM as grouping constructs in templates | User's actual training patterns require this; most apps handle it poorly | — Pending |
+| SQLite with EF Core for data | Zero setup, easy backup, sufficient for single-user personal app | ✓ Phase 01 |
+| Strength/endurance type discriminator on Exercise entity | Allows shared library while preserving type-specific metadata and logging shapes | ✓ Phase 01 |
+| Planned vs. logged separation in data model | Enables adherence tracking and deviation analysis — see what you intended vs. what happened | ✓ Phase 01 |
+| Superset/EMOM as grouping constructs in templates | User's actual training patterns require this; most apps handle it poorly | ✓ Phase 01 |
 | Full vision as v1 scope | Personal app, user wants all features before switching from current workflow | — Pending |
 
 ## Evolution
@@ -83,4 +88,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-21 after initialization*
+*Last updated: 2026-03-21 after Phase 01 completion*
