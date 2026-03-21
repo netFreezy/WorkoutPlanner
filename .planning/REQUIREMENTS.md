@@ -20,9 +20,9 @@
 
 ### Exercise Library
 
-- [ ] **EXER-01**: Searchable, filterable exercise catalog by name, type, muscle group, and equipment
-- [ ] **EXER-02**: Custom exercise creation with name, type, muscle group, equipment, optional notes
-- [ ] **EXER-03**: Seed database with ~50 common exercises across strength and endurance
+- [x] **EXER-01**: Searchable, filterable exercise catalog by name, type, muscle group, and equipment
+- [x] **EXER-02**: Custom exercise creation with name, type, muscle group, equipment, optional notes
+- [x] **EXER-03**: Seed database with ~50 common exercises across strength and endurance
 
 ### Workout Templates
 
@@ -110,9 +110,9 @@
 | DATA-08 | Phase 1 | Complete |
 | DATA-09 | Phase 1 | Complete |
 | DATA-10 | Phase 1 | Complete |
-| EXER-01 | Phase 2 | Pending |
-| EXER-02 | Phase 2 | Pending |
-| EXER-03 | Phase 2 | Pending |
+| EXER-01 | Phase 2 | Complete |
+| EXER-02 | Phase 2 | Complete |
+| EXER-03 | Phase 2 | Complete |
 | TMPL-01 | Phase 3 | Pending |
 | TMPL-02 | Phase 3 | Pending |
 | TMPL-03 | Phase 3 | Pending |

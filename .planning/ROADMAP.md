@@ -49,7 +49,7 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Seed ~50 exercises into database via EF Core HasData migration + data-layer tests
+- [x] 02-01-PLAN.md — Seed ~50 exercises into database via EF Core HasData migration + data-layer tests
 - [ ] 02-02-PLAN.md — Exercise library page with card grid, search/filter, detail dialog, and navigation bar
 - [ ] 02-03-PLAN.md — Custom exercise creation dialog with polymorphic form, FAB trigger, and success toast
 - [ ] 02-04-PLAN.md — Premium dark-mode design system: CSS tokens, Inter font, glassmorphism, card animations, tag glow, frosted dialogs
