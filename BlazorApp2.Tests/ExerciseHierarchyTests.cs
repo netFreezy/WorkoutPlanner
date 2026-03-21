@@ -18,7 +18,7 @@ public class ExerciseHierarchyTests : DataTestBase
         });
         await Context.SaveChangesAsync();
 
-        var result = await Context.Exercises.FirstAsync();
+        var result = await Context.Exercises.FirstAsync(e => e.Name == "Bench Press");
 
         var strength = Assert.IsType<StrengthExercise>(result);
         Assert.Equal("Bench Press", strength.Name);
@@ -37,7 +37,7 @@ public class ExerciseHierarchyTests : DataTestBase
         });
         await Context.SaveChangesAsync();
 
-        var result = await Context.Exercises.FirstAsync();
+        var result = await Context.Exercises.FirstAsync(e => e.Name == "5K Run");
 
         var endurance = Assert.IsType<EnduranceExercise>(result);
         Assert.Equal("5K Run", endurance.Name);
@@ -47,67 +47,43 @@ public class ExerciseHierarchyTests : DataTestBase
     [Fact]
     public async Task BothTypes_QueryFromExercisesBase_ReturnsCorrectDiscriminators()
     {
-        Context.StrengthExercises.Add(new StrengthExercise
-        {
-            Name = "Pull-Up",
-            MuscleGroup = MuscleGroup.Back,
-            Equipment = Equipment.Bodyweight
-        });
-        Context.EnduranceExercises.Add(new EnduranceExercise
-        {
-            Name = "Cycling",
-            ActivityType = ActivityType.Cycle
-        });
-        await Context.SaveChangesAsync();
+        // Seed data already provides both types; verify discriminators work
+        var strengthFromBase = await Context.Exercises
+            .Where(e => e.Name == "Pull-Up")
+            .FirstAsync();
+        var enduranceFromBase = await Context.Exercises
+            .Where(e => e.Name == "Easy Run")
+            .FirstAsync();
 
-        var exercises = await Context.Exercises.OrderBy(e => e.Name).ToListAsync();
-
-        Assert.Equal(2, exercises.Count);
-        Assert.IsType<EnduranceExercise>(exercises[0]); // Cycling
-        Assert.IsType<StrengthExercise>(exercises[1]);  // Pull-Up
+        Assert.IsType<StrengthExercise>(strengthFromBase);
+        Assert.IsType<EnduranceExercise>(enduranceFromBase);
     }
 
     [Fact]
     public async Task StrengthExercisesDbSet_ReturnsOnlyStrengthExercises()
     {
-        Context.StrengthExercises.Add(new StrengthExercise
-        {
-            Name = "Squat",
-            MuscleGroup = MuscleGroup.Legs,
-            Equipment = Equipment.Barbell
-        });
-        Context.EnduranceExercises.Add(new EnduranceExercise
-        {
-            Name = "Swimming",
-            ActivityType = ActivityType.Swim
-        });
-        await Context.SaveChangesAsync();
-
         var strengthOnly = await Context.StrengthExercises.ToListAsync();
+        var enduranceOnly = await Context.EnduranceExercises.ToListAsync();
 
-        Assert.Single(strengthOnly);
-        Assert.Equal("Squat", strengthOnly[0].Name);
+        Assert.NotEmpty(strengthOnly);
+        Assert.All(strengthOnly, e => Assert.IsType<StrengthExercise>(e));
+
+        // Verify no overlap -- strength names should not appear in endurance
+        var enduranceNames = enduranceOnly.Select(e => e.Name).ToHashSet();
+        Assert.All(strengthOnly, e => Assert.DoesNotContain(e.Name, enduranceNames));
     }
 
     [Fact]
     public async Task EnduranceExercisesDbSet_ReturnsOnlyEnduranceExercises()
     {
-        Context.StrengthExercises.Add(new StrengthExercise
-        {
-            Name = "Deadlift",
-            MuscleGroup = MuscleGroup.Back,
-            Equipment = Equipment.Barbell
-        });
-        Context.EnduranceExercises.Add(new EnduranceExercise
-        {
-            Name = "Rowing",
-            ActivityType = ActivityType.Row
-        });
-        await Context.SaveChangesAsync();
-
         var enduranceOnly = await Context.EnduranceExercises.ToListAsync();
+        var strengthOnly = await Context.StrengthExercises.ToListAsync();
 
-        Assert.Single(enduranceOnly);
-        Assert.Equal("Rowing", enduranceOnly[0].Name);
+        Assert.NotEmpty(enduranceOnly);
+        Assert.All(enduranceOnly, e => Assert.IsType<EnduranceExercise>(e));
+
+        // Verify no overlap -- endurance names should not appear in strength
+        var strengthNames = strengthOnly.Select(e => e.Name).ToHashSet();
+        Assert.All(enduranceOnly, e => Assert.DoesNotContain(e.Name, strengthNames));
     }
 }

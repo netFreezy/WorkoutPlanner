@@ -7,12 +7,13 @@ namespace BlazorApp2.Tests;
 public class DbContextFactoryTests : DataTestBase
 {
     [Fact]
-    public async Task ExercisesDbSet_IsQueryable_ReturnsEmptyList()
+    public async Task ExercisesDbSet_IsQueryable_ReturnsSeedData()
     {
         var exercises = await Context.Exercises.ToListAsync();
 
         Assert.NotNull(exercises);
-        Assert.Empty(exercises);
+        Assert.NotEmpty(exercises);
+        Assert.Equal(50, exercises.Count);
     }
 
     [Fact]
@@ -25,6 +26,8 @@ public class DbContextFactoryTests : DataTestBase
 
         using var context2 = new AppDbContext(options);
 
+        var seedCount = await Context.Exercises.CountAsync();
+
         Context.StrengthExercises.Add(new StrengthExercise
         {
             Name = "Test Exercise",
@@ -34,7 +37,7 @@ public class DbContextFactoryTests : DataTestBase
         await Context.SaveChangesAsync();
 
         var exercises = await context2.Exercises.ToListAsync();
-        Assert.Single(exercises);
-        Assert.Equal("Test Exercise", exercises[0].Name);
+        Assert.Equal(seedCount + 1, exercises.Count);
+        Assert.Contains(exercises, e => e.Name == "Test Exercise");
     }
 }
