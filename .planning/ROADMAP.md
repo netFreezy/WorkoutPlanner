@@ -100,12 +100,14 @@ Plans:
   2. User can see their previous performance for each exercise inline while logging, and a rest timer auto-starts after completing a set
   3. User can mark individual exercises as completed, partially completed, or skipped, and rate the session with RPE (1-10) and free-text notes
   4. Progress is saved to the database incrementally on every set completion -- if the browser tab dies or the connection drops, the user can reopen the app and resume the session exactly where they left off
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md — SessionService, ExerciseCompletionStatus enum, CSS tokens/animations, DI registration
+- [ ] 05-02-PLAN.md — SessionTests: 16 integration tests covering all service operations
+- [ ] 05-03-PLAN.md — Session page (landing + active) and SessionExerciseItem component
+- [ ] 05-04-PLAN.md — WorkoutDetailDialog "Start Session" button and MainLayout nav link
+- [ ] 05-05-PLAN.md — SessionSummary overlay, AbandonSessionDialog, NavigationLock wiring
 
 ### Phase 6: Analytics
 **Goal**: Users can view unified training progress across strength and endurance with automatic PR detection and adherence tracking
@@ -148,6 +150,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 2. Exercise Library | 3/4 | In Progress|  |
 | 3. Workout Templates | 3/5 | In Progress|  |
 | 4. Calendar & Scheduling | 0/4 | Not started | - |
-| 5. Session Tracking | 0/? | Not started | - |
+| 5. Session Tracking | 0/5 | Not started | - |
 | 6. Analytics | 0/? | Not started | - |
 | 7. Quality of Life | 0/? | Not started | - |
