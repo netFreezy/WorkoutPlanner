@@ -219,7 +219,7 @@ Accent reserved for: FAB, primary submit button in create dialog, active filter 
 | Border | 1px solid `#2E7D32` |
 | Border radius | 8px |
 | Padding | 12px 16px |
-| Font size | 14px |
+| Font size | 16px (body size) |
 | Duration | 3 seconds, auto-dismiss |
 | Animation | Fade in (opacity 0 to 1 over 200ms), fade out at end |
 | Copy | "{Exercise Name} added to library" |
