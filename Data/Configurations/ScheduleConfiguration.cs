@@ -11,7 +11,7 @@ public class ScheduledWorkoutConfiguration : IEntityTypeConfiguration<ScheduledW
         builder.HasOne(sw => sw.WorkoutTemplate)
             .WithMany()
             .HasForeignKey(sw => sw.WorkoutTemplateId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(sw => sw.RecurrenceRule)
             .WithMany(rr => rr.ScheduledWorkouts)
@@ -19,6 +19,8 @@ public class ScheduledWorkoutConfiguration : IEntityTypeConfiguration<ScheduledW
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(sw => sw.ScheduledDate);
+
+        builder.Property(sw => sw.AdHocName).HasMaxLength(200);
     }
 }
 
@@ -29,6 +31,8 @@ public class RecurrenceRuleConfiguration : IEntityTypeConfiguration<RecurrenceRu
         builder.HasOne(rr => rr.WorkoutTemplate)
             .WithMany()
             .HasForeignKey(rr => rr.WorkoutTemplateId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(rr => rr.AdHocName).HasMaxLength(200);
     }
 }

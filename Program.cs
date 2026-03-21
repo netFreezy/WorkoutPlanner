@@ -1,5 +1,6 @@
 using BlazorApp2.Components;
 using BlazorApp2.Data;
+using BlazorApp2.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<MaterializationService>();
+builder.Services.AddScoped<SchedulingService>();
 
 var app = builder.Build();
 
