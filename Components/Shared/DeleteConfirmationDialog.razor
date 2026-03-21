@@ -1,8 +1,14 @@
-@* Stub - fully implemented in Task 2 *@
-@if (IsOpen)
-{
-    <div>Delete @TemplateName?</div>
-}
+<Dialog IsOpen="@IsOpen" Title="Delete Template" OnClose="@OnCancel">
+    <div class="delete-dialog-content">
+        <p class="delete-dialog-message">
+            Are you sure you want to delete "@TemplateName"? This action cannot be undone.
+        </p>
+        <div class="delete-dialog-footer">
+            <button class="keep-btn" @onclick="OnCancel">Keep Template</button>
+            <button class="destructive-btn" @onclick="OnConfirm">Delete Template</button>
+        </div>
+    </div>
+</Dialog>
 
 @code {
     [Parameter] public bool IsOpen { get; set; }

@@ -1,0 +1,67 @@
+.delete-dialog-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.delete-dialog-message {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0;
+}
+
+.delete-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.keep-btn {
+    height: 44px;
+    padding: 0 var(--space-lg);
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.keep-btn:hover {
+    border-color: var(--color-border-default);
+    color: var(--color-text-primary);
+    background: var(--color-bg-glass-hover);
+}
+
+.destructive-btn {
+    height: 44px;
+    padding: 0 var(--space-lg);
+    background: var(--color-error);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.destructive-btn:hover {
+    background: #DC2626;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.30);
+}
+
+.destructive-btn:active {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+}
+
+.destructive-btn:focus-visible {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+}

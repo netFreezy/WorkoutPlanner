@@ -1,8 +1,141 @@
-@* Stub - fully implemented in Task 2 *@
-@if (IsOpen && Template is not null)
-{
-    <div>@Template.Name</div>
-}
+<Dialog IsOpen="@IsOpen" Title="@(Template?.Name ?? "")" OnClose="@OnClose">
+    @if (Template is not null)
+    {
+        <div class="template-detail-content">
+            <div class="detail-header-row">
+                <div class="detail-header-actions">
+                    <button class="duplicate-btn" @onclick="() => OnDuplicate.InvokeAsync(Template)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        Duplicate
+                    </button>
+                    <button class="edit-header-btn" @onclick="() => OnEdit.InvokeAsync(Template)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Edit
+                    </button>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Template.Description))
+            {
+                <p class="detail-description">@Template.Description</p>
+            }
+
+            @if (Template.Tags.Any())
+            {
+                <div class="detail-tags">
+                    @foreach (var tag in Template.Tags)
+                    {
+                        <span class="detail-tag-chip">@tag</span>
+                    }
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(EstimatedDuration))
+            {
+                <div class="detail-duration">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    @EstimatedDuration
+                </div>
+            }
+
+            @foreach (var section in Enum.GetValues<SectionType>())
+            {
+                var sectionItems = Template.Items
+                    .Where(i => i.SectionType == section)
+                    .OrderBy(i => i.Position)
+                    .ToList();
+
+                @if (sectionItems.Any() || section == SectionType.Working)
+                {
+                    <div class="section-block">
+                        <div class="section-header section-header--@(section.ToString().ToLower())">
+                            <span class="section-label">@FormatSectionName(section)</span>
+                            <span class="section-count">@sectionItems.Count</span>
+                        </div>
+
+                        @if (sectionItems.Any())
+                        {
+                            var positionInSection = 1;
+                            var processedItems = new HashSet<int>();
+
+                            @foreach (var item in sectionItems)
+                            {
+                                @if (processedItems.Contains(item.Id))
+                                {
+                                    continue;
+                                }
+
+                                @if (item.TemplateGroupId.HasValue)
+                                {
+                                    var group = Template.Groups.FirstOrDefault(g => g.Id == item.TemplateGroupId.Value);
+                                    @if (group is not null)
+                                    {
+                                        var groupItems = sectionItems
+                                            .Where(i => i.TemplateGroupId == group.Id)
+                                            .ToList();
+
+                                        <div class="group-block">
+                                            <div class="group-indicator group-indicator--@(group.GroupType == GroupType.Superset ? "superset" : "emom")">
+                                                @if (group.GroupType == GroupType.Superset)
+                                                {
+                                                    <span>SUPERSET</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>EMOM @(group.Rounds)x@(group.MinuteWindow)min</span>
+                                                }
+                                            </div>
+
+                                            @foreach (var groupItem in groupItems)
+                                            {
+                                                processedItems.Add(groupItem.Id);
+                                                <div class="detail-exercise-row">
+                                                    <div class="detail-exercise-left">
+                                                        <span class="detail-position">@positionInSection</span>
+                                                        <span class="detail-exercise-name">@groupItem.Exercise.Name</span>
+                                                        <span class="type-tag @(groupItem.Exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance")">
+                                                            @(groupItem.Exercise is StrengthExercise ? "S" : "E")
+                                                        </span>
+                                                    </div>
+                                                    <span class="detail-targets">@FormatTargets(groupItem)</span>
+                                                </div>
+                                                positionInSection++;
+                                            }
+                                        </div>
+
+                                        continue;
+                                    }
+                                }
+
+                                processedItems.Add(item.Id);
+                                <div class="detail-exercise-row">
+                                    <div class="detail-exercise-left">
+                                        <span class="detail-position">@positionInSection</span>
+                                        <span class="detail-exercise-name">@item.Exercise.Name</span>
+                                        <span class="type-tag @(item.Exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance")">
+                                            @(item.Exercise is StrengthExercise ? "S" : "E")
+                                        </span>
+                                    </div>
+                                    <span class="detail-targets">@FormatTargets(item)</span>
+                                </div>
+                                positionInSection++;
+                            }
+                        }
+                        else
+                        {
+                            <p class="section-empty">No exercises in this section</p>
+                        }
+                    </div>
+                }
+            }
+
+            <div class="detail-footer">
+                <button class="edit-btn" @onclick="() => OnEdit.InvokeAsync(Template)">Edit Template</button>
+                <button class="delete-btn" @onclick="() => OnDelete.InvokeAsync()">Delete</button>
+            </div>
+        </div>
+    }
+</Dialog>
 
 @code {
     [Parameter] public bool IsOpen { get; set; }
@@ -12,4 +145,46 @@
     [Parameter] public EventCallback<WorkoutTemplate> OnDuplicate { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
     [Parameter] public string EstimatedDuration { get; set; } = "";
+
+    private static string FormatSectionName(SectionType section) => section switch
+    {
+        SectionType.WarmUp => "WARM-UP",
+        SectionType.Working => "WORKING",
+        SectionType.CoolDown => "COOL-DOWN",
+        _ => section.ToString().ToUpper()
+    };
+
+    private static string FormatTargets(TemplateItem item)
+    {
+        if (item.Exercise is StrengthExercise)
+        {
+            var parts = new List<string>();
+            if (item.TargetSets.HasValue && item.TargetReps.HasValue)
+                parts.Add($"{item.TargetSets}x{item.TargetReps}");
+            else if (item.TargetSets.HasValue)
+                parts.Add($"{item.TargetSets} sets");
+            else if (item.TargetReps.HasValue)
+                parts.Add($"{item.TargetReps} reps");
+
+            if (item.TargetWeight.HasValue)
+                parts.Add($"@ {item.TargetWeight}kg");
+
+            return parts.Any() ? string.Join(" ", parts) : "";
+        }
+        else
+        {
+            var parts = new List<string>();
+            if (item.TargetDistance.HasValue)
+                parts.Add($"{item.TargetDistance}km");
+            if (item.TargetDurationSeconds.HasValue)
+            {
+                var ts = TimeSpan.FromSeconds(item.TargetDurationSeconds.Value);
+                parts.Add(ts.ToString(@"mm\:ss"));
+            }
+            if (item.TargetHeartRateZone.HasValue)
+                parts.Add($"Z{item.TargetHeartRateZone}");
+
+            return parts.Any() ? string.Join(" / ", parts) : "";
+        }
+    }
 }
