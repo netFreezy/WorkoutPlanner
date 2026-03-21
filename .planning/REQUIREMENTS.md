@@ -7,16 +7,16 @@
 
 ### Data Foundation
 
-- [ ] **DATA-01**: EF Core with SQLite using `IDbContextFactory` pattern (not scoped DbContext)
-- [ ] **DATA-02**: Exercise entity with TPH inheritance — StrengthExercise and EnduranceExercise subtypes with type-specific metadata (muscle group, equipment, activity type)
-- [ ] **DATA-03**: WorkoutTemplate entity with ordered TemplateItems supporting both strength targets (sets/reps/weight) and endurance targets (distance/duration/pace/HR zone)
-- [ ] **DATA-04**: Superset and EMOM grouping constructs within templates
-- [ ] **DATA-05**: Warm-up and cool-down block sections in templates (excluded from working volume stats)
-- [ ] **DATA-06**: ScheduledWorkout entity with date, status (planned/completed/skipped), and template snapshot
-- [ ] **DATA-07**: RecurrenceRule support — every X days, specific weekdays, every other day
-- [ ] **DATA-08**: WorkoutLog entity with planned-vs-actual separation — snapshot planned targets at session creation
-- [ ] **DATA-09**: Strength log entries: actual sets with reps and weight per set, set type (warm-up/working/failure/drop)
-- [ ] **DATA-10**: Endurance log entries: actual distance, duration, pace, optional HR data
+- [x] **DATA-01**: EF Core with SQLite using `IDbContextFactory` pattern (not scoped DbContext)
+- [x] **DATA-02**: Exercise entity with TPH inheritance — StrengthExercise and EnduranceExercise subtypes with type-specific metadata (muscle group, equipment, activity type)
+- [x] **DATA-03**: WorkoutTemplate entity with ordered TemplateItems supporting both strength targets (sets/reps/weight) and endurance targets (distance/duration/pace/HR zone)
+- [x] **DATA-04**: Superset and EMOM grouping constructs within templates
+- [x] **DATA-05**: Warm-up and cool-down block sections in templates (excluded from working volume stats)
+- [x] **DATA-06**: ScheduledWorkout entity with date, status (planned/completed/skipped), and template snapshot
+- [x] **DATA-07**: RecurrenceRule support — every X days, specific weekdays, every other day
+- [x] **DATA-08**: WorkoutLog entity with planned-vs-actual separation — snapshot planned targets at session creation
+- [x] **DATA-09**: Strength log entries: actual sets with reps and weight per set, set type (warm-up/working/failure/drop)
+- [x] **DATA-10**: Endurance log entries: actual distance, duration, pace, optional HR data
 
 ### Exercise Library
 
@@ -100,16 +100,16 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
-| DATA-07 | Phase 1 | Pending |
-| DATA-08 | Phase 1 | Pending |
-| DATA-09 | Phase 1 | Pending |
-| DATA-10 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
+| DATA-03 | Phase 1 | Complete |
+| DATA-04 | Phase 1 | Complete |
+| DATA-05 | Phase 1 | Complete |
+| DATA-06 | Phase 1 | Complete |
+| DATA-07 | Phase 1 | Complete |
+| DATA-08 | Phase 1 | Complete |
+| DATA-09 | Phase 1 | Complete |
+| DATA-10 | Phase 1 | Complete |
 | EXER-01 | Phase 2 | Pending |
 | EXER-02 | Phase 2 | Pending |
 | EXER-03 | Phase 2 | Pending |
