@@ -8,7 +8,7 @@
 
     <div class="filter-bar">
         <div class="filter-bar-row">
-            <div class="search-wrapper">
+            <div class="search-input-wrapper">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                 <input type="text" class="search-input" placeholder="Search exercises..."
                        @bind="searchText" @bind:event="oninput" aria-label="Search exercises" />
@@ -81,9 +81,7 @@
             @{ var index = 0; }
             @foreach (var exercise in FilteredExercises)
             {
-                <div style="--card-index: @(index < 10 ? index : 10)">
-                    <ExerciseCard Exercise="@exercise" OnClick="@ShowDetail" />
-                </div>
+                <ExerciseCard Exercise="@exercise" OnClick="@ShowDetail" Index="@(index % 10)" />
                 index++;
             }
         </div>

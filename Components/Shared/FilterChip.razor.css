@@ -11,12 +11,12 @@
     letter-spacing: var(--letter-spacing-label);
     color: var(--color-accent-hover);
     line-height: var(--line-height-label);
+    transition: background-color var(--transition-fast);
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .filter-chip {
-        animation: chipIn 200ms ease;
-        transition: background var(--transition-fast);
+        animation: chipIn 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 }
 
@@ -30,22 +30,13 @@
     cursor: pointer;
     color: var(--color-accent-hover);
     padding: 0;
-    line-height: 0;
+    line-height: 1;
     display: flex;
     align-items: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .filter-chip-remove {
-        transition: color var(--transition-fast);
-    }
+    margin-left: var(--space-xs);
+    transition: color var(--transition-fast);
 }
 
 .filter-chip-remove:hover {
-    color: var(--color-text-primary);
-}
-
-@keyframes chipIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    color: #FFFFFF;
 }

@@ -1,4 +1,4 @@
-<div class="exercise-card" tabindex="0" @onclick="() => OnClick.InvokeAsync(Exercise)" @onkeydown="HandleKeyDown">
+<div class="exercise-card" tabindex="0" style="--card-index: @Index" @onclick="() => OnClick.InvokeAsync(Exercise)" @onkeydown="HandleKeyDown">
     <div class="exercise-card-name">@Exercise.Name</div>
     <span class="type-tag @GetTypeTagClass()">@GetTypeLabel()</span>
 </div>
@@ -6,6 +6,7 @@
 @code {
     [Parameter] public Exercise Exercise { get; set; } = null!;
     [Parameter] public EventCallback<Exercise> OnClick { get; set; }
+    [Parameter] public int Index { get; set; }
 
     private string GetTypeTagClass() => Exercise is StrengthExercise ? "type-tag--strength" : "type-tag--endurance";
     private string GetTypeLabel() => Exercise is StrengthExercise ? "Strength" : "Endurance";

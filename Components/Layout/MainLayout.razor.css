@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     padding: 0 var(--space-xl);
-    z-index: var(--z-nav, 60);
+    z-index: var(--z-nav);
 }
 
 .nav-title {
@@ -37,12 +37,7 @@
     align-items: center;
     border-bottom: 2px solid transparent;
     padding: 0 var(--space-xs);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .nav-link {
-        transition: color var(--transition-fast);
-    }
+    transition: color var(--transition-fast);
 }
 
 .nav-link:hover {

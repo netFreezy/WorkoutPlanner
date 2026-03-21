@@ -13,13 +13,16 @@
     margin: 0 0 var(--space-md) 0;
 }
 
-/* Search/filter bar */
+/* Search/filter bar - glassmorphism */
 .filter-bar {
+    position: sticky;
+    top: 60px;
+    z-index: 40;
     background: var(--color-bg-secondary);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border-subtle);
     padding: var(--space-md) var(--space-xl);
     margin-bottom: var(--space-md);
 }
@@ -30,9 +33,9 @@
     align-items: center;
 }
 
-.search-wrapper {
-    position: relative;
+.search-input-wrapper {
     flex: 1;
+    position: relative;
 }
 
 .search-icon {
@@ -46,13 +49,14 @@
 
 .search-input {
     width: 100%;
-    padding: 10px 16px 10px 40px;
+    padding: 10px var(--space-md) 10px 40px;
     border: 1px solid var(--color-input-border);
     border-radius: var(--radius-sm);
     font-size: var(--font-size-body);
     font-family: var(--font-family);
     color: var(--color-text-primary);
     background: var(--color-input-bg);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     box-sizing: border-box;
 }
 
@@ -64,12 +68,6 @@
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.20);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .search-input {
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
 }
 
 .filter-selects {
@@ -90,6 +88,7 @@
     background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(240,240,245,0.4)' stroke-width='2' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .filter-select option {
@@ -101,12 +100,6 @@
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.20);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .filter-select {
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
 }
 
 /* Filter chips */
@@ -138,28 +131,16 @@
     font-size: var(--font-size-label);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-tertiary);
-    margin: 0 0 var(--space-md) 0;
+    margin: 0 0 var(--space-sm) 0;
     line-height: var(--line-height-label);
     letter-spacing: var(--letter-spacing-label);
 }
 
-/* Card grid */
+/* Card grid with staggered entry animation */
 .exercise-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-md);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .exercise-grid > div {
-        animation: fadeSlideIn 300ms ease backwards;
-        animation-delay: calc(var(--card-index, 0) * 50ms);
-    }
-}
-
-@keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* States */
@@ -202,11 +183,11 @@
     color: var(--color-accent-hover);
 }
 
-/* FAB */
+/* FAB - gradient with glow */
 .fab {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
     width: 56px;
     height: 56px;
     border-radius: var(--radius-full);
@@ -216,13 +197,12 @@
     font-size: 24px;
     cursor: pointer;
     box-shadow: var(--shadow-md);
-    z-index: var(--z-fab, 50);
+    z-index: var(--z-fab);
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
     transition: transform var(--transition-fast), box-shadow var(--transition-normal), background var(--transition-fast);
-    line-height: 0;
-    padding: 0;
 }
 
 .fab:hover {
@@ -243,13 +223,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
     .fab {
-        animation: fabIn 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms backwards;
+        animation: fabIn 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms both;
     }
-}
-
-@keyframes fabIn {
-    from { transform: scale(0) rotate(-90deg); }
-    to { transform: scale(1) rotate(0deg); }
 }
 
 /* Responsive */
@@ -266,7 +241,11 @@
         flex-direction: column;
     }
 
-    .search-wrapper {
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .search-input {
         width: 100%;
     }
 
@@ -291,7 +270,7 @@
     }
 
     .fab {
-        bottom: 16px;
-        right: 16px;
+        bottom: var(--space-md);
+        right: var(--space-md);
     }
 }
