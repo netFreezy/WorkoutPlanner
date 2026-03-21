@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. WorkoutTemplate with ordered TemplateItems, grouping constructs (superset/EMOM), and section types (warm-up/working/cool-down) round-trips through the database
   4. ScheduledWorkout with RecurrenceRule and WorkoutLog with planned-vs-actual separation (strength SetLog, endurance EnduranceLog) persist and retrieve correctly
   5. EF Core migrations apply cleanly to a fresh SQLite database
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans executed
 
 Plans:
 - [x] 01-01-PLAN.md — Entity model, enums, DbContext, fluent configurations, and initial migration
@@ -46,10 +46,12 @@ Plans:
   1. User can browse a pre-loaded catalog of ~50 exercises spanning both strength and endurance types
   2. User can search exercises by name and filter by type (strength/endurance), muscle group, and equipment
   3. User can create a custom exercise with name, type, muscle group, equipment, and optional notes, and it appears in the catalog immediately
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Seed ~50 exercises into database via EF Core HasData migration + data-layer tests
+- [ ] 02-02-PLAN.md — Exercise library page with card grid, search/filter, detail dialog, and navigation bar
+- [ ] 02-03-PLAN.md — Custom exercise creation dialog with polymorphic form, FAB trigger, and success toast
 
 ### Phase 3: Workout Templates
 **Goal**: Users can build reusable workout blueprints with ordered exercises, type-appropriate targets, grouping constructs, and warm-up/cool-down sections
@@ -136,8 +138,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation | 1/2 | In Progress|  |
-| 2. Exercise Library | 0/? | Not started | - |
+| 1. Data Foundation | 2/2 | Complete |  |
+| 2. Exercise Library | 0/3 | In Progress | - |
 | 3. Workout Templates | 0/? | Not started | - |
 | 4. Calendar & Scheduling | 0/? | Not started | - |
 | 5. Session Tracking | 0/? | Not started | - |
