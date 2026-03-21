@@ -49,8 +49,8 @@
     margin-bottom: 6px;
 }
 
-.form-input,
-.form-textarea {
+::deep .form-input,
+::deep .form-textarea {
     width: 100%;
     padding: 10px var(--space-md) 10px var(--space-md);
     border: 1px solid var(--color-input-border);
@@ -63,33 +63,33 @@
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.form-textarea {
+::deep .form-textarea {
     min-height: 80px;
     resize: vertical;
 }
 
-.form-input::placeholder,
-.form-textarea::placeholder {
+::deep .form-input::placeholder,
+::deep .form-textarea::placeholder {
     color: var(--color-text-tertiary);
 }
 
-.form-input:focus,
-.form-textarea:focus {
+::deep .form-input:focus,
+::deep .form-textarea:focus {
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.20);
 }
 
 /* Blazor validation CSS classes */
-.form-input.invalid,
-.form-textarea.invalid,
-.form-input.modified.invalid,
-.form-textarea.modified.invalid {
+::deep .form-input.invalid,
+::deep .form-textarea.invalid,
+::deep .form-input.modified.invalid,
+::deep .form-textarea.modified.invalid {
     border-color: var(--color-error);
     box-shadow: 0 0 0 3px var(--color-error-bg);
 }
 
-.validation-message {
+::deep .validation-message {
     color: var(--color-error);
     font-size: var(--font-size-label);
     margin-top: var(--space-xs);
@@ -141,7 +141,7 @@
 }
 
 /* Select dropdown option styling */
-.form-input option {
+::deep .form-input option {
     background: var(--color-bg-elevated);
     color: var(--color-text-primary);
 }
