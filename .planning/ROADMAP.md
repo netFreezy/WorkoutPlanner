@@ -86,7 +86,7 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Schema change for ad-hoc workouts, MaterializationService, SchedulingService, and tests
+- [x] 04-01-PLAN.md — Schema change for ad-hoc workouts, MaterializationService, SchedulingService, and tests
 - [ ] 04-02-PLAN.md — Calendar page with weekly grid, WorkoutChip component, navigation, and nav link
 - [ ] 04-03-PLAN.md — ScheduleDialog with template picker, ad-hoc input, and recurrence configuration
 - [ ] 04-04-PLAN.md — MonthlyMiniCalendar, WorkoutDetailDialog, dialog wiring, and drag-to-reschedule

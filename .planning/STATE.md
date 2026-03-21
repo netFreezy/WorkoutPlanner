@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-03-21T19:22:58.735Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-21T20:21:35.363Z"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 15
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** A single system where you plan, log, and analyze both strength and endurance training side by side
-**Current focus:** Phase 03 — workout-templates
+**Current focus:** Phase 04 — calendar-scheduling
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (calendar-scheduling) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: Not started
 | Phase 03 P03 | 6min | 2 tasks | 12 files |
 | Phase 03 P04 | 4min | 2 tasks | 7 files |
 | Phase 03 P05 | 4min | 2 tasks | 6 files |
+| Phase 04 P01 | 7min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Recent decisions affecting current work:
 - [Phase 03]: SectionEntry record pattern to pre-compute grouped items, avoiding Razor code block limitations in foreach loops
 - [Phase 03]: AddWarmUp/CoolDown require selected exercises first, toast notification if none selected; EMOM defaults 5 rounds x 1 min
 - [Phase 03]: SortableJS loaded as global script; DOM revert pattern for Blazor compatibility; cross-section detection via backward data-section scan
+- [Phase 04]: TestDbContextFactory creates new contexts per call sharing same SQLite connection for service testing
+- [Phase 04]: GenerateOccurrences is static pure method for testability without DB dependency
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T19:18:10.031Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-03-21T20:21:35.360Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
