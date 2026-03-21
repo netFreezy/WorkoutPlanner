@@ -1,0 +1,21 @@
+using BlazorApp2.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace BlazorApp2.Data.Configurations;
+
+public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
+{
+    public void Configure(EntityTypeBuilder<Exercise> builder)
+    {
+        builder.HasDiscriminator<string>("ExerciseType")
+            .HasValue<StrengthExercise>("Strength")
+            .HasValue<EnduranceExercise>("Endurance");
+
+        builder.Property(e => e.Name)
+            .IsRequired()
+            .HasMaxLength(200);
+
+        builder.HasIndex(e => e.Name);
+    }
+}
