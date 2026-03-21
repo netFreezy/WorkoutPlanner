@@ -1,5 +1,7 @@
+using System.Text.Json;
 using BlazorApp2.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BlazorApp2.Data.Configurations;
@@ -11,6 +13,19 @@ public class WorkoutTemplateConfiguration : IEntityTypeConfiguration<WorkoutTemp
         builder.Property(t => t.Name)
             .IsRequired()
             .HasMaxLength(200);
+
+        var tagsComparer = new ValueComparer<List<string>>(
+            (c1, c2) => c1!.SequenceEqual(c2!),
+            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+            c => c.ToList());
+
+        builder.Property(t => t.Tags)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
+            .HasColumnType("TEXT")
+            .HasDefaultValue(new List<string>())
+            .Metadata.SetValueComparer(tagsComparer);
     }
 }
 

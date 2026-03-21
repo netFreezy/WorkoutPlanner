@@ -7,6 +7,7 @@ public class WorkoutTemplate
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public List<string> Tags { get; set; } = new();
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public ICollection<TemplateItem> Items { get; set; } = new List<TemplateItem>();
     public ICollection<TemplateGroup> Groups { get; set; } = new List<TemplateGroup>();
