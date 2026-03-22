@@ -1,9 +1,245 @@
 @inject BlazorApp2.Services.SessionService SessionService
 
-<div class="exercise-item @(IsExpanded ? "exercise-item--expanded" : "")"
-     @onclick="HandleClick">
-    <span>@Position. @Exercise?.Name</span>
-</div>
+@if (!IsExpanded)
+{
+    @* --- Collapsed State --- *@
+    <div class="exercise-item" @onclick="HandleClick">
+        <span class="exercise-item__position">@Position</span>
+        <span class="exercise-item__name">@Exercise?.Name</span>
+        <span class="type-dot @(IsStrength ? "type-dot--strength" : "type-dot--endurance")"></span>
+        <span class="status-badge @GetStatusBadgeClass()">@GetStatusLabel()</span>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 18l6-6-6-6"/>
+        </svg>
+    </div>
+}
+else
+{
+    @* --- Expanded State --- *@
+    <div class="exercise-item exercise-item--expanded">
+        @* Exercise Header *@
+        <div class="exercise-item__header" @onclick="HandleClick">
+            <span class="exercise-item__position">@Position</span>
+            <span class="exercise-item__name">@Exercise?.Name</span>
+            <span class="type-dot @(IsStrength ? "type-dot--strength" : "type-dot--endurance")"></span>
+            <span class="status-badge @GetStatusBadgeClass()">@GetStatusLabel()</span>
+            <svg class="chevron chevron--expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </div>
+
+        @* --- Previous Performance Drawer --- *@
+        <div class="previous-drawer">
+            <button class="previous-drawer__toggle" @onclick="TogglePrevious" @onclick:stopPropagation="true">
+                <svg class="previous-drawer__arrow @(showPrevious ? "previous-drawer__arrow--open" : "")" width="6" height="10" viewBox="0 0 6 10" fill="currentColor">
+                    <path d="M0 0l6 5-6 5V0z"/>
+                </svg>
+                Previous
+            </button>
+
+            @if (showPrevious)
+            {
+                <div class="previous-drawer__content">
+                    @if (IsStrength)
+                    {
+                        @if (previousStrength == null)
+                        {
+                            <span class="previous-drawer__loading">Loading...</span>
+                        }
+                        else if (previousStrength.Count == 0)
+                        {
+                            <span class="previous-drawer__empty">No previous data</span>
+                        }
+                        else
+                        {
+                            @foreach (var session in previousStrength)
+                            {
+                                <div class="previous-drawer__session">
+                                    <span class="previous-drawer__date">@session.Date.ToString("MMM d")</span>
+                                    <span class="previous-drawer__separator">&mdash;</span>
+                                    <span class="previous-drawer__data">@FormatStrengthSets(session.Sets)</span>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @if (previousEndurance == null)
+                        {
+                            <span class="previous-drawer__loading">Loading...</span>
+                        }
+                        else if (previousEndurance.Count == 0)
+                        {
+                            <span class="previous-drawer__empty">No previous data</span>
+                        }
+                        else
+                        {
+                            @foreach (var session in previousEndurance)
+                            {
+                                <div class="previous-drawer__session">
+                                    <span class="previous-drawer__date">@session.Date.ToString("MMM d")</span>
+                                    <span class="previous-drawer__separator">&mdash;</span>
+                                    <span class="previous-drawer__data">@FormatEnduranceSession(session)</span>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            }
+        </div>
+
+        @if (IsStrength)
+        {
+            @* --- Set Rows (Strength) --- *@
+            <div class="set-rows">
+                @foreach (var setLog in SetLogs)
+                {
+                    var currentSet = setLog;
+                    var editing = GetEditingValues(currentSet.Id);
+
+                    <div class="set-row @(currentSet.IsCompleted ? "set-row--completed" : "")">
+                        <span class="set-row__number">@currentSet.SetNumber</span>
+
+                        <button class="set-row__type @GetTypeClass(currentSet.SetType)"
+                                @onclick="() => CycleSetType(currentSet)"
+                                @onclick:stopPropagation="true">
+                            @GetTypeAbbreviation(currentSet.SetType)
+                        </button>
+
+                        <input type="number"
+                               class="set-row__input set-row__input--weight @(currentSet.IsCompleted ? "set-row__input--readonly" : "")"
+                               step="0.5"
+                               value="@editing.weight"
+                               placeholder="@currentSet.PlannedWeight"
+                               @onchange="(e) => UpdateWeight(currentSet.Id, e)"
+                               disabled="@currentSet.IsCompleted" />
+                        <span class="set-row__unit">kg</span>
+                        <span class="set-row__separator">x</span>
+                        <input type="number"
+                               class="set-row__input set-row__input--reps @(currentSet.IsCompleted ? "set-row__input--readonly" : "")"
+                               step="1"
+                               value="@editing.reps"
+                               placeholder="@currentSet.PlannedReps"
+                               @onchange="(e) => UpdateReps(currentSet.Id, e)"
+                               disabled="@currentSet.IsCompleted" />
+
+                        <button class="set-row__check @(currentSet.IsCompleted ? "set-row__check--completed" : "")"
+                                @onclick="() => ToggleSetComplete(currentSet)"
+                                @onclick:stopPropagation="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            @* --- Add Set Button (strength only) --- *@
+            <button class="add-set-btn" @onclick="HandleAddSet" @onclick:stopPropagation="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Add Set
+            </button>
+        }
+        else
+        {
+            @* --- Endurance Input Fields --- *@
+            <div class="endurance-fields">
+                <div class="endurance-field">
+                    <label class="endurance-field__label">Distance (km)</label>
+                    @if (EnduranceLog?.PlannedDistance != null)
+                    {
+                        <span class="endurance-field__target">Target: @EnduranceLog.PlannedDistance km</span>
+                    }
+                    <input type="number"
+                           class="endurance-field__input"
+                           step="0.1"
+                           value="@enduranceDistance"
+                           placeholder="@EnduranceLog?.PlannedDistance"
+                           @onchange="OnDistanceChanged" />
+                </div>
+
+                <div class="endurance-field">
+                    <label class="endurance-field__label">Duration</label>
+                    @if (EnduranceLog?.PlannedDurationSeconds != null)
+                    {
+                        <span class="endurance-field__target">Target: @FormatDuration(EnduranceLog.PlannedDurationSeconds.Value)</span>
+                    }
+                    <div class="endurance-field__duration-row">
+                        <input type="number"
+                               class="endurance-field__input endurance-field__input--duration"
+                               step="1"
+                               min="0"
+                               value="@enduranceMinutes"
+                               placeholder="min"
+                               @onchange="OnMinutesChanged" />
+                        <span class="endurance-field__colon">:</span>
+                        <input type="number"
+                               class="endurance-field__input endurance-field__input--duration"
+                               step="1"
+                               min="0"
+                               max="59"
+                               value="@enduranceSeconds"
+                               placeholder="sec"
+                               @onchange="OnSecondsChanged" />
+                    </div>
+                </div>
+
+                <div class="endurance-field">
+                    <label class="endurance-field__label">Pace (min/km)</label>
+                    <input type="text"
+                           class="endurance-field__input endurance-field__pace"
+                           value="@CalculatePace()"
+                           readonly />
+                </div>
+
+                <div class="endurance-field">
+                    <label class="endurance-field__label">HR Zone</label>
+                    <select class="endurance-field__input"
+                            value="@enduranceHrZone"
+                            @onchange="OnHrZoneChanged">
+                        <option value="">Skip</option>
+                        <option value="1">Zone 1</option>
+                        <option value="2">Zone 2</option>
+                        <option value="3">Zone 3</option>
+                        <option value="4">Zone 4</option>
+                        <option value="5">Zone 5</option>
+                    </select>
+                </div>
+            </div>
+        }
+
+        @* --- Exercise Status Buttons --- *@
+        <div class="status-buttons">
+            <button class="status-btn status-btn--complete @(Status == ExerciseCompletionStatus.Complete ? "status-btn--active" : "")"
+                    @onclick="() => SetStatus(ExerciseCompletionStatus.Complete)"
+                    @onclick:stopPropagation="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Complete
+            </button>
+            <button class="status-btn status-btn--partial @(Status == ExerciseCompletionStatus.Partial ? "status-btn--active" : "")"
+                    @onclick="() => SetStatus(ExerciseCompletionStatus.Partial)"
+                    @onclick:stopPropagation="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a10 10 0 0 1 0 20V2z"/>
+                </svg>
+                Partial
+            </button>
+            <button class="status-btn status-btn--skip @(Status == ExerciseCompletionStatus.Skipped ? "status-btn--active" : "")"
+                    @onclick="() => SetStatus(ExerciseCompletionStatus.Skipped)"
+                    @onclick:stopPropagation="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 4l10 8-10 8V4z"/>
+                    <line x1="19" y1="5" x2="19" y2="19"/>
+                </svg>
+                Skip
+            </button>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter] public Exercise Exercise { get; set; } = null!;
@@ -21,8 +257,280 @@
     [Parameter] public EventCallback<(int exerciseId, ExerciseCompletionStatus status)> OnStatusChanged { get; set; }
     [Parameter] public EventCallback<(int setLogId, SetType type)> OnSetTypeChanged { get; set; }
 
+    // Private state
+    private bool showPrevious;
+    private List<PreviousStrengthSession>? previousStrength;
+    private List<PreviousEnduranceSession>? previousEndurance;
+    private Dictionary<int, (double? weight, int? reps)> editingValues = new();
+
+    // Endurance local state
+    private double? enduranceDistance;
+    private int? enduranceMinutes;
+    private int? enduranceSeconds;
+    private int? enduranceHrZone;
+
+    private bool IsStrength => Exercise is StrengthExercise;
+
+    protected override void OnParametersSet()
+    {
+        // Initialize editing values from SetLogs
+        foreach (var setLog in SetLogs)
+        {
+            if (!editingValues.ContainsKey(setLog.Id))
+            {
+                editingValues[setLog.Id] = (setLog.ActualWeight, setLog.ActualReps);
+            }
+        }
+
+        // Initialize endurance local state
+        if (EnduranceLog != null)
+        {
+            enduranceDistance ??= EnduranceLog.ActualDistance;
+            if (enduranceMinutes == null && EnduranceLog.ActualDurationSeconds != null)
+            {
+                enduranceMinutes = EnduranceLog.ActualDurationSeconds.Value / 60;
+                enduranceSeconds = EnduranceLog.ActualDurationSeconds.Value % 60;
+            }
+            enduranceHrZone ??= EnduranceLog.ActualHeartRateZone;
+        }
+    }
+
     private async Task HandleClick()
     {
         await OnClicked.InvokeAsync();
+    }
+
+    // --- Strength set methods ---
+
+    private (double? weight, int? reps) GetEditingValues(int setLogId)
+    {
+        if (editingValues.TryGetValue(setLogId, out var values))
+            return values;
+        var setLog = SetLogs.FirstOrDefault(sl => sl.Id == setLogId);
+        return (setLog?.ActualWeight, setLog?.ActualReps);
+    }
+
+    private void UpdateWeight(int setLogId, ChangeEventArgs e)
+    {
+        var current = GetEditingValues(setLogId);
+        double? weight = null;
+        if (double.TryParse(e.Value?.ToString(), out var w))
+            weight = w;
+        editingValues[setLogId] = (weight, current.reps);
+    }
+
+    private void UpdateReps(int setLogId, ChangeEventArgs e)
+    {
+        var current = GetEditingValues(setLogId);
+        int? reps = null;
+        if (int.TryParse(e.Value?.ToString(), out var r))
+            reps = r;
+        editingValues[setLogId] = (current.weight, reps);
+    }
+
+    private async Task ToggleSetComplete(SetLog setLog)
+    {
+        if (setLog.IsCompleted)
+        {
+            await OnSetUncompleted.InvokeAsync(setLog.Id);
+        }
+        else
+        {
+            var editing = GetEditingValues(setLog.Id);
+            await OnSetCompleted.InvokeAsync((setLog.Id, editing.weight, editing.reps, setLog.SetType));
+        }
+    }
+
+    private async Task CycleSetType(SetLog setLog)
+    {
+        if (setLog.IsCompleted) return;
+
+        var nextType = setLog.SetType switch
+        {
+            SetType.Working => SetType.WarmUp,
+            SetType.WarmUp => SetType.Failure,
+            SetType.Failure => SetType.Drop,
+            SetType.Drop => SetType.Working,
+            _ => SetType.Working
+        };
+
+        await OnSetTypeChanged.InvokeAsync((setLog.Id, nextType));
+    }
+
+    private async Task HandleAddSet()
+    {
+        var lastWeight = SetLogs.LastOrDefault()?.ActualWeight;
+        await OnSetAdded.InvokeAsync((Exercise.Id, lastWeight));
+    }
+
+    private string GetTypeAbbreviation(SetType type) => type switch
+    {
+        SetType.Working => "W",
+        SetType.WarmUp => "WU",
+        SetType.Failure => "F",
+        SetType.Drop => "D",
+        _ => "W"
+    };
+
+    private string GetTypeClass(SetType type) => type switch
+    {
+        SetType.Working => "set-row__type--working",
+        SetType.WarmUp => "set-row__type--warmup",
+        SetType.Failure => "set-row__type--failure",
+        SetType.Drop => "set-row__type--drop",
+        _ => "set-row__type--working"
+    };
+
+    // --- Endurance methods ---
+
+    private void OnDistanceChanged(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var d))
+            enduranceDistance = d;
+        else
+            enduranceDistance = null;
+    }
+
+    private void OnMinutesChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var m))
+            enduranceMinutes = m;
+        else
+            enduranceMinutes = null;
+    }
+
+    private void OnSecondsChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var s))
+            enduranceSeconds = s;
+        else
+            enduranceSeconds = null;
+    }
+
+    private void OnHrZoneChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var z))
+            enduranceHrZone = z;
+        else
+            enduranceHrZone = null;
+    }
+
+    private int? GetTotalDurationSeconds()
+    {
+        if (enduranceMinutes == null && enduranceSeconds == null) return null;
+        return ((enduranceMinutes ?? 0) * 60) + (enduranceSeconds ?? 0);
+    }
+
+    private string CalculatePace()
+    {
+        var totalSeconds = GetTotalDurationSeconds();
+        if (enduranceDistance == null || enduranceDistance <= 0 || totalSeconds == null || totalSeconds <= 0)
+            return "--:--";
+
+        var paceMinPerKm = (totalSeconds.Value / 60.0) / enduranceDistance.Value;
+        var paceMin = (int)paceMinPerKm;
+        var paceSec = (int)((paceMinPerKm - paceMin) * 60);
+        return $"{paceMin}:{paceSec:D2}";
+    }
+
+    private string FormatDuration(int totalSeconds)
+    {
+        var minutes = totalSeconds / 60;
+        var seconds = totalSeconds % 60;
+        return $"{minutes}:{seconds:D2}";
+    }
+
+    // --- Previous performance drawer ---
+
+    private async Task TogglePrevious()
+    {
+        showPrevious = !showPrevious;
+
+        if (showPrevious)
+        {
+            // Load on demand
+            if (IsStrength && previousStrength == null)
+            {
+                previousStrength = await SessionService.GetPreviousStrengthPerformanceAsync(
+                    Exercise.Id, WorkoutLogId, 3);
+            }
+            else if (!IsStrength && previousEndurance == null)
+            {
+                previousEndurance = await SessionService.GetPreviousEndurancePerformanceAsync(
+                    Exercise.Id, WorkoutLogId, 3);
+            }
+        }
+    }
+
+    private string FormatStrengthSets(List<PreviousSet> sets)
+    {
+        return string.Join(", ", sets.Select(s =>
+            $"{s.Weight?.ToString("0.##") ?? "?"}kg x {s.Reps?.ToString() ?? "?"}"));
+    }
+
+    private string FormatEnduranceSession(PreviousEnduranceSession session)
+    {
+        var distance = session.Distance?.ToString("0.#") ?? "?";
+        var duration = session.DurationSeconds != null
+            ? FormatDuration(session.DurationSeconds.Value)
+            : "?";
+        var pace = session.Pace != null
+            ? $"{(int)session.Pace.Value}:{(int)((session.Pace.Value - (int)session.Pace.Value) * 60):D2}"
+            : "?";
+        return $"{distance} km in {duration} ({pace}/km)";
+    }
+
+    // --- Status badge ---
+
+    private string GetStatusLabel()
+    {
+        if (Status == null)
+            return "Pending";
+
+        if (Status == ExerciseCompletionStatus.Skipped)
+            return "Skipped";
+
+        if (Status == ExerciseCompletionStatus.Partial)
+        {
+            if (IsStrength)
+            {
+                var completed = SetLogs.Count(sl => sl.IsCompleted);
+                return $"{completed}/{SetLogs.Count} sets";
+            }
+            return "Partial";
+        }
+
+        // Complete
+        if (IsStrength)
+        {
+            var completed = SetLogs.Count(sl => sl.IsCompleted);
+            return $"{completed}/{SetLogs.Count} sets";
+        }
+        return "Done";
+    }
+
+    private string GetStatusBadgeClass()
+    {
+        return Status switch
+        {
+            ExerciseCompletionStatus.Complete => "status-badge--complete",
+            ExerciseCompletionStatus.Partial => "status-badge--partial",
+            ExerciseCompletionStatus.Skipped => "status-badge--skipped",
+            _ => "status-badge--pending"
+        };
+    }
+
+    // --- Status buttons ---
+
+    private async Task SetStatus(ExerciseCompletionStatus status)
+    {
+        // For endurance, persist data first
+        if (!IsStrength && EnduranceLog != null)
+        {
+            var totalSeconds = GetTotalDurationSeconds();
+            await OnEnduranceSaved.InvokeAsync((EnduranceLog.Id, enduranceDistance, totalSeconds, enduranceHrZone));
+        }
+
+        await OnStatusChanged.InvokeAsync((Exercise.Id, status));
     }
 }
