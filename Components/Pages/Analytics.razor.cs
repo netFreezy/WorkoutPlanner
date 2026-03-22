@@ -1,4 +1,6 @@
 using ApexCharts;
+using BlazorApp2.Data.Entities;
+using BlazorApp2.Data.Enums;
 using BlazorApp2.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -32,6 +34,12 @@ public partial class Analytics : ComponentBase
     private List<(int Id, string Name)> enduranceExercises = new();
     private int? selectedEnduranceExerciseId;
 
+    // PRs data
+    private List<IGrouping<string, PersonalRecord>> prGroups = new();
+    private List<PersonalRecord> prTimeline = new();
+    private List<PersonalRecord> prTimelineStrength => prTimeline.Where(pr => pr.StrengthType.HasValue).ToList();
+    private List<PersonalRecord> prTimelineEndurance => prTimeline.Where(pr => pr.EnduranceType.HasValue).ToList();
+
     // Chart options -- EACH chart gets its OWN instance
     private ApexChartOptions<WeeklyVolume> volumeChartOptions = new();
     private ApexChartOptions<WeeklyAdherence> adherenceChartOptions = new();
@@ -42,6 +50,7 @@ public partial class Analytics : ComponentBase
     private ApexChartOptions<WeeklyEndurance> paceChartOptions = new();
     private ApexChartOptions<EnduranceExerciseWeeklyData> endExDistanceChartOptions = new();
     private ApexChartOptions<EnduranceExerciseWeeklyData> endExPaceChartOptions = new();
+    private ApexChartOptions<PersonalRecord> prTimelineChartOptions = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,6 +71,7 @@ public partial class Analytics : ComponentBase
         ConfigureChartOptions(paceChartOptions);
         ConfigureChartOptions(endExDistanceChartOptions);
         ConfigureChartOptions(endExPaceChartOptions);
+        ConfigureChartOptions(prTimelineChartOptions);
     }
 
     private static void ConfigureChartOptions<T>(ApexChartOptions<T> options) where T : class
@@ -81,7 +91,7 @@ public partial class Analytics : ComponentBase
             case "overview": await LoadOverviewDataAsync(); break;
             case "strength": await LoadStrengthDataAsync(); break;
             case "endurance": await LoadEnduranceDataAsync(); break;
-            // "prs" loaded in Plan 04
+            case "prs": await LoadPRsDataAsync(); break;
         }
     }
 
@@ -139,6 +149,38 @@ public partial class Analytics : ComponentBase
     private bool HasEnduranceData => selectedEnduranceExerciseId.HasValue
         ? enduranceExerciseHistory.Any(e => e.TotalDistance > 0)
         : weeklyEndurance.Any(w => w.TotalDistance > 0);
+
+    private async Task LoadPRsDataAsync()
+    {
+        prGroups = await PRDetectionService.GetAllPRsAsync();
+        prTimeline = await PRDetectionService.GetPRTimelineAsync(RangeStart, RangeEnd);
+    }
+
+    private bool HasPRData => prGroups.Any();
+
+    private static string GetPRTypeLabel(PersonalRecord pr)
+    {
+        if (pr.StrengthType.HasValue)
+        {
+            return pr.StrengthType.Value switch
+            {
+                StrengthPRType.Weight => "Weight",
+                StrengthPRType.Reps => "Reps",
+                StrengthPRType.EstimatedOneRepMax => "Est. 1RM",
+                _ => "PR"
+            };
+        }
+        if (pr.EnduranceType.HasValue)
+        {
+            return pr.EnduranceType.Value switch
+            {
+                EndurancePRType.Pace => "Pace",
+                EndurancePRType.Distance => "Distance",
+                _ => "PR"
+            };
+        }
+        return "PR";
+    }
 
     private string TimeRangeLabel => selectedWeeks switch
     {

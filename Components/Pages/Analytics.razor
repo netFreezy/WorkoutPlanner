@@ -1,6 +1,7 @@
 @page "/analytics"
 @rendermode InteractiveServer
 @using ApexCharts
+@using BlazorApp2.Data.Entities
 
 <PageTitle>Analytics</PageTitle>
 
@@ -286,10 +287,59 @@
         @* ==================== PRs TAB ==================== *@
         @if (activeTab == "prs")
         {
-            <div class="empty-state">
-                <p class="empty-state__heading">PRs tab</p>
-                <p class="empty-state__body">PRs tab -- coming in next plan</p>
-            </div>
+            @if (HasPRData)
+            {
+                @* --- PR Record Book (per D-12) --- *@
+                @foreach (var group in prGroups)
+                {
+                    <div class="pr-section">
+                        <h3 class="pr-section__header">@group.Key</h3>
+                        <div class="pr-entries">
+                            @foreach (var pr in group)
+                            {
+                                <div class="pr-entry">
+                                    <span class="pr-entry__badge @(pr.StrengthType.HasValue ? "pr-entry__badge--strength" : "pr-entry__badge--endurance")">
+                                        @GetPRTypeLabel(pr)
+                                    </span>
+                                    <span class="pr-entry__value">@pr.DisplayValue</span>
+                                    <span class="pr-entry__date">@pr.AchievedAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @* --- PR Timeline Chart (per D-13) --- *@
+                @if (prTimeline.Any())
+                {
+                    <div class="chart-container" aria-label="PR timeline scatter chart showing when each personal record was set">
+                        <ApexChart TItem="PersonalRecord" Title="PR Timeline" Options="prTimelineChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="PersonalRecord"
+                                             Items="prTimelineStrength"
+                                             Name="Strength PRs"
+                                             SeriesType="SeriesType.Scatter"
+                                             XValue='@(e => e.AchievedAt.ToString("MMM dd"))'
+                                             YValue="e => (decimal)(e.Value ?? 0)"
+                                             Color="#60A5FA" />
+                            <ApexPointSeries TItem="PersonalRecord"
+                                             Items="prTimelineEndurance"
+                                             Name="Endurance PRs"
+                                             SeriesType="SeriesType.Scatter"
+                                             XValue='@(e => e.AchievedAt.ToString("MMM dd"))'
+                                             YValue="e => (decimal)(e.Value ?? 0)"
+                                             Color="#34D399" />
+                        </ApexChart>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p class="empty-state__heading">No personal records yet</p>
+                    <p class="empty-state__body">PRs are automatically detected when you finish a session. Keep training and your records will appear here.</p>
+                </div>
+            }
         }
 
     </div>
