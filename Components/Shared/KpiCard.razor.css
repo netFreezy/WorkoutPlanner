@@ -1,0 +1,45 @@
+/* --- KPI Card --- */
+.kpi-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.kpi-card__label {
+    font-size: var(--font-size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-label);
+}
+
+.kpi-card__value {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    display: block;
+    margin-top: var(--space-xs);
+    line-height: var(--line-height-heading);
+}
+
+.kpi-card__subtitle {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    display: block;
+    margin-top: var(--space-xs);
+    line-height: var(--line-height-label);
+}
+
+/* --- Stagger Animation --- */
+@media (prefers-reduced-motion: no-preference) {
+    .kpi-card {
+        animation: fadeSlideIn 350ms cubic-bezier(0.4, 0, 0.2, 1) both;
+        animation-delay: calc(var(--card-index, 0) * 60ms);
+    }
+}

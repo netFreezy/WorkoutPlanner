@@ -1,0 +1,15 @@
+<div class="kpi-card" style="--card-index: @Index">
+    <span class="kpi-card__label">@Label</span>
+    <span class="kpi-card__value">@Value</span>
+    @if (!string.IsNullOrEmpty(Subtitle))
+    {
+        <span class="kpi-card__subtitle">@Subtitle</span>
+    }
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+}

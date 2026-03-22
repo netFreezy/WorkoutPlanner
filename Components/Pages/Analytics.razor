@@ -1,0 +1,296 @@
+@page "/analytics"
+@rendermode InteractiveServer
+@using ApexCharts
+
+<PageTitle>Analytics</PageTitle>
+
+<div class="analytics-page">
+
+    @* --- Page Header --- *@
+    <div class="analytics-header">
+        <h1>Analytics</h1>
+        <div class="time-range" role="group" aria-label="Time range selector">
+            <button class="time-range__btn @(selectedWeeks == 4 ? "time-range__btn--active" : "")"
+                    aria-pressed="@(selectedWeeks == 4)" @onclick="() => ChangeTimeRange(4)">4W</button>
+            <button class="time-range__btn @(selectedWeeks == 8 ? "time-range__btn--active" : "")"
+                    aria-pressed="@(selectedWeeks == 8)" @onclick="() => ChangeTimeRange(8)">8W</button>
+            <button class="time-range__btn @(selectedWeeks == 12 ? "time-range__btn--active" : "")"
+                    aria-pressed="@(selectedWeeks == 12)" @onclick="() => ChangeTimeRange(12)">12W</button>
+            <button class="time-range__btn @(selectedWeeks == 0 ? "time-range__btn--active" : "")"
+                    aria-pressed="@(selectedWeeks == 0)" @onclick="() => ChangeTimeRange(0)">All</button>
+        </div>
+    </div>
+
+    @* --- Tab Bar --- *@
+    <div class="analytics-tabs" role="tablist" aria-label="Analytics tabs">
+        <button class="tab-btn @(activeTab == "overview" ? "tab-btn--active" : "")"
+                role="tab" aria-selected="@(activeTab == "overview")" @onclick='() => SwitchTab("overview")'>Overview</button>
+        <button class="tab-btn @(activeTab == "strength" ? "tab-btn--active" : "")"
+                role="tab" aria-selected="@(activeTab == "strength")" @onclick='() => SwitchTab("strength")'>Strength</button>
+        <button class="tab-btn @(activeTab == "endurance" ? "tab-btn--active" : "")"
+                role="tab" aria-selected="@(activeTab == "endurance")" @onclick='() => SwitchTab("endurance")'>Endurance</button>
+        <button class="tab-btn @(activeTab == "prs" ? "tab-btn--active" : "")"
+                role="tab" aria-selected="@(activeTab == "prs")" @onclick='() => SwitchTab("prs")'>PRs</button>
+    </div>
+
+    @* --- Tab Content --- *@
+    <div class="tab-content" role="tabpanel">
+
+        @* ==================== OVERVIEW TAB ==================== *@
+        @if (activeTab == "overview")
+        {
+            @* --- KPI Cards --- *@
+            @if (kpiSummary != null)
+            {
+                <div class="kpi-grid">
+                    <KpiCard Label="SESSIONS THIS WEEK"
+                             Value="@kpiSummary.SessionsThisWeek.ToString()"
+                             Subtitle="@($"of {kpiSummary.PlannedThisWeek} planned")"
+                             Index="0" />
+                    <KpiCard Label="CURRENT STREAK"
+                             Value="@($"{kpiSummary.CurrentStreak} days")"
+                             Subtitle="@($"longest: {kpiSummary.LongestStreak} days")"
+                             Index="1" />
+                    <KpiCard Label="TOTAL VOLUME"
+                             Value="@($"{kpiSummary.TotalVolume:N0} kg")"
+                             Subtitle="this period"
+                             Index="2" />
+                    <KpiCard Label="LATEST PR"
+                             Value="@(kpiSummary.LatestPRExercise ?? "None yet")"
+                             Subtitle="@(kpiSummary.LatestPRValue != null ? $"{kpiSummary.LatestPRValue} -- {kpiSummary.LatestPRDaysAgo} days ago" : null)"
+                             Index="3" />
+                </div>
+            }
+
+            @* --- Volume Chart --- *@
+            @if (HasVolumeData)
+            {
+                <div class="chart-container" aria-label="Weekly volume bar chart showing total weight lifted per week">
+                    <ApexChart TItem="WeeklyVolume" Title="Weekly Volume" Options="volumeChartOptions"
+                               Height="280">
+                        <ApexPointSeries TItem="WeeklyVolume"
+                                         Items="weeklyVolume"
+                                         Name="Total Volume (kg)"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                         YValue="e => (decimal)e.TotalVolume"
+                                         Color="#60A5FA" />
+                    </ApexChart>
+                </div>
+            }
+
+            @* --- Adherence Chart --- *@
+            @if (HasAdherenceData)
+            {
+                <div class="chart-container" aria-label="Weekly adherence grouped bar chart showing planned versus completed sessions">
+                    <ApexChart TItem="WeeklyAdherence" Title="Adherence" Options="adherenceChartOptions"
+                               Height="280">
+                        <ApexPointSeries TItem="WeeklyAdherence"
+                                         Items="weeklyAdherence"
+                                         Name="Completed"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                         YValue="e => (decimal)e.Completed"
+                                         Color="#34D399" />
+                        <ApexPointSeries TItem="WeeklyAdherence"
+                                         Items="weeklyAdherence"
+                                         Name="Planned"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                         YValue="e => (decimal)e.Planned"
+                                         Color="rgba(255,255,255,0.08)" />
+                    </ApexChart>
+                </div>
+            }
+
+            @* --- Empty State --- *@
+            @if (!HasVolumeData && !HasAdherenceData)
+            {
+                <div class="empty-state">
+                    @if (selectedWeeks == 0)
+                    {
+                        <p class="empty-state__heading">No workout data yet</p>
+                        <p class="empty-state__body">Complete your first session to see analytics here. Start by scheduling a workout on the <a href="calendar">Calendar</a>.</p>
+                    }
+                    else
+                    {
+                        <p class="empty-state__heading">No data in the last @TimeRangeLabel</p>
+                        <p class="empty-state__body">Try expanding the time range or check back after your next session.</p>
+                    }
+                </div>
+            }
+        }
+
+        @* ==================== STRENGTH TAB ==================== *@
+        @if (activeTab == "strength")
+        {
+            <select class="exercise-select" @onchange="ChangeStrengthExercise">
+                <option value="">All Exercises</option>
+                @foreach (var ex in strengthExercises)
+                {
+                    <option value="@ex.Id" selected="@(selectedStrengthExerciseId == ex.Id)">@ex.Name</option>
+                }
+            </select>
+
+            @if (HasStrengthData)
+            {
+                @if (selectedStrengthExerciseId.HasValue)
+                {
+                    @* --- Exercise-specific charts --- *@
+                    <div class="chart-container" aria-label="Sets per week bar chart for selected exercise">
+                        <ApexChart TItem="ExerciseWeeklyData" Title="Sets per Week" Options="maxWeightChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="ExerciseWeeklyData"
+                                             Items="exerciseHistory"
+                                             Name="Total Sets"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.TotalSets"
+                                             Color="#60A5FA" />
+                        </ApexChart>
+                    </div>
+
+                    <div class="chart-container" aria-label="Max weight trend line chart for selected exercise">
+                        <ApexChart TItem="ExerciseWeeklyData" Title="Max Weight Trend" Options="e1rmChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="ExerciseWeeklyData"
+                                             Items="exerciseHistory"
+                                             Name="Max Weight (kg)"
+                                             SeriesType="SeriesType.Line"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.MaxWeight"
+                                             Color="#60A5FA" />
+                        </ApexChart>
+                    </div>
+
+                    <div class="chart-container" aria-label="Estimated 1RM trend line chart for selected exercise">
+                        <ApexChart TItem="ExerciseWeeklyData" Title="Estimated 1RM Trend" Options="maxWeightChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="ExerciseWeeklyData"
+                                             Items="exerciseHistory"
+                                             Name="Est. 1RM (kg)"
+                                             SeriesType="SeriesType.Line"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.BestE1RM"
+                                             Color="#7C5CFC" />
+                        </ApexChart>
+                    </div>
+                }
+                else
+                {
+                    @* --- All exercises volume chart --- *@
+                    <div class="chart-container" aria-label="Weekly volume bar chart for all strength exercises">
+                        <ApexChart TItem="WeeklyVolume" Title="Volume per Week" Options="strengthVolumeChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="WeeklyVolume"
+                                             Items="strengthVolume"
+                                             Name="Total Volume (kg)"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.TotalVolume"
+                                             Color="#60A5FA" />
+                        </ApexChart>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p class="empty-state__heading">No strength sessions logged yet</p>
+                    <p class="empty-state__body">Complete a strength workout to see your lifting analytics.</p>
+                </div>
+            }
+        }
+
+        @* ==================== ENDURANCE TAB ==================== *@
+        @if (activeTab == "endurance")
+        {
+            <select class="exercise-select" @onchange="ChangeEnduranceExercise">
+                <option value="">All Activities</option>
+                @foreach (var ex in enduranceExercises)
+                {
+                    <option value="@ex.Id" selected="@(selectedEnduranceExerciseId == ex.Id)">@ex.Name</option>
+                }
+            </select>
+
+            @if (HasEnduranceData)
+            {
+                @if (selectedEnduranceExerciseId.HasValue)
+                {
+                    @* --- Exercise-specific endurance charts --- *@
+                    <div class="chart-container" aria-label="Distance per week bar chart for selected activity">
+                        <ApexChart TItem="EnduranceExerciseWeeklyData" Title="Distance per Week" Options="endExDistanceChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="EnduranceExerciseWeeklyData"
+                                             Items="enduranceExerciseHistory"
+                                             Name="Distance (km)"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.TotalDistance"
+                                             Color="#34D399" />
+                        </ApexChart>
+                    </div>
+
+                    <div class="chart-container" aria-label="Pace trend line chart for selected activity">
+                        <ApexChart TItem="EnduranceExerciseWeeklyData" Title="Pace Trend" Options="endExPaceChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="EnduranceExerciseWeeklyData"
+                                             Items="enduranceExerciseHistory"
+                                             Name="Best Pace (min/km)"
+                                             SeriesType="SeriesType.Line"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)(e.BestPace ?? 0)"
+                                             Color="#34D399" />
+                        </ApexChart>
+                    </div>
+                }
+                else
+                {
+                    @* --- All activities charts --- *@
+                    <div class="chart-container" aria-label="Distance per week bar chart for all endurance activities">
+                        <ApexChart TItem="WeeklyEndurance" Title="Distance per Week" Options="distanceChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="WeeklyEndurance"
+                                             Items="weeklyEndurance"
+                                             Name="Distance (km)"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)e.TotalDistance"
+                                             Color="#34D399" />
+                        </ApexChart>
+                    </div>
+
+                    <div class="chart-container" aria-label="Pace trend line chart for all endurance activities">
+                        <ApexChart TItem="WeeklyEndurance" Title="Pace Trend" Options="paceChartOptions"
+                                   Height="280">
+                            <ApexPointSeries TItem="WeeklyEndurance"
+                                             Items="weeklyEndurance"
+                                             Name="Avg Pace (min/km)"
+                                             SeriesType="SeriesType.Line"
+                                             XValue='@(e => e.WeekStart.ToString("MMM dd"))'
+                                             YValue="e => (decimal)(e.AvgPace ?? 0)"
+                                             Color="#34D399" />
+                        </ApexChart>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p class="empty-state__heading">No endurance sessions logged yet</p>
+                    <p class="empty-state__body">Complete an endurance workout to see your endurance analytics.</p>
+                </div>
+            }
+        }
+
+        @* ==================== PRs TAB ==================== *@
+        @if (activeTab == "prs")
+        {
+            <div class="empty-state">
+                <p class="empty-state__heading">PRs tab</p>
+                <p class="empty-state__body">PRs tab -- coming in next plan</p>
+            </div>
+        }
+
+    </div>
+</div>
