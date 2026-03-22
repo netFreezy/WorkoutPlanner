@@ -141,7 +141,7 @@ Plans:
 - [x] 07-01-PLAN.md — NuGet packages (QuestPDF, CsvHelper), OverloadService, ExportService, HistoryService, JS interop, DI registration
 - [ ] 07-02-PLAN.md — Integration tests for overload detection, CSV/PDF export, and history queries
 - [x] 07-03-PLAN.md — Home dashboard rewrite with today's workout, repeat last, and empty states
-- [ ] 07-04-PLAN.md — History browser page with search, filters, expandable cards, and nav link
+- [x] 07-04-PLAN.md — History browser page with search, filters, expandable cards, and nav link
 - [ ] 07-05-PLAN.md — Export buttons on Analytics page and progressive overload integration on Session page
 
 ## Progress
