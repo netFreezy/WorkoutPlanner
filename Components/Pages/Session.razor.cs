@@ -3,6 +3,7 @@ using BlazorApp2.Data.Entities;
 using BlazorApp2.Data.Enums;
 using BlazorApp2.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace BlazorApp2.Components.Pages;
 
@@ -20,6 +21,8 @@ public partial class Session : IDisposable
     private bool isLoading = true;
     private List<ScheduledWorkout>? todaysWorkouts;
     private Toast? _toast;
+    private bool showSummary = false;
+    private bool showAbandonDialog = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -255,28 +258,46 @@ public partial class Session : IDisposable
         await Task.CompletedTask;
     }
 
-    private async Task HandleBack()
+    private void HandleFinish()
     {
-        NavigationManager.NavigateTo("/calendar");
-        await Task.CompletedTask;
+        showSummary = true;
     }
 
-    private async Task HandleAbandon()
+    private async Task HandleFinishSession((int? rpe, string? notes) args)
     {
-        if (workoutLog != null)
-        {
-            await SessionService.AbandonSessionAsync(workoutLog.Id);
-        }
-        NavigationManager.NavigateTo("/calendar");
+        if (workoutLog == null) return;
+        await SessionService.FinishSessionAsync(workoutLog.Id, args.rpe, args.notes);
+        _elapsedTimer?.Dispose();
+        NavigationManager.NavigateTo("/calendar?toast=Session+complete");
     }
 
-    private async Task HandleFinish()
+    private void HandleBackToSession()
     {
-        if (workoutLog != null)
+        showSummary = false;
+    }
+
+    private void ShowAbandonDialog()
+    {
+        showAbandonDialog = true;
+    }
+
+    private async Task HandleAbandonConfirm()
+    {
+        if (workoutLog == null) return;
+        showAbandonDialog = false;
+        await SessionService.AbandonSessionAsync(workoutLog.Id);
+        _elapsedTimer?.Dispose();
+        NavigationManager.NavigateTo("/calendar?toast=Session+abandoned");
+    }
+
+    private void OnBeforeNavigation(LocationChangingContext context)
+    {
+        if (workoutLog != null && workoutLog.CompletedAt == null && !context.TargetLocation.Contains("/session"))
         {
-            await SessionService.FinishSessionAsync(workoutLog.Id, null, null);
+            context.PreventNavigation();
+            showAbandonDialog = true;
+            InvokeAsync(StateHasChanged);
         }
-        NavigationManager.NavigateTo("/calendar");
     }
 
     public void Dispose()

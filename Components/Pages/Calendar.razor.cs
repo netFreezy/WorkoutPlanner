@@ -13,6 +13,8 @@ public partial class Calendar : IDisposable
     [Inject] private MaterializationService MaterializationService { get; set; } = null!;
     [Inject] private IJSRuntime JS { get; set; } = null!;
 
+    [SupplyParameterFromQuery] private string? Toast { get; set; }
+
     private DateTime currentWeekStart;
     private List<ScheduledWorkout> weekWorkouts = new();
     private Dictionary<DateTime, List<ScheduledWorkout>> workoutsByDay = new();
@@ -44,6 +46,11 @@ public partial class Calendar : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && !string.IsNullOrEmpty(Toast) && toast != null)
+        {
+            await toast.ShowAsync(Uri.UnescapeDataString(Toast));
+        }
+
         if (!isLoading && !showMonthView)
         {
             dotNetRef ??= DotNetObjectReference.Create(this);

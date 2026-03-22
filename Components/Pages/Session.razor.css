@@ -255,6 +255,57 @@
     opacity: 0.9;
 }
 
+/* --- Abandon Dialog --- */
+.abandon-dialog-body {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-body);
+    margin-bottom: var(--space-lg);
+}
+
+.abandon-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+}
+
+::deep .btn-ghost {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+::deep .btn-ghost:hover {
+    background: var(--color-bg-glass-hover);
+    color: var(--color-text-primary);
+}
+
+::deep .btn-destructive {
+    height: 40px;
+    padding: 0 var(--space-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-error);
+    color: #FFFFFF;
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+::deep .btn-destructive:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
 /* --- Responsive --- */
 @media (max-width: 480px) {
     .session-page {
