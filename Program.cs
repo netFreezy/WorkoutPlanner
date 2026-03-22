@@ -14,6 +14,7 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 
 builder.Services.AddScoped<MaterializationService>();
 builder.Services.AddScoped<SchedulingService>();
+builder.Services.AddScoped<SessionService>();
 
 var app = builder.Build();
 
