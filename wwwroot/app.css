@@ -156,6 +156,14 @@
     --z-session-header: 40;
     --z-session-progress: 35;
     --z-session-summary: 100;
+
+    /* --- Colors: Analytics --- */
+    --color-pr-badge-bg: rgba(124, 92, 252, 0.15);
+    --color-pr-badge-text: #7C5CFC;
+    --color-pr-badge-glow: 0 0 12px rgba(124, 92, 252, 0.20);
+
+    /* --- Z-Index: Analytics --- */
+    --z-analytics-tabs: 35;
 }
 
 body {

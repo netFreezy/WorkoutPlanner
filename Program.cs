@@ -1,3 +1,4 @@
+using ApexCharts;
 using BlazorApp2.Components;
 using BlazorApp2.Data;
 using BlazorApp2.Services;
@@ -15,6 +16,17 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 builder.Services.AddScoped<MaterializationService>();
 builder.Services.AddScoped<SchedulingService>();
 builder.Services.AddScoped<SessionService>();
+builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddScoped<PRDetectionService>();
+
+builder.Services.AddApexCharts(e =>
+{
+    e.GlobalOptions = new ApexChartBaseOptions
+    {
+        Theme = new Theme { Mode = Mode.Dark },
+        Chart = new Chart { Background = "transparent" }
+    };
+});
 
 var app = builder.Build();
 
