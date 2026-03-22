@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Skill(gsd:plan-phase)",
+      "Bash(grep -c \"@media\" /c/Users/finnp/source/repos/BlazorApp2/Components/Shared/*.razor.css)",
+      "Bash(grep -v \":0$\")",
+      "Bash(wc -l /c/Users/finnp/source/repos/BlazorApp2/Components/**/*.razor.css)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
