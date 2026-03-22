@@ -135,11 +135,14 @@ Plans:
   2. User receives progressive overload suggestions when they have consistently hit a target (e.g., "you hit 3x8 at 20kg twice -- ready for 22.5kg?")
   3. User can export all training data as CSV with date-range filtering, and export workout templates and training summaries as formatted PDF
   4. User can browse a chronological list of completed workout sessions with search and filter capabilities
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — NuGet packages (QuestPDF, CsvHelper), OverloadService, ExportService, HistoryService, JS interop, DI registration
+- [ ] 07-02-PLAN.md — Integration tests for overload detection, CSV/PDF export, and history queries
+- [ ] 07-03-PLAN.md — Home dashboard rewrite with today's workout, repeat last, and empty states
+- [ ] 07-04-PLAN.md — History browser page with search, filters, expandable cards, and nav link
+- [ ] 07-05-PLAN.md — Export buttons on Analytics page and progressive overload integration on Session page
 
 ## Progress
 
@@ -154,4 +157,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Calendar & Scheduling | 0/4 | Not started | - |
 | 5. Session Tracking | 0/5 | Not started | - |
 | 6. Analytics | 0/4 | Not started | - |
-| 7. Quality of Life | 0/? | Not started | - |
+| 7. Quality of Life | 0/5 | Not started | - |
