@@ -262,7 +262,7 @@
 }
 
 /* --- Responsive --- */
-@media (max-width: 640px) {
+@media (max-width: 480px) {
     ::deep .dialog-panel {
         max-width: 100%;
         width: 100%;

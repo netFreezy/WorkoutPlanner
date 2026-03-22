@@ -152,7 +152,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
     .builder-toolbar {
         margin: 0 calc(-1 * var(--space-md));
     }

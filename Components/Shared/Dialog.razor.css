@@ -67,8 +67,8 @@
     align-items: center;
     justify-content: center;
     transition: color var(--transition-fast), background-color var(--transition-fast);
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
 }
 
 .dialog-close:hover {
@@ -80,7 +80,7 @@
     color: var(--color-text-primary);
 }
 
-@media (max-width: 479px) {
+@media (max-width: 480px) {
     .dialog-panel {
         width: 95vw;
     }

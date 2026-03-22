@@ -386,7 +386,7 @@
 }
 
 /* --- Mobile Responsive --- */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .calendar-page {
         padding: var(--space-xl) var(--space-md);
     }

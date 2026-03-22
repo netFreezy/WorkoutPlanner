@@ -281,7 +281,7 @@
     background: var(--color-error-bg);
 }
 
-@media (max-width: 479px) {
+@media (max-width: 480px) {
     ::deep .dialog-panel {
         width: 95vw;
     }

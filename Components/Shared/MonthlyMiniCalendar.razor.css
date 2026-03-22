@@ -135,7 +135,7 @@
 }
 
 /* Mobile: full width with smaller cells */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .monthly-calendar {
         max-width: 100%;
     }

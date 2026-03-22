@@ -253,7 +253,7 @@
 }
 
 /* Responsive */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .templates-page {
         padding: var(--space-xl) var(--space-md);
     }
@@ -275,7 +275,7 @@
     }
 }
 
-@media (max-width: 479px) {
+@media (max-width: 480px) {
     .templates-page {
         padding: var(--space-xl) var(--space-md);
     }

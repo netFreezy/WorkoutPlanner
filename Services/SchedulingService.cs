@@ -91,8 +91,14 @@ public class SchedulingService(IDbContextFactory<AppDbContext> contextFactory, M
     {
         await using var context = await _contextFactory.CreateDbContextAsync();
 
-        var workout = await context.ScheduledWorkouts.FindAsync(workoutId);
+        var workout = await context.ScheduledWorkouts
+            .Include(sw => sw.WorkoutLog)
+            .FirstOrDefaultAsync(sw => sw.Id == workoutId);
         if (workout == null) return;
+
+        // Remove associated log first (FK Restrict prevents deleting scheduled workout with a log)
+        if (workout.WorkoutLog != null)
+            context.WorkoutLogs.Remove(workout.WorkoutLog);
 
         var recurrenceRuleId = workout.RecurrenceRuleId;
         context.ScheduledWorkouts.Remove(workout);
