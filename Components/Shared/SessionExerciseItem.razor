@@ -1,0 +1,28 @@
+@inject BlazorApp2.Services.SessionService SessionService
+
+<div class="exercise-item @(IsExpanded ? "exercise-item--expanded" : "")"
+     @onclick="HandleClick">
+    <span>@Position. @Exercise?.Name</span>
+</div>
+
+@code {
+    [Parameter] public Exercise Exercise { get; set; } = null!;
+    [Parameter] public List<SetLog> SetLogs { get; set; } = new();
+    [Parameter] public EnduranceLog? EnduranceLog { get; set; }
+    [Parameter] public int Position { get; set; }
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public ExerciseCompletionStatus? Status { get; set; }
+    [Parameter] public int WorkoutLogId { get; set; }
+    [Parameter] public EventCallback OnClicked { get; set; }
+    [Parameter] public EventCallback<(int setLogId, double? weight, int? reps, SetType type)> OnSetCompleted { get; set; }
+    [Parameter] public EventCallback<int> OnSetUncompleted { get; set; }
+    [Parameter] public EventCallback<(int enduranceLogId, double? distance, int? duration, int? hrZone)> OnEnduranceSaved { get; set; }
+    [Parameter] public EventCallback<(int exerciseId, double? prefillWeight)> OnSetAdded { get; set; }
+    [Parameter] public EventCallback<(int exerciseId, ExerciseCompletionStatus status)> OnStatusChanged { get; set; }
+    [Parameter] public EventCallback<(int setLogId, SetType type)> OnSetTypeChanged { get; set; }
+
+    private async Task HandleClick()
+    {
+        await OnClicked.InvokeAsync();
+    }
+}

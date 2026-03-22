@@ -1,0 +1,119 @@
+@page "/session"
+@page "/session/{ScheduledWorkoutId:int}"
+@rendermode InteractiveServer
+
+@inject BlazorApp2.Services.SessionService SessionService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Session</PageTitle>
+
+<Toast @ref="_toast" />
+
+@if (workoutLog != null)
+{
+    @* --- Active Session State --- *@
+    <div class="session-page">
+        @* --- Session Header (sticky) --- *@
+        <div class="session-header">
+            <button class="session-header__back" @onclick="HandleBack" aria-label="Back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M5 12l7 7M5 12l7-7"/>
+                </svg>
+            </button>
+
+            <span class="session-header__name">@GetWorkoutName()</span>
+
+            <span class="session-header__time">@FormatElapsed()</span>
+
+            <button class="session-header__abandon" @onclick="HandleAbandon">Abandon</button>
+        </div>
+
+        @* --- Progress Bar (sticky below header) --- *@
+        <div class="progress-bar">
+            <div class="progress-bar__track">
+                @foreach (var exerciseId in exerciseOrder)
+                {
+                    var status = exerciseStatuses.GetValueOrDefault(exerciseId);
+                    <div class="progress-bar__segment @GetSegmentClass(status)"></div>
+                }
+            </div>
+            <div class="progress-bar__label">@GetCompletedCount()/@exerciseOrder.Count exercises</div>
+        </div>
+
+        @* --- Exercise List --- *@
+        <div class="exercise-list">
+            @{ int position = 1; }
+            @foreach (var exerciseId in exerciseOrder)
+            {
+                var exercise = GetExercise(exerciseId);
+                var setLogs = GetSetLogsForExercise(exerciseId);
+                var enduranceLog = GetEnduranceLogForExercise(exerciseId);
+                var status = exerciseStatuses.ContainsKey(exerciseId) ? exerciseStatuses[exerciseId] : (ExerciseCompletionStatus?)null;
+                var pos = position;
+
+                <SessionExerciseItem
+                    Exercise="exercise"
+                    SetLogs="setLogs"
+                    EnduranceLog="enduranceLog"
+                    Position="pos"
+                    IsExpanded="expandedExerciseId == exerciseId"
+                    Status="status"
+                    WorkoutLogId="workoutLog.Id"
+                    OnClicked="() => HandleExerciseClicked(exerciseId)"
+                    OnSetCompleted="HandleSetCompleted"
+                    OnSetUncompleted="HandleSetUncompleted"
+                    OnEnduranceSaved="HandleEnduranceSaved"
+                    OnSetAdded="HandleSetAdded"
+                    OnStatusChanged="HandleStatusChanged"
+                    OnSetTypeChanged="HandleSetTypeChanged" />
+
+                position++;
+            }
+        </div>
+
+        @* --- Finish Session Button --- *@
+        @if (AllExercisesHaveStatus())
+        {
+            <button class="finish-btn" @onclick="HandleFinish">Finish Session</button>
+        }
+    </div>
+}
+else if (isLoading)
+{
+    <div class="session-page">
+        <div class="landing-loading">Loading...</div>
+    </div>
+}
+else
+{
+    @* --- Landing State --- *@
+    <div class="session-page">
+        <h1 class="landing-title">Today's Workouts</h1>
+
+        @if (todaysWorkouts != null && todaysWorkouts.Count > 0)
+        {
+            <div class="workout-list">
+                @foreach (var workout in todaysWorkouts)
+                {
+                    <div class="workout-card">
+                        <div class="workout-card__info">
+                            <span class="workout-card__name">@workout.DisplayName</span>
+                            <span class="workout-card__count">@GetTemplateExerciseCount(workout) exercises</span>
+                        </div>
+                        <button class="workout-card__start" @onclick="() => StartSession(workout.Id)">
+                            Start Session
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <h2 class="empty-state__heading">No workouts today</h2>
+                <p class="empty-state__body">Schedule a workout from the calendar, or start an ad-hoc session.</p>
+                <a class="empty-state__link" href="/calendar">Go to Calendar</a>
+            </div>
+        }
+    </div>
+}
