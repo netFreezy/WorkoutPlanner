@@ -25,6 +25,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<SetLog> SetLogs => Set<SetLog>();
     public DbSet<EnduranceLog> EnduranceLogs => Set<EnduranceLog>();
 
+    // Personal Records
+    public DbSet<PersonalRecord> PersonalRecords => Set<PersonalRecord>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
