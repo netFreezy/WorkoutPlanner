@@ -104,8 +104,8 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — SessionService, ExerciseCompletionStatus enum, CSS tokens/animations, DI registration
-- [ ] 05-02-PLAN.md — SessionTests: 16 integration tests covering all service operations
-- [ ] 05-03-PLAN.md — Session page (landing + active) and SessionExerciseItem component
+- [x] 05-02-PLAN.md — SessionTests: 16 integration tests covering all service operations
+- [x] 05-03-PLAN.md — Session page (landing + active) and SessionExerciseItem component
 - [x] 05-04-PLAN.md — WorkoutDetailDialog "Start Session" button and MainLayout nav link
 - [ ] 05-05-PLAN.md — SessionSummary overlay, AbandonSessionDialog, NavigationLock wiring
 
