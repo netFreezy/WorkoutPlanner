@@ -20,6 +20,9 @@ builder.Services.AddScoped<SchedulingService>();
 builder.Services.AddScoped<SessionService>();
 builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<PRDetectionService>();
+builder.Services.AddScoped<OverloadService>();
+builder.Services.AddScoped<ExportService>();
+builder.Services.AddScoped<HistoryService>();
 
 builder.Services.AddApexCharts(e =>
 {
