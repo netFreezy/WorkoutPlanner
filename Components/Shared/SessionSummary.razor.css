@@ -1,0 +1,239 @@
+/* --- Summary Overlay --- */
+.summary-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg-primary);
+    z-index: var(--z-session-summary);
+    overflow-y: auto;
+    padding: var(--space-2xl) var(--space-xl);
+    animation: summarySlideUp 350ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.summary-content {
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* --- Header --- */
+.summary-header {
+    text-align: center;
+}
+
+.summary-header__title {
+    font-size: var(--font-size-heading);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.summary-header__subtitle {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    margin: var(--space-xs) 0 0;
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+}
+
+.stat-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    text-align: center;
+}
+
+.stat-card__value {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.stat-card__suffix {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-regular);
+}
+
+.stat-card__label {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    letter-spacing: var(--letter-spacing-label);
+    text-transform: uppercase;
+    margin-top: var(--space-xs);
+}
+
+/* --- RPE Section --- */
+.rpe-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.rpe-section__label {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.rpe-section__value {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    transition: color var(--transition-fast);
+}
+
+.rpe-section__descriptor {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+/* --- RPE Slider --- */
+::deep .rpe-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(to right, var(--color-rpe-low) 0%, var(--color-rpe-mid) 50%, var(--color-rpe-high) 100%);
+    outline: none;
+    cursor: pointer;
+}
+
+::deep .rpe-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background: white;
+    border: 3px solid var(--color-accent);
+    cursor: grab;
+    box-shadow: var(--shadow-md);
+}
+
+::deep .rpe-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background: white;
+    border: 3px solid var(--color-accent);
+    cursor: grab;
+    box-shadow: var(--shadow-md);
+}
+
+::deep .rpe-slider::-moz-range-track {
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(to right, var(--color-rpe-low) 0%, var(--color-rpe-mid) 50%, var(--color-rpe-high) 100%);
+}
+
+/* --- Notes Section --- */
+.notes-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.notes-section__label {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    letter-spacing: var(--letter-spacing-label);
+    text-transform: uppercase;
+}
+
+::deep .notes-section__input {
+    width: 100%;
+    min-height: 80px;
+    max-height: 200px;
+    resize: vertical;
+    padding: var(--space-md);
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-body);
+    font-family: var(--font-family);
+    color: var(--color-text-primary);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    box-sizing: border-box;
+}
+
+::deep .notes-section__input::placeholder {
+    color: var(--color-input-placeholder);
+}
+
+::deep .notes-section__input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-muted);
+}
+
+/* --- Footer --- */
+.summary-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.summary-footer__back {
+    background: transparent;
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.summary-footer__back:hover {
+    background: var(--color-bg-glass-hover);
+    color: var(--color-text-primary);
+}
+
+.summary-footer__finish {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-xl);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.summary-footer__finish:hover {
+    box-shadow: var(--shadow-glow-accent);
+    transform: translateY(-1px);
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-footer {
+        flex-direction: column;
+    }
+
+    .summary-footer__back,
+    .summary-footer__finish {
+        width: 100%;
+        text-align: center;
+    }
+}

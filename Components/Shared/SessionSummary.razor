@@ -1,0 +1,148 @@
+@if (IsVisible)
+{
+    <div class="summary-overlay">
+        <div class="summary-content">
+
+            @* --- Header --- *@
+            <div class="summary-header">
+                <h1 class="summary-header__title">Session Complete</h1>
+                <p class="summary-header__subtitle">@GetWorkoutName()</p>
+            </div>
+
+            @* --- Stats Grid --- *@
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card__value">@FormatDuration()</div>
+                    <div class="stat-card__label">Duration</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value">@GetCompletedCount()/@TotalExercises</div>
+                    <div class="stat-card__label">Exercises</div>
+                </div>
+                @if (HasEnduranceOnly())
+                {
+                    <div class="stat-card">
+                        <div class="stat-card__value">@FormatDistance(GetTotalDistance()) <span class="stat-card__suffix">km</span></div>
+                        <div class="stat-card__label">Total Distance</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="stat-card">
+                        <div class="stat-card__value">@FormatVolume(GetTotalVolume()) <span class="stat-card__suffix">kg</span></div>
+                        <div class="stat-card__label">Total Volume</div>
+                    </div>
+                }
+                <div class="stat-card">
+                    <div class="stat-card__value">@GetCompletedSetsCount()</div>
+                    <div class="stat-card__label">Total Sets</div>
+                </div>
+            </div>
+
+            @* --- RPE Slider --- *@
+            <div class="rpe-section">
+                <label class="rpe-section__label">How hard was that?</label>
+                <div class="rpe-section__value" style="color: @GetRpeColor()">@rpeValue</div>
+                <input type="range" min="1" max="10" step="1" @bind="rpeValue" @bind:event="oninput" class="rpe-slider" />
+                <div class="rpe-section__descriptor">@GetRpeDescriptor()</div>
+            </div>
+
+            @* --- Notes --- *@
+            <div class="notes-section">
+                <label class="notes-section__label">Session Notes</label>
+                <textarea class="notes-section__input" @bind="notes" placeholder="How did the session go? Any notes for next time..."></textarea>
+            </div>
+
+            @* --- Footer Buttons --- *@
+            <div class="summary-footer">
+                <button class="summary-footer__back" @onclick="HandleBack">Back to Session</button>
+                <button class="summary-footer__finish" @onclick="HandleFinish">Finish Session</button>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public WorkoutLog WorkoutLog { get; set; } = null!;
+    [Parameter] public TimeSpan Elapsed { get; set; }
+    [Parameter] public Dictionary<int, ExerciseCompletionStatus> ExerciseStatuses { get; set; } = new();
+    [Parameter] public int TotalExercises { get; set; }
+    [Parameter] public EventCallback<(int? rpe, string? notes)> OnFinish { get; set; }
+    [Parameter] public EventCallback OnBack { get; set; }
+
+    private int rpeValue = 5;
+    private string? notes;
+
+    private string GetWorkoutName()
+    {
+        return WorkoutLog?.ScheduledWorkout?.WorkoutTemplate?.Name ?? "Workout";
+    }
+
+    private string FormatDuration()
+    {
+        if (Elapsed.TotalHours >= 1)
+            return Elapsed.ToString(@"h\:mm\:ss");
+        return Elapsed.ToString(@"mm\:ss");
+    }
+
+    private int GetCompletedCount()
+    {
+        return ExerciseStatuses.Count(s => s.Value == ExerciseCompletionStatus.Complete);
+    }
+
+    private double GetTotalVolume()
+    {
+        if (WorkoutLog == null) return 0;
+        return WorkoutLog.SetLogs
+            .Where(sl => sl.IsCompleted)
+            .Sum(sl => (sl.ActualWeight ?? 0) * (sl.ActualReps ?? 0));
+    }
+
+    private double GetTotalDistance()
+    {
+        if (WorkoutLog == null) return 0;
+        return WorkoutLog.EnduranceLogs
+            .Where(el => el.IsCompleted)
+            .Sum(el => el.ActualDistance ?? 0);
+    }
+
+    private bool HasEnduranceOnly()
+    {
+        if (WorkoutLog == null) return false;
+        var hasStrength = WorkoutLog.SetLogs.Any(sl => sl.IsCompleted);
+        var hasEndurance = WorkoutLog.EnduranceLogs.Any(el => el.IsCompleted);
+        return hasEndurance && !hasStrength;
+    }
+
+    private int GetCompletedSetsCount()
+    {
+        if (WorkoutLog == null) return 0;
+        return WorkoutLog.SetLogs.Count(sl => sl.IsCompleted);
+    }
+
+    private string GetRpeColor() => rpeValue switch
+    {
+        <= 3 => "var(--color-rpe-low)",
+        <= 6 => "var(--color-rpe-mid)",
+        _ => "var(--color-rpe-high)"
+    };
+
+    private string GetRpeDescriptor() => rpeValue switch
+    {
+        1 or 2 => "Very Light",
+        3 or 4 => "Light",
+        5 or 6 => "Moderate",
+        7 or 8 => "Hard",
+        9 => "Very Hard",
+        10 => "Maximum Effort",
+        _ => ""
+    };
+
+    private string FormatVolume(double volume) => volume.ToString("N0");
+    private string FormatDistance(double distance) => distance.ToString("F1");
+
+    private async Task HandleBack() => await OnBack.InvokeAsync();
+    private async Task HandleFinish() => await OnFinish.InvokeAsync((rpeValue, notes));
+}
