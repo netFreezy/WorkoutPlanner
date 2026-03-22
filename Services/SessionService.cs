@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp2.Services;
 
-public class SessionService(IDbContextFactory<AppDbContext> contextFactory)
+public class SessionService(IDbContextFactory<AppDbContext> contextFactory, PRDetectionService prDetectionService)
 {
     private readonly IDbContextFactory<AppDbContext> _contextFactory = contextFactory;
+    private readonly PRDetectionService _prDetectionService = prDetectionService;
 
     /// <summary>
     /// Starts a new session for a scheduled workout by creating a WorkoutLog
@@ -251,21 +252,26 @@ public class SessionService(IDbContextFactory<AppDbContext> contextFactory)
 
     /// <summary>
     /// Finishes a session with RPE and notes per D-11.
+    /// Detects PRs inline per D-09 and returns any new personal records.
     /// </summary>
-    public async Task FinishSessionAsync(int workoutLogId, int? rpe, string? notes)
+    public async Task<List<PersonalRecord>> FinishSessionAsync(int workoutLogId, int? rpe, string? notes)
     {
         await using var context = await _contextFactory.CreateDbContextAsync();
 
         var log = await context.WorkoutLogs
             .Include(wl => wl.ScheduledWorkout)
             .FirstOrDefaultAsync(wl => wl.Id == workoutLogId);
-        if (log == null) return;
+        if (log == null) return new List<PersonalRecord>();
 
         log.CompletedAt = DateTime.UtcNow;
         log.Rpe = rpe;
         log.Notes = notes;
         log.ScheduledWorkout.Status = WorkoutStatus.Completed;
         await context.SaveChangesAsync();
+
+        // Detect PRs inline per D-09
+        var newPRs = await _prDetectionService.DetectAndSavePRsAsync(workoutLogId);
+        return newPRs;
     }
 
     /// <summary>

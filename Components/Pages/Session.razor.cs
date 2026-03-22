@@ -266,9 +266,18 @@ public partial class Session : IDisposable
     private async Task HandleFinishSession((int? rpe, string? notes) args)
     {
         if (workoutLog == null) return;
-        await SessionService.FinishSessionAsync(workoutLog.Id, args.rpe, args.notes);
+        var newPRs = await SessionService.FinishSessionAsync(workoutLog.Id, args.rpe, args.notes);
         _elapsedTimer?.Dispose();
-        NavigationManager.NavigateTo("/calendar?toast=Session+complete");
+
+        // Build toast message including PR notifications
+        var message = "Session complete!";
+        if (newPRs.Any())
+        {
+            var prMessages = newPRs.Select(pr => $"New PR! {pr.Exercise.Name} \u2014 {pr.DisplayValue}");
+            message = string.Join(" | ", new[] { message }.Concat(prMessages));
+        }
+
+        NavigationManager.NavigateTo($"/calendar?toast={Uri.EscapeDataString(message)}", forceLoad: false);
     }
 
     private void HandleBackToSession()

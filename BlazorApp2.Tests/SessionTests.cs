@@ -64,7 +64,7 @@ public class SessionTests : DataTestBase
     {
         var (template, scheduled, strengthEx, enduranceEx) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
 
@@ -96,7 +96,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var first = await service.StartSessionAsync(scheduled.Id);
         var second = await service.StartSessionAsync(scheduled.Id);
@@ -109,7 +109,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var setLogId = workoutLog.SetLogs.First().Id;
@@ -130,7 +130,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var setLogId = workoutLog.SetLogs.First().Id;
@@ -148,7 +148,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var setLogId = workoutLog.SetLogs.First().Id;
@@ -165,7 +165,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var enduranceLogId = workoutLog.EnduranceLogs.First().Id;
@@ -190,7 +190,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, strengthEx, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
 
@@ -213,7 +213,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var setLogId = workoutLog.SetLogs.First().Id;
@@ -294,7 +294,7 @@ public class SessionTests : DataTestBase
     {
         var (_, _, strengthEx, enduranceEx) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         // Create 4 completed sessions with different dates and weights
         CreateCompletedSession(strengthEx, enduranceEx, new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc), 50.0, 10, 5.0, 1500);
@@ -318,7 +318,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, strengthEx, enduranceEx) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         // Create 2 completed sessions
         CreateCompletedSession(strengthEx, enduranceEx, new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc), 50.0, 10, 5.0, 1500);
@@ -338,7 +338,7 @@ public class SessionTests : DataTestBase
     {
         var (_, _, strengthEx, enduranceEx) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         // Create 2 completed endurance sessions
         CreateCompletedSession(strengthEx, enduranceEx, new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc), 50.0, 10, 5.0, 1500);
@@ -359,7 +359,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         await service.FinishSessionAsync(workoutLog.Id, 7, "Good session");
@@ -379,7 +379,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         var firstSetId = workoutLog.SetLogs.First().Id;
@@ -408,7 +408,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         await service.StartSessionAsync(scheduled.Id);
 
@@ -423,7 +423,7 @@ public class SessionTests : DataTestBase
     {
         var (_, scheduled, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var workoutLog = await service.StartSessionAsync(scheduled.Id);
         await service.FinishSessionAsync(workoutLog.Id, 6, null);
@@ -438,7 +438,7 @@ public class SessionTests : DataTestBase
     {
         var (template, _, _, _) = CreateSessionTestSetup();
         var factory = new TestDbContextFactory(Connection);
-        var service = new SessionService(factory);
+        var service = new SessionService(factory, new PRDetectionService(factory));
 
         var today = DateTime.UtcNow.Date;
         var yesterday = today.AddDays(-1);
