@@ -26,9 +26,9 @@ A single system where you plan, log, and analyze both strength and endurance tra
 - ✓ Session tracker — real-time workout logging with incremental persistence, previous performance, RPE/notes, resume on reconnect — Validated in Phase 05: session-tracking (SESS-06 rest timer deferred per D-14)
 - ✓ Workout logging — planned-vs-actual with strength set logging and endurance data entry — Validated in Phase 05: session-tracking
 - ✓ RPE and session notes — RPE 1-10 slider and free-text notes on session finish — Validated in Phase 05: session-tracking
+- ✓ Analytics dashboard — volume trends, PR tracking with automatic detection, streak/consistency metrics, endurance pace/distance trends, planned-vs-actual deviation — Validated in Phase 06: analytics
 
 ### Active
-- [ ] Analytics dashboard — volume trends over time (total sets, weight lifted per week), PR tracking with automatic detection, streak and consistency metrics (X/Y planned workouts completed), endurance pace trends and distance per week
 - [ ] Progressive overload suggestions — if target hit consistently (e.g. 3x8 at 20kg for two sessions), nudge to increase weight
 - [ ] Warm-up / cool-down blocks — separate template sections that don't count toward working volume stats
 - [ ] Quick-start repeat last workout — open app, today's recurring workout is right there, one tap to start logging
@@ -87,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-22 after Phase 05 completion — Session tracking complete (real-time logging, incremental persistence, previous performance, RPE/notes, resume on reconnect, session summary)*
+*Last updated: 2026-03-22 after Phase 06 completion — Analytics dashboard with unified training progress, automatic PR detection, adherence tracking, and interactive charts*
