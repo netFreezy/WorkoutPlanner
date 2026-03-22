@@ -1,7 +1,8 @@
 ---
 phase: 6
 slug: analytics
-status: draft
+status: approved
+reviewed_at: 2026-03-22
 shadcn_initialized: false
 preset: none
 created: 2026-03-22
