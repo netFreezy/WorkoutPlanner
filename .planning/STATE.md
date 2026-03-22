@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-05-PLAN.md
-last_updated: "2026-03-22T10:09:24.826Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-22T11:06:44.328Z"
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 20
-  completed_plans: 20
+  total_plans: 24
+  completed_plans: 21
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** A single system where you plan, log, and analyze both strength and endurance training side by side
-**Current focus:** Phase 05 — session-tracking
+**Current focus:** Phase 06 — analytics
 
 ## Current Position
 
-Phase: 6
-Plan: Not started
+Phase: 06 (analytics) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Plan: Not started
 | Phase 05 P02 | 5min | 2 tasks | 2 files |
 | Phase 05 P03 | 5min | 2 tasks | 5 files |
 | Phase 05 P05 | 3min | 2 tasks | 6 files |
+| Phase 06 P01 | 3min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Local editingValues dictionary decouples input state from committed SetLog data until checkmark pressed
 - [Phase 05]: Query parameter toast: navigate to /calendar?toast=message for cross-page notification after session finish/abandon
 - [Phase 05]: NavigationLock with InvokeAsync(StateHasChanged) to update UI when preventing navigation and showing abandon dialog
+- [Phase 06]: IDbContextFactory per-method pattern reused for analytics queries (Blazor Server thread safety)
+- [Phase 06]: Client-side GroupBy for weekly bucketing to avoid EF Core SQLite translation issues
+- [Phase 06]: Epley formula (weight * (1 + reps/30)) for estimated 1RM, Mode.Dark enum for ApexCharts theme
 
 ### Pending Todos
 
@@ -132,6 +136,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T10:02:58.481Z
-Stopped at: Completed 05-05-PLAN.md
+Last session: 2026-03-22T11:06:44.324Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None

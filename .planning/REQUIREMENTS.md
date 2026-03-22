@@ -58,11 +58,11 @@
 
 ### Analytics
 
-- [ ] **ANLY-01**: Volume trends — total sets and total weight lifted per week over time
-- [ ] **ANLY-02**: PR tracking with automatic detection (weight PR, rep PR, estimated 1RM, pace PR, distance PR)
-- [ ] **ANLY-03**: Streak and consistency metrics — X workouts completed out of Y planned per week/month
-- [ ] **ANLY-04**: Endurance trends — pace and distance per week over time
-- [ ] **ANLY-05**: Planned vs. actual adherence — deviation display per session and over time
+- [x] **ANLY-01**: Volume trends — total sets and total weight lifted per week over time
+- [x] **ANLY-02**: PR tracking with automatic detection (weight PR, rep PR, estimated 1RM, pace PR, distance PR)
+- [x] **ANLY-03**: Streak and consistency metrics — X workouts completed out of Y planned per week/month
+- [x] **ANLY-04**: Endurance trends — pace and distance per week over time
+- [x] **ANLY-05**: Planned vs. actual adherence — deviation display per session and over time
 
 ### Quality of Life
 
@@ -136,11 +136,11 @@
 | SESS-08 | Phase 5 | Complete |
 | SESS-09 | Phase 5 | Complete |
 | SESS-10 | Phase 5 | Complete |
-| ANLY-01 | Phase 6 | Pending |
-| ANLY-02 | Phase 6 | Pending |
-| ANLY-03 | Phase 6 | Pending |
-| ANLY-04 | Phase 6 | Pending |
-| ANLY-05 | Phase 6 | Pending |
+| ANLY-01 | Phase 6 | Complete |
+| ANLY-02 | Phase 6 | Complete |
+| ANLY-03 | Phase 6 | Complete |
+| ANLY-04 | Phase 6 | Complete |
+| ANLY-05 | Phase 6 | Complete |
 | QOL-01 | Phase 7 | Pending |
 | QOL-02 | Phase 7 | Pending |
 | QOL-03 | Phase 7 | Pending |
