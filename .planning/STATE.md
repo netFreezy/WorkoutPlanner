@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-22T09:57:11.290Z"
+stopped_at: Completed 05-05-PLAN.md
+last_updated: "2026-03-22T10:02:58.485Z"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 20
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -65,6 +65,7 @@ Plan: 5 of 5
 | Phase 05 P04 | 1min | 2 tasks | 3 files |
 | Phase 05 P02 | 5min | 2 tasks | 2 files |
 | Phase 05 P03 | 5min | 2 tasks | 5 files |
+| Phase 05 P05 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,8 @@ Recent decisions affecting current work:
 - [Phase 05]: System.Threading.Timer with InvokeAsync(StateHasChanged) for elapsed time counter -- no JS interop
 - [Phase 05]: On-demand previous performance loading in SessionExerciseItem (fetch on first drawer toggle, not eagerly)
 - [Phase 05]: Local editingValues dictionary decouples input state from committed SetLog data until checkmark pressed
+- [Phase 05]: Query parameter toast: navigate to /calendar?toast=message for cross-page notification after session finish/abandon
+- [Phase 05]: NavigationLock with InvokeAsync(StateHasChanged) to update UI when preventing navigation and showing abandon dialog
 
 ### Pending Todos
 
@@ -129,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T09:57:11.286Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-22T10:02:58.481Z
+Stopped at: Completed 05-05-PLAN.md
 Resume file: None

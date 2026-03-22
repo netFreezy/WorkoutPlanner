@@ -107,7 +107,7 @@ Plans:
 - [x] 05-02-PLAN.md — SessionTests: 16 integration tests covering all service operations
 - [x] 05-03-PLAN.md — Session page (landing + active) and SessionExerciseItem component
 - [x] 05-04-PLAN.md — WorkoutDetailDialog "Start Session" button and MainLayout nav link
-- [ ] 05-05-PLAN.md — SessionSummary overlay, AbandonSessionDialog, NavigationLock wiring
+- [x] 05-05-PLAN.md — SessionSummary overlay, AbandonSessionDialog, NavigationLock wiring
 
 ### Phase 6: Analytics
 **Goal**: Users can view unified training progress across strength and endurance with automatic PR detection and adherence tracking
