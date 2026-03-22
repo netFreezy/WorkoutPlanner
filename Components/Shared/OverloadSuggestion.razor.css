@@ -1,0 +1,95 @@
+.suggestion-card {
+    background: var(--color-suggestion-bg);
+    border: 1px solid var(--color-suggestion-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.suggestion-card--dismissing {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.suggestion-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.suggestion-icon {
+    color: var(--color-suggestion-text);
+    flex-shrink: 0;
+}
+
+.suggestion-heading {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--color-suggestion-text);
+}
+
+.suggestion-body {
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-md) 0;
+}
+
+.suggestion-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.btn-apply {
+    background: var(--color-accent);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-label);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--transition-fast);
+}
+
+.btn-apply:hover {
+    background: var(--color-accent-hover);
+}
+
+.btn-dismiss {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-label);
+    font-weight: 400;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color var(--transition-fast);
+}
+
+.btn-dismiss:hover {
+    border-color: var(--color-border-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .suggestion-card {
+        animation: fadeSlideIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

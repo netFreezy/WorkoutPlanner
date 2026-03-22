@@ -335,6 +335,29 @@ public class SessionService(IDbContextFactory<AppDbContext> contextFactory, PRDe
         setLog.SetType = setType;
         await context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Updates planned and actual weight for all incomplete sets of an exercise in a workout log.
+    /// Used by progressive overload suggestions to apply the new target weight.
+    /// </summary>
+    public async Task UpdatePlannedWeightAsync(int workoutLogId, int exerciseId, double newWeight)
+    {
+        await using var context = await _contextFactory.CreateDbContextAsync();
+
+        var setLogs = await context.SetLogs
+            .Where(sl => sl.WorkoutLogId == workoutLogId
+                && sl.ExerciseId == exerciseId
+                && !sl.IsCompleted)
+            .ToListAsync();
+
+        foreach (var setLog in setLogs)
+        {
+            setLog.PlannedWeight = newWeight;
+            setLog.ActualWeight = newWeight;
+        }
+
+        await context.SaveChangesAsync();
+    }
 }
 
 // DTOs for previous performance queries

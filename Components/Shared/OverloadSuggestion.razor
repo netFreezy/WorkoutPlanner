@@ -1,0 +1,45 @@
+@using BlazorApp2.Services
+
+<div class="suggestion-card @(isDismissing ? "suggestion-card--dismissing" : "")" role="alert">
+    <div class="suggestion-header">
+        <svg class="suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+        </svg>
+        <span class="suggestion-heading">Ready to increase weight</span>
+    </div>
+    <p class="suggestion-body">
+        You hit @Suggestion.PlannedSets x@Suggestion.PlannedReps at @Suggestion.CurrentWeight kg in your last @Suggestion.ConsecutiveSessions sessions.
+        Try @Suggestion.SuggestedWeight kg today.
+    </p>
+    <div class="suggestion-actions">
+        <button class="btn-apply" @onclick="HandleApply">
+            Apply +@Suggestion.Increment kg
+        </button>
+        <button class="btn-dismiss" @onclick="HandleDismiss">
+            Dismiss
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public BlazorApp2.Services.OverloadSuggestion Suggestion { get; set; } = null!;
+    [Parameter] public EventCallback<BlazorApp2.Services.OverloadSuggestion> OnApply { get; set; }
+    [Parameter] public EventCallback<int> OnDismiss { get; set; }
+
+    private bool isDismissing = false;
+
+    private async Task HandleApply()
+    {
+        await OnApply.InvokeAsync(Suggestion);
+    }
+
+    private async Task HandleDismiss()
+    {
+        isDismissing = true;
+        StateHasChanged();
+        await Task.Delay(200);
+        await OnDismiss.InvokeAsync(Suggestion.ExerciseId);
+    }
+}

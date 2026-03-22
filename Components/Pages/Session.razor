@@ -56,6 +56,14 @@
                 var enduranceLog = GetEnduranceLogForExercise(exerciseId);
                 var status = exerciseStatuses.ContainsKey(exerciseId) ? exerciseStatuses[exerciseId] : (ExerciseCompletionStatus?)null;
                 var pos = position;
+                var suggestion = GetSuggestionForExercise(exerciseId);
+
+                @if (suggestion != null)
+                {
+                    <OverloadSuggestion Suggestion="suggestion"
+                                        OnApply="ApplyOverload"
+                                        OnDismiss="DismissOverload" />
+                }
 
                 <SessionExerciseItem
                     Exercise="exercise"

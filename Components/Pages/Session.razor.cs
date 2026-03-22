@@ -10,6 +10,7 @@ namespace BlazorApp2.Components.Pages;
 public partial class Session : IDisposable
 {
     [Parameter] public int ScheduledWorkoutId { get; set; }
+    [Inject] private OverloadService OverloadService { get; set; } = null!;
 
     private WorkoutLog? workoutLog;
     private Dictionary<int, ExerciseCompletionStatus> exerciseStatuses = new();
@@ -23,6 +24,8 @@ public partial class Session : IDisposable
     private Toast? _toast;
     private bool showSummary = false;
     private bool showAbandonDialog = false;
+    private List<Services.OverloadSuggestion> overloadSuggestions = new();
+    private HashSet<int> dismissedSuggestions = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,6 +59,12 @@ public partial class Session : IDisposable
                         workoutLog.EnduranceLogs.Any(el => el.IsCompleted);
 
             exerciseOrder = GetExerciseOrder();
+
+            // Load overload suggestions per D-06 (at session start)
+            if (workoutLog != null)
+            {
+                overloadSuggestions = await OverloadService.GetSuggestionsAsync(workoutLog.Id);
+            }
 
             // Set first pending exercise as expanded
             expandedExerciseId = exerciseOrder.FirstOrDefault(id => !exerciseStatuses.ContainsKey(id));
@@ -307,6 +316,41 @@ public partial class Session : IDisposable
             showAbandonDialog = true;
             InvokeAsync(StateHasChanged);
         }
+    }
+
+    private Services.OverloadSuggestion? GetSuggestionForExercise(int exerciseId)
+    {
+        if (dismissedSuggestions.Contains(exerciseId)) return null;
+        return overloadSuggestions.FirstOrDefault(s => s.ExerciseId == exerciseId);
+    }
+
+    private async Task ApplyOverload(Services.OverloadSuggestion suggestion)
+    {
+        if (workoutLog != null)
+        {
+            // Update local state for all sets of this exercise
+            foreach (var setLog in workoutLog.SetLogs.Where(sl => sl.ExerciseId == suggestion.ExerciseId && !sl.IsCompleted))
+            {
+                setLog.PlannedWeight = suggestion.SuggestedWeight;
+                setLog.ActualWeight = suggestion.SuggestedWeight;
+            }
+
+            // Persist the updated weights
+            await SessionService.UpdatePlannedWeightAsync(workoutLog.Id, suggestion.ExerciseId, suggestion.SuggestedWeight);
+        }
+        dismissedSuggestions.Add(suggestion.ExerciseId);
+
+        if (_toast != null)
+        {
+            await _toast.ShowAsync($"Weight updated to {suggestion.SuggestedWeight}kg");
+        }
+        StateHasChanged();
+    }
+
+    private void DismissOverload(int exerciseId)
+    {
+        dismissedSuggestions.Add(exerciseId);
+        StateHasChanged();
     }
 
     public void Dispose()
