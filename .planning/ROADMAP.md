@@ -122,7 +122,7 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — PersonalRecord entity, AnalyticsService, PRDetectionService, BlazorApexCharts setup, CSS tokens
-- [ ] 06-02-PLAN.md — AnalyticsService and PRDetectionService integration tests
+- [x] 06-02-PLAN.md — AnalyticsService and PRDetectionService integration tests
 - [x] 06-03-PLAN.md — Analytics dashboard page with tabs, KPI cards, charts, time range, exercise drill-down
 - [ ] 06-04-PLAN.md — PRs tab record book, PR timeline chart, session finish PR detection with toast
 
