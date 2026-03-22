@@ -3,6 +3,7 @@ using BlazorApp2.Data.Entities;
 using BlazorApp2.Data.Enums;
 using BlazorApp2.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace BlazorApp2.Components.Pages;
 
@@ -10,6 +11,8 @@ public partial class Analytics : ComponentBase
 {
     [Inject] private AnalyticsService AnalyticsService { get; set; } = null!;
     [Inject] private PRDetectionService PRDetectionService { get; set; } = null!;
+    [Inject] private ExportService ExportService { get; set; } = null!;
+    [Inject] private IJSRuntime JS { get; set; } = null!;
 
     private string activeTab = "overview";
     private int selectedWeeks = 4; // Default per D-14
@@ -189,4 +192,67 @@ public partial class Analytics : ComponentBase
         12 => "12 weeks",
         _ => "all time"
     };
+
+    // Export state
+    private bool isExportingCsv = false;
+    private bool isExportingPdf = false;
+
+    private async Task ExportCsv()
+    {
+        isExportingCsv = true;
+        StateHasChanged();
+        try
+        {
+            // Per D-09, always attempt both strength and endurance downloads
+            var strengthBytes = await ExportService.GenerateStrengthCsvAsync(RangeStart, RangeEnd);
+            var enduranceBytes = await ExportService.GenerateEnduranceCsvAsync(RangeStart, RangeEnd);
+
+            // Download strength CSV
+            var strengthFileName = $"strength-data-{DateTime.UtcNow:yyyy-MM-dd}.csv";
+            using var stream = new MemoryStream(strengthBytes);
+            using var streamRef = new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("downloadFileFromStream", strengthFileName, streamRef);
+
+            // Download endurance CSV only if it contains data rows (not just header)
+            if (enduranceBytes.Length > 50)
+            {
+                var enduranceFileName = $"endurance-data-{DateTime.UtcNow:yyyy-MM-dd}.csv";
+                using var endStream = new MemoryStream(enduranceBytes);
+                using var endStreamRef = new DotNetStreamReference(endStream);
+                await JS.InvokeVoidAsync("downloadFileFromStream", enduranceFileName, endStreamRef);
+            }
+        }
+        catch (Exception)
+        {
+            // Silent catch for now; toast notification can be added later
+        }
+        finally
+        {
+            isExportingCsv = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ExportPdf()
+    {
+        isExportingPdf = true;
+        StateHasChanged();
+        try
+        {
+            var pdfBytes = await ExportService.GenerateTrainingSummaryPdfAsync(RangeStart, RangeEnd);
+            var fileName = $"training-summary-{DateTime.UtcNow:yyyy-MM-dd}.pdf";
+            using var stream = new MemoryStream(pdfBytes);
+            using var streamRef = new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+        catch (Exception)
+        {
+            // Silent catch for now; toast notification can be added later
+        }
+        finally
+        {
+            isExportingPdf = false;
+            StateHasChanged();
+        }
+    }
 }

@@ -10,15 +10,49 @@
     @* --- Page Header --- *@
     <div class="analytics-header">
         <h1>Analytics</h1>
-        <div class="time-range" role="group" aria-label="Time range selector">
-            <button class="time-range__btn @(selectedWeeks == 4 ? "time-range__btn--active" : "")"
-                    aria-pressed="@(selectedWeeks == 4)" @onclick="() => ChangeTimeRange(4)">4W</button>
-            <button class="time-range__btn @(selectedWeeks == 8 ? "time-range__btn--active" : "")"
-                    aria-pressed="@(selectedWeeks == 8)" @onclick="() => ChangeTimeRange(8)">8W</button>
-            <button class="time-range__btn @(selectedWeeks == 12 ? "time-range__btn--active" : "")"
-                    aria-pressed="@(selectedWeeks == 12)" @onclick="() => ChangeTimeRange(12)">12W</button>
-            <button class="time-range__btn @(selectedWeeks == 0 ? "time-range__btn--active" : "")"
-                    aria-pressed="@(selectedWeeks == 0)" @onclick="() => ChangeTimeRange(0)">All</button>
+        <div class="header-actions">
+            <div class="export-buttons">
+                <button class="export-btn" @onclick="ExportCsv" disabled="@isExportingCsv"
+                        aria-label="Export training data as CSV" aria-busy="@isExportingCsv">
+                    @if (isExportingCsv)
+                    {
+                        <span class="export-spinner"></span>
+                        <span>Exporting...</span>
+                    }
+                    else
+                    {
+                        <svg class="export-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        <span>CSV</span>
+                    }
+                </button>
+                <button class="export-btn" @onclick="ExportPdf" disabled="@isExportingPdf"
+                        aria-label="Export training summary as PDF" aria-busy="@isExportingPdf">
+                    @if (isExportingPdf)
+                    {
+                        <span class="export-spinner"></span>
+                        <span>Exporting...</span>
+                    }
+                    else
+                    {
+                        <svg class="export-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        <span>PDF</span>
+                    }
+                </button>
+            </div>
+            <div class="time-range" role="group" aria-label="Time range selector">
+                <button class="time-range__btn @(selectedWeeks == 4 ? "time-range__btn--active" : "")"
+                        aria-pressed="@(selectedWeeks == 4)" @onclick="() => ChangeTimeRange(4)">4W</button>
+                <button class="time-range__btn @(selectedWeeks == 8 ? "time-range__btn--active" : "")"
+                        aria-pressed="@(selectedWeeks == 8)" @onclick="() => ChangeTimeRange(8)">8W</button>
+                <button class="time-range__btn @(selectedWeeks == 12 ? "time-range__btn--active" : "")"
+                        aria-pressed="@(selectedWeeks == 12)" @onclick="() => ChangeTimeRange(12)">12W</button>
+                <button class="time-range__btn @(selectedWeeks == 0 ? "time-range__btn--active" : "")"
+                        aria-pressed="@(selectedWeeks == 0)" @onclick="() => ChangeTimeRange(0)">All</button>
+            </div>
         </div>
     </div>
 
