@@ -1,0 +1,227 @@
+using Microsoft.EntityFrameworkCore;
+using BlazorApp2.Data;
+using BlazorApp2.Data.Entities;
+using BlazorApp2.Data.Enums;
+using BlazorApp2.Services;
+
+namespace BlazorApp2.Tests;
+
+public class SessionTests : DataTestBase
+{
+    private (WorkoutTemplate template, ScheduledWorkout scheduled, StrengthExercise strengthExercise, EnduranceExercise enduranceExercise) CreateSessionTestSetup()
+    {
+        var strengthExercise = new StrengthExercise
+        {
+            Name = "Bench Press",
+            MuscleGroup = MuscleGroup.Chest,
+            Equipment = Equipment.Barbell
+        };
+        var enduranceExercise = new EnduranceExercise
+        {
+            Name = "5K Run",
+            ActivityType = ActivityType.Run
+        };
+
+        Context.StrengthExercises.Add(strengthExercise);
+        Context.EnduranceExercises.Add(enduranceExercise);
+        Context.SaveChanges();
+
+        var template = new WorkoutTemplate { Name = "Test Session Workout" };
+        template.Items.Add(new TemplateItem
+        {
+            ExerciseId = strengthExercise.Id,
+            Position = 1,
+            TargetSets = 3,
+            TargetReps = 10,
+            TargetWeight = 60.0
+        });
+        template.Items.Add(new TemplateItem
+        {
+            ExerciseId = enduranceExercise.Id,
+            Position = 2,
+            TargetDistance = 5.0,
+            TargetDurationSeconds = 1500,
+            TargetPace = 5.0,
+            TargetHeartRateZone = 3
+        });
+        Context.WorkoutTemplates.Add(template);
+        Context.SaveChanges();
+
+        var scheduled = new ScheduledWorkout
+        {
+            ScheduledDate = new DateTime(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc),
+            Status = WorkoutStatus.Planned,
+            WorkoutTemplateId = template.Id
+        };
+        Context.ScheduledWorkouts.Add(scheduled);
+        Context.SaveChanges();
+
+        return (template, scheduled, strengthExercise, enduranceExercise);
+    }
+
+    [Fact]
+    public async Task StartSessionAsync_CreatesWorkoutLogWithSnapshotSetLogs()
+    {
+        var (template, scheduled, strengthEx, enduranceEx) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+
+        Assert.NotNull(workoutLog);
+        Assert.True(workoutLog.StartedAt > DateTime.MinValue);
+        Assert.Null(workoutLog.CompletedAt);
+
+        // 3 sets for strength exercise
+        Assert.Equal(3, workoutLog.SetLogs.Count);
+        foreach (var setLog in workoutLog.SetLogs)
+        {
+            Assert.Equal(10, setLog.PlannedReps);
+            Assert.Equal(60.0, setLog.PlannedWeight);
+            Assert.Equal(10, setLog.ActualReps);
+            Assert.Equal(60.0, setLog.ActualWeight);
+            Assert.False(setLog.IsCompleted);
+        }
+
+        // 1 endurance log
+        Assert.Single(workoutLog.EnduranceLogs);
+        var enduranceLog = workoutLog.EnduranceLogs.First();
+        Assert.Equal(5.0, enduranceLog.PlannedDistance);
+        Assert.Equal(1500, enduranceLog.PlannedDurationSeconds);
+        Assert.False(enduranceLog.IsCompleted);
+    }
+
+    [Fact]
+    public async Task StartSessionAsync_ResumeExistingSession_ReturnsSameWorkoutLog()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var first = await service.StartSessionAsync(scheduled.Id);
+        var second = await service.StartSessionAsync(scheduled.Id);
+
+        Assert.Equal(first.Id, second.Id);
+    }
+
+    [Fact]
+    public async Task CompleteSetAsync_PersistsActualValuesAndMarksCompleted()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+        var setLogId = workoutLog.SetLogs.First().Id;
+
+        await service.CompleteSetAsync(setLogId, 65.0, 8, SetType.Working);
+
+        // Reload from DB via fresh context
+        await using var verifyContext = factory.CreateDbContext();
+        var loaded = await verifyContext.SetLogs.FindAsync(setLogId);
+        Assert.NotNull(loaded);
+        Assert.Equal(65.0, loaded!.ActualWeight);
+        Assert.Equal(8, loaded.ActualReps);
+        Assert.True(loaded.IsCompleted);
+    }
+
+    [Fact]
+    public async Task UncompleteSetAsync_SetsIsCompletedFalse()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+        var setLogId = workoutLog.SetLogs.First().Id;
+
+        await service.CompleteSetAsync(setLogId, 60.0, 10, SetType.Working);
+        await service.UncompleteSetAsync(setLogId);
+
+        await using var verifyContext = factory.CreateDbContext();
+        var loaded = await verifyContext.SetLogs.FindAsync(setLogId);
+        Assert.False(loaded!.IsCompleted);
+    }
+
+    [Fact]
+    public async Task CompleteSetAsync_WithDifferentSetType_PersistsType()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+        var setLogId = workoutLog.SetLogs.First().Id;
+
+        await service.CompleteSetAsync(setLogId, 60.0, 6, SetType.Failure);
+
+        await using var verifyContext = factory.CreateDbContext();
+        var loaded = await verifyContext.SetLogs.FindAsync(setLogId);
+        Assert.Equal(SetType.Failure, loaded!.SetType);
+    }
+
+    [Fact]
+    public async Task SaveEnduranceLogAsync_PersistsValuesAndCalculatesPace()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+        var enduranceLogId = workoutLog.EnduranceLogs.First().Id;
+
+        await service.SaveEnduranceLogAsync(enduranceLogId, 5.2, 1560, 4);
+
+        await using var verifyContext = factory.CreateDbContext();
+        var loaded = await verifyContext.EnduranceLogs.FindAsync(enduranceLogId);
+        Assert.NotNull(loaded);
+        Assert.Equal(5.2, loaded!.ActualDistance);
+        Assert.Equal(1560, loaded.ActualDurationSeconds);
+        Assert.Equal(4, loaded.ActualHeartRateZone);
+        Assert.True(loaded.IsCompleted);
+
+        // Pace = (1560/60.0) / 5.2 = 26.0 / 5.2 = 5.0
+        Assert.NotNull(loaded.ActualPace);
+        Assert.Equal(5.0, loaded.ActualPace!.Value, 2);
+    }
+
+    [Fact]
+    public async Task AddSetAsync_CreatesSetWithIncrementedNumber()
+    {
+        var (_, scheduled, strengthEx, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+
+        var newSet = await service.AddSetAsync(workoutLog.Id, strengthEx.Id, 60.0);
+
+        Assert.Equal(4, newSet.SetNumber);
+        Assert.Equal(60.0, newSet.ActualWeight);
+        Assert.False(newSet.IsCompleted);
+
+        // Verify total count
+        await using var verifyContext = factory.CreateDbContext();
+        var totalSets = await verifyContext.SetLogs
+            .Where(sl => sl.WorkoutLogId == workoutLog.Id && sl.ExerciseId == strengthEx.Id)
+            .CountAsync();
+        Assert.Equal(4, totalSets);
+    }
+
+    [Fact]
+    public async Task UpdateSetTypeAsync_PersistsNewType()
+    {
+        var (_, scheduled, _, _) = CreateSessionTestSetup();
+        var factory = new TestDbContextFactory(Connection);
+        var service = new SessionService(factory);
+
+        var workoutLog = await service.StartSessionAsync(scheduled.Id);
+        var setLogId = workoutLog.SetLogs.First().Id;
+
+        await service.UpdateSetTypeAsync(setLogId, SetType.WarmUp);
+
+        await using var verifyContext = factory.CreateDbContext();
+        var loaded = await verifyContext.SetLogs.FindAsync(setLogId);
+        Assert.Equal(SetType.WarmUp, loaded!.SetType);
+    }
+}
