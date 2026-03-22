@@ -1,0 +1,64 @@
+@using BlazorApp2.Services
+
+<div class="history-detail">
+    @{ var position = 1; }
+    @foreach (var exercise in Session.Exercises)
+    {
+        <div class="exercise-entry @(exercise.IsStrength && exercise.Sets.Count == 0 ? "exercise-entry--skipped" : "")">
+            <div class="exercise-entry__header">
+                <span class="exercise-entry__position">@position</span>
+                <span class="exercise-entry__name">@exercise.ExerciseName</span>
+            </div>
+
+            @if (exercise.IsStrength)
+            {
+                @if (exercise.Sets.Count > 0)
+                {
+                    <div class="sets-grid">
+                        @foreach (var set in exercise.Sets)
+                        {
+                            <span class="set-item">@(set.Weight?.ToString("0.#") ?? "0")kg x @(set.Reps ?? 0)</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span class="skipped-label">Skipped</span>
+                }
+            }
+            else if (exercise.Endurance is not null)
+            {
+                <div class="endurance-data">
+                    @if (exercise.Endurance.Distance.HasValue)
+                    {
+                        <span>@exercise.Endurance.Distance.Value.ToString("F1") km</span>
+                    }
+                    @if (exercise.Endurance.DurationSeconds.HasValue)
+                    {
+                        var ts = TimeSpan.FromSeconds(exercise.Endurance.DurationSeconds.Value);
+                        <span>in @ts.ToString(@"h\:mm\:ss")</span>
+                    }
+                    @if (exercise.Endurance.Pace.HasValue)
+                    {
+                        var paceMinutes = (int)exercise.Endurance.Pace.Value;
+                        var paceSeconds = (int)((exercise.Endurance.Pace.Value - paceMinutes) * 60);
+                        <span>(@paceMinutes:@paceSeconds.ToString("D2")/km)</span>
+                    }
+                </div>
+            }
+        </div>
+        position++;
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Session.Notes))
+    {
+        <div class="session-notes">
+            <span class="session-notes__label">Notes</span>
+            <p class="session-notes__content">@Session.Notes</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public HistorySession Session { get; set; } = null!;
+}

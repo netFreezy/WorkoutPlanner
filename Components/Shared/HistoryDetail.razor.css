@@ -1,0 +1,116 @@
+/* --- History Detail Panel --- */
+.history-detail {
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border-subtle);
+    padding: var(--space-md);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    margin-top: var(--space-sm);
+}
+
+/* --- Exercise Entry --- */
+.exercise-entry {
+    margin-bottom: var(--space-sm);
+}
+
+.exercise-entry:last-of-type {
+    margin-bottom: 0;
+}
+
+.exercise-entry--skipped {
+    opacity: 0.5;
+}
+
+.exercise-entry__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.exercise-entry__position {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    font-weight: 600;
+    min-width: 18px;
+}
+
+.exercise-entry__name {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* --- Sets Grid --- */
+.sets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xs);
+    padding-left: calc(18px + var(--space-sm));
+}
+
+.set-item {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-label);
+}
+
+/* --- Skipped Label --- */
+.skipped-label {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    text-decoration: line-through;
+    padding-left: calc(18px + var(--space-sm));
+}
+
+/* --- Endurance Data --- */
+.endurance-data {
+    display: flex;
+    gap: var(--space-sm);
+    padding-left: calc(18px + var(--space-sm));
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-label);
+}
+
+/* --- Session Notes --- */
+.session-notes {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.session-notes__label {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-label);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.session-notes__content {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0;
+    line-height: var(--line-height-body);
+}
+
+/* --- Animation --- */
+@media (prefers-reduced-motion: no-preference) {
+    .history-detail {
+        animation: sectionExpand 0.2s ease-out;
+    }
+
+    @keyframes sectionExpand {
+        from {
+            opacity: 0;
+            max-height: 0;
+        }
+        to {
+            opacity: 1;
+            max-height: 500px;
+        }
+    }
+}

@@ -1,0 +1,174 @@
+/* --- History Card --- */
+.history-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+}
+
+.history-card:hover {
+    border-color: var(--color-border-strong);
+}
+
+.history-card--expanded {
+    border-color: var(--color-border-strong);
+}
+
+/* --- Card Header --- */
+.history-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.history-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-card__date {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    line-height: var(--line-height-label);
+}
+
+/* --- Chevron Button --- */
+.history-card__chevron {
+    background: none;
+    border: none;
+    padding: var(--space-xs);
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast);
+}
+
+.history-card__chevron:hover {
+    color: var(--color-text-primary);
+}
+
+.history-card__chevron svg {
+    transition: transform var(--transition-fast);
+}
+
+.chevron--expanded {
+    transform: rotate(180deg);
+}
+
+/* --- Name Row --- */
+.history-card__name-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.history-card__name {
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* --- Type Icon --- */
+.history-card__type-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-label);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.history-card__type-icon--strength {
+    background: var(--color-strength-bg);
+    color: var(--color-strength-text);
+}
+
+.history-card__type-icon--endurance {
+    background: var(--color-endurance-bg);
+    color: var(--color-endurance-text);
+}
+
+.history-card__type-icon--mixed {
+    background: var(--color-mixed-bg);
+    color: var(--color-mixed-text);
+}
+
+.history-card__type-icon--unknown {
+    background: var(--color-bg-glass);
+    color: var(--color-text-tertiary);
+}
+
+/* --- Metadata Row --- */
+.history-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    font-size: var(--font-size-label);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-label);
+}
+
+.meta-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-text-tertiary);
+    flex-shrink: 0;
+}
+
+/* --- RPE Badge --- */
+.rpe-badge {
+    border-radius: var(--radius-full);
+    padding: 2px var(--space-sm);
+    font-size: var(--font-size-label);
+    font-weight: 600;
+    line-height: var(--line-height-label);
+}
+
+.rpe-badge--low {
+    background: rgba(52, 211, 153, 0.12);
+    color: var(--color-rpe-low);
+}
+
+.rpe-badge--mid {
+    background: rgba(251, 191, 36, 0.12);
+    color: var(--color-rpe-mid);
+}
+
+.rpe-badge--high {
+    background: rgba(239, 68, 68, 0.12);
+    color: var(--color-rpe-high);
+}
+
+/* --- Animation --- */
+@media (prefers-reduced-motion: no-preference) {
+    .history-card {
+        animation: fadeSlideIn 0.3s ease-out both;
+        animation-delay: calc(var(--card-index, 0) * 0.04s);
+    }
+
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

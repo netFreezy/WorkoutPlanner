@@ -1,0 +1,66 @@
+@using BlazorApp2.Services
+
+<div class="history-card @(IsExpanded ? "history-card--expanded" : "")" style="--card-index: @(Index % 10)" @onclick="OnToggle">
+    <div class="history-card__header">
+        <div class="history-card__top">
+            <span class="history-card__date">@Session.CompletedAt.ToString("ddd, MMM d yyyy")</span>
+            <button class="history-card__chevron" aria-expanded="@IsExpanded"
+                    aria-controls="detail-@Session.WorkoutLogId" @onclick="OnToggle" @onclick:stopPropagation="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="@(IsExpanded ? "chevron--expanded" : "")">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="history-card__name-row">
+            <span class="history-card__name">@Session.WorkoutName</span>
+            <span class="history-card__type-icon history-card__type-icon--@(Session.WorkoutType.ToLowerInvariant())">
+                @(Session.WorkoutType switch { "Strength" => "S", "Endurance" => "E", "Mixed" => "M", _ => "?" })
+            </span>
+        </div>
+
+        <div class="history-card__meta">
+            <span class="meta-item">@Session.DurationMinutes min</span>
+            <span class="meta-dot"></span>
+            @if (Session.WorkoutType == "Endurance" && Session.TotalDistance.HasValue)
+            {
+                <span class="meta-item">@Session.TotalDistance.Value.ToString("F1") km</span>
+            }
+            else
+            {
+                <span class="meta-item">@Session.TotalVolume.ToString("N0") kg</span>
+            }
+            <span class="meta-dot"></span>
+            <span class="meta-item">@Session.ExerciseCount @(Session.ExerciseCount == 1 ? "exercise" : "exercises")</span>
+            @if (Session.Rpe.HasValue)
+            {
+                <span class="meta-dot"></span>
+                <span class="rpe-badge @GetRpeBadgeClass()">RPE @Session.Rpe</span>
+            }
+        </div>
+    </div>
+
+    @if (IsExpanded)
+    {
+        <div id="detail-@Session.WorkoutLogId">
+            <HistoryDetail Session="Session" />
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public HistorySession Session { get; set; } = null!;
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public EventCallback OnToggle { get; set; }
+    [Parameter] public int Index { get; set; }
+
+    private string GetRpeBadgeClass()
+    {
+        return Session.Rpe switch
+        {
+            <= 3 => "rpe-badge--low",
+            <= 6 => "rpe-badge--mid",
+            _ => "rpe-badge--high"
+        };
+    }
+}

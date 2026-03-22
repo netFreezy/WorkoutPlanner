@@ -1,0 +1,104 @@
+@page "/history"
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>History</PageTitle>
+
+<div class="history-page">
+    <h1 class="page-title">History</h1>
+
+    @if (isLoading)
+    {
+        <div class="loading-skeleton">
+            <div class="skeleton-bar"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    }
+    else
+    {
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <!-- Search input with search icon -->
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="search" class="search-input" placeholder="Search workouts or exercises..."
+                       aria-label="Search workout history"
+                       value="@searchText" @oninput="OnSearchInput" />
+            </div>
+
+            <!-- Filter row: type chips + date range + exercise filter -->
+            <div class="filter-row">
+                <div class="type-chips" role="group" aria-label="Filter by workout type">
+                    <button class="filter-chip @(filterStrength ? "filter-chip--active" : "")"
+                            aria-pressed="@filterStrength" @onclick="ToggleStrength">
+                        <span class="chip-dot chip-dot--strength"></span> Strength
+                    </button>
+                    <button class="filter-chip @(filterEndurance ? "filter-chip--active" : "")"
+                            aria-pressed="@filterEndurance" @onclick="ToggleEndurance">
+                        <span class="chip-dot chip-dot--endurance"></span> Endurance
+                    </button>
+                    <button class="filter-chip @(filterMixed ? "filter-chip--active" : "")"
+                            aria-pressed="@filterMixed" @onclick="ToggleMixed">
+                        <span class="chip-dot chip-dot--mixed"></span> Mixed
+                    </button>
+                </div>
+
+                <div class="date-range">
+                    <input type="date" class="date-input" @bind="dateStart" @bind:event="onchange"
+                           @bind:after="OnDateRangeChanged" />
+                    <span class="date-separator">--</span>
+                    <input type="date" class="date-input" @bind="dateEnd" @bind:event="onchange"
+                           @bind:after="OnDateRangeChanged" />
+                </div>
+
+                <select class="exercise-filter" @onchange="OnExerciseFilterChanged">
+                    <option value="">All Exercises</option>
+                    @foreach (var ex in loggedExercises)
+                    {
+                        <option value="@ex.Id">@ex.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (FilteredSessionsList.Count == 0 && HasAnyFilter)
+        {
+            <!-- Empty: no matching filters -->
+            <div class="empty-state">
+                <h2>No matching sessions</h2>
+                <p>Try adjusting your filters or clearing the search.</p>
+                <button class="btn-ghost" @onclick="ClearFilters">Clear Filters</button>
+            </div>
+        }
+        else if (FilteredSessionsList.Count == 0)
+        {
+            <!-- Empty: no history at all -->
+            <div class="empty-state">
+                <h2>No workout history yet</h2>
+                <p>Complete your first session to see it here. Start by scheduling a workout on the <a href="/calendar">Calendar</a>.</p>
+            </div>
+        }
+        else
+        {
+            <!-- Session cards list -->
+            <div class="session-list">
+                @foreach (var (session, index) in FilteredSessionsList.Select((s, i) => (s, i)))
+                {
+                    <HistoryCard Session="session"
+                                 IsExpanded="IsExpanded(session.WorkoutLogId)"
+                                 OnToggle="() => ToggleCard(session.WorkoutLogId)"
+                                 Index="index" />
+                }
+            </div>
+
+            @if (GetRemainingCount() > 0)
+            {
+                <button class="btn-load-more" @onclick="LoadMore" disabled="@isLoadingMore">
+                    @(isLoadingMore ? "Loading..." : $"Load More ({GetRemainingCount()} remaining)")
+                </button>
+            }
+        }
+    }
+</div>
