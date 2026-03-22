@@ -27,13 +27,13 @@ A single system where you plan, log, and analyze both strength and endurance tra
 - ✓ Workout logging — planned-vs-actual with strength set logging and endurance data entry — Validated in Phase 05: session-tracking
 - ✓ RPE and session notes — RPE 1-10 slider and free-text notes on session finish — Validated in Phase 05: session-tracking
 - ✓ Analytics dashboard — volume trends, PR tracking with automatic detection, streak/consistency metrics, endurance pace/distance trends, planned-vs-actual deviation — Validated in Phase 06: analytics
+- ✓ Quick-start home dashboard — today's workout with Start Session CTA, Repeat Workout for last completed, Up Next preview — Validated in Phase 07: quality-of-life
+- ✓ Progressive overload suggestions — inline suggestion cards when target hit consistently across 2 sessions, per-muscle-group increments — Validated in Phase 07: quality-of-life
+- ✓ Export — CSV (CsvHelper) and PDF (QuestPDF) export from analytics page with time range selector — Validated in Phase 07: quality-of-life
+- ✓ Workout history browser — searchable, filterable history page with paginated session cards and expandable detail — Validated in Phase 07: quality-of-life
 
 ### Active
-- [ ] Progressive overload suggestions — if target hit consistently (e.g. 3x8 at 20kg for two sessions), nudge to increase weight
 - [ ] Warm-up / cool-down blocks — separate template sections that don't count toward working volume stats
-- [ ] Quick-start repeat last workout — open app, today's recurring workout is right there, one tap to start logging
-- [ ] Export — CSV/PDF export of training data and summaries
-- [ ] SQLite database with EF Core — local data storage, zero setup
 
 ### Out of Scope
 
@@ -87,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-22 after Phase 06 completion — Analytics dashboard with unified training progress, automatic PR detection, adherence tracking, and interactive charts*
+*Last updated: 2026-03-22 after Phase 07 completion — Quality of life features: home dashboard, progressive overload suggestions, CSV/PDF export, workout history browser*
