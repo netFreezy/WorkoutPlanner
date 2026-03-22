@@ -118,11 +118,13 @@ Plans:
   2. User can see automatically detected personal records (weight PR, rep PR, estimated 1RM for strength; pace PR, distance PR for endurance) with a timeline of when they were set
   3. User can see streak and consistency metrics showing how many planned workouts were completed out of how many were scheduled, per week and month
   4. User can see planned-vs-actual deviation per session and aggregated over time -- how closely actual performance matched planned targets
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — PersonalRecord entity, AnalyticsService, PRDetectionService, BlazorApexCharts setup, CSS tokens
+- [ ] 06-02-PLAN.md — AnalyticsService and PRDetectionService integration tests
+- [ ] 06-03-PLAN.md — Analytics dashboard page with tabs, KPI cards, charts, time range, exercise drill-down
+- [ ] 06-04-PLAN.md — PRs tab record book, PR timeline chart, session finish PR detection with toast
 
 ### Phase 7: Quality of Life
 **Goal**: Daily workflow is streamlined with quick-start, smart suggestions, data export, and workout history browsing
@@ -151,5 +153,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Workout Templates | 3/5 | In Progress|  |
 | 4. Calendar & Scheduling | 0/4 | Not started | - |
 | 5. Session Tracking | 0/5 | Not started | - |
-| 6. Analytics | 0/? | Not started | - |
+| 6. Analytics | 0/4 | Not started | - |
 | 7. Quality of Life | 0/? | Not started | - |
