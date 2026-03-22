@@ -66,12 +66,12 @@
 
 ### Quality of Life
 
-- [ ] **QOL-01**: Quick-start — home screen shows today's scheduled workout, one action to start logging
-- [ ] **QOL-02**: "Repeat last workout" option when no workout scheduled
-- [ ] **QOL-03**: Progressive overload suggestions — nudge to increase weight when target hit consistently
-- [ ] **QOL-04**: CSV export of all training data
-- [ ] **QOL-05**: PDF export of workout templates and training summaries
-- [ ] **QOL-06**: Workout history — chronological list of completed sessions with search/filter
+- [x] **QOL-01**: Quick-start — home screen shows today's scheduled workout, one action to start logging
+- [x] **QOL-02**: "Repeat last workout" option when no workout scheduled
+- [x] **QOL-03**: Progressive overload suggestions — nudge to increase weight when target hit consistently
+- [x] **QOL-04**: CSV export of all training data
+- [x] **QOL-05**: PDF export of workout templates and training summaries
+- [x] **QOL-06**: Workout history — chronological list of completed sessions with search/filter
 
 ## v2 Requirements
 
@@ -141,12 +141,12 @@
 | ANLY-03 | Phase 6 | Complete |
 | ANLY-04 | Phase 6 | Complete |
 | ANLY-05 | Phase 6 | Complete |
-| QOL-01 | Phase 7 | Pending |
-| QOL-02 | Phase 7 | Pending |
-| QOL-03 | Phase 7 | Pending |
-| QOL-04 | Phase 7 | Pending |
-| QOL-05 | Phase 7 | Pending |
-| QOL-06 | Phase 7 | Pending |
+| QOL-01 | Phase 7 | Complete |
+| QOL-02 | Phase 7 | Complete |
+| QOL-03 | Phase 7 | Complete |
+| QOL-04 | Phase 7 | Complete |
+| QOL-05 | Phase 7 | Complete |
+| QOL-06 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 47 total
