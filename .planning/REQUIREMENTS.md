@@ -50,7 +50,7 @@
 - [x] **SESS-03**: Endurance logging: timer/stopwatch with distance and pace entry
 - [x] **SESS-04**: Previous performance displayed inline for each exercise
 - [x] **SESS-05**: Mark exercises as completed, partially completed, or skipped
-- [x] **SESS-06**: Rest timer — auto-start on set completion, adjustable duration
+- [ ] **SESS-06**: Rest timer — auto-start on set completion, adjustable duration *(Deferred per D-14: users manage their own rest)*
 - [x] **SESS-07**: RPE rating (1-10) per session
 - [x] **SESS-08**: Free-text session notes
 - [x] **SESS-09**: Incremental persistence — save progress to DB during logging (circuit death resilience)
@@ -131,7 +131,7 @@
 | SESS-03 | Phase 5 | Complete |
 | SESS-04 | Phase 5 | Complete |
 | SESS-05 | Phase 5 | Complete |
-| SESS-06 | Phase 5 | Complete |
+| SESS-06 | — | Deferred (D-14) |
 | SESS-07 | Phase 5 | Complete |
 | SESS-08 | Phase 5 | Complete |
 | SESS-09 | Phase 5 | Complete |
