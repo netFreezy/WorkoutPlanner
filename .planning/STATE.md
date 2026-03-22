@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-04-PLAN.md
-last_updated: "2026-03-21T20:45:42.114Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-22T09:49:32.170Z"
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 20
+  completed_plans: 16
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** A single system where you plan, log, and analyze both strength and endurance training side by side
-**Current focus:** Phase 04 — calendar-scheduling
+**Current focus:** Phase 05 — session-tracking
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 05 (session-tracking) — EXECUTING
+Plan: 2 of 5
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Plan: Not started
 | Phase 04 P03 | 3min | 2 tasks | 6 files |
 | Phase 04 P02 | 4min | 2 tasks | 7 files |
 | Phase 04 P04 | 5min | 2 tasks | 9 files |
+| Phase 05 P01 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,9 @@ Recent decisions affecting current work:
 - [Phase 04]: WorkoutChip uses DetermineWorkoutType static method for type-colored left border, reusable across views
 - [Phase 04]: Used window.calendarDrag global namespace for calendar-drag.js (SortableJS loaded globally)
 - [Phase 04]: WorkoutChip wrapped in div with data-workout-id for SortableJS drag targeting without interfering with click events
+- [Phase 05]: SessionService follows IDbContextFactory pattern with per-method DbContext creation for Blazor Server thread safety
+- [Phase 05]: Previous performance queries use client-side GroupBy after fetch to avoid EF Core translation issues
+- [Phase 05]: StartSessionAsync returns loaded session via LoadSessionAsync after creation for consistent navigation properties
 
 ### Pending Todos
 
@@ -116,6 +120,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T20:37:23.449Z
-Stopped at: Completed 04-04-PLAN.md
+Last session: 2026-03-22T09:49:32.166Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None

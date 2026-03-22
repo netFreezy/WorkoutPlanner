@@ -45,16 +45,16 @@
 
 ### Session Tracking
 
-- [ ] **SESS-01**: Start logging from a scheduled workout — open template with targets pre-filled
-- [ ] **SESS-02**: Strength logging: tap through sets, enter weight and reps, checkmark to complete
-- [ ] **SESS-03**: Endurance logging: timer/stopwatch with distance and pace entry
-- [ ] **SESS-04**: Previous performance displayed inline for each exercise
-- [ ] **SESS-05**: Mark exercises as completed, partially completed, or skipped
-- [ ] **SESS-06**: Rest timer — auto-start on set completion, adjustable duration
-- [ ] **SESS-07**: RPE rating (1-10) per session
-- [ ] **SESS-08**: Free-text session notes
-- [ ] **SESS-09**: Incremental persistence — save progress to DB during logging (circuit death resilience)
-- [ ] **SESS-10**: Resume incomplete session after connection loss
+- [x] **SESS-01**: Start logging from a scheduled workout — open template with targets pre-filled
+- [x] **SESS-02**: Strength logging: tap through sets, enter weight and reps, checkmark to complete
+- [x] **SESS-03**: Endurance logging: timer/stopwatch with distance and pace entry
+- [x] **SESS-04**: Previous performance displayed inline for each exercise
+- [x] **SESS-05**: Mark exercises as completed, partially completed, or skipped
+- [x] **SESS-06**: Rest timer — auto-start on set completion, adjustable duration
+- [x] **SESS-07**: RPE rating (1-10) per session
+- [x] **SESS-08**: Free-text session notes
+- [x] **SESS-09**: Incremental persistence — save progress to DB during logging (circuit death resilience)
+- [x] **SESS-10**: Resume incomplete session after connection loss
 
 ### Analytics
 
@@ -126,16 +126,16 @@
 | SCHED-04 | Phase 4 | Complete |
 | SCHED-05 | Deferred | Deferred per D-14 — future phase |
 | SCHED-06 | Phase 4 | Complete |
-| SESS-01 | Phase 5 | Pending |
-| SESS-02 | Phase 5 | Pending |
-| SESS-03 | Phase 5 | Pending |
-| SESS-04 | Phase 5 | Pending |
-| SESS-05 | Phase 5 | Pending |
-| SESS-06 | Phase 5 | Pending |
-| SESS-07 | Phase 5 | Pending |
-| SESS-08 | Phase 5 | Pending |
-| SESS-09 | Phase 5 | Pending |
-| SESS-10 | Phase 5 | Pending |
+| SESS-01 | Phase 5 | Complete |
+| SESS-02 | Phase 5 | Complete |
+| SESS-03 | Phase 5 | Complete |
+| SESS-04 | Phase 5 | Complete |
+| SESS-05 | Phase 5 | Complete |
+| SESS-06 | Phase 5 | Complete |
+| SESS-07 | Phase 5 | Complete |
+| SESS-08 | Phase 5 | Complete |
+| SESS-09 | Phase 5 | Complete |
+| SESS-10 | Phase 5 | Complete |
 | ANLY-01 | Phase 6 | Pending |
 | ANLY-02 | Phase 6 | Pending |
 | ANLY-03 | Phase 6 | Pending |
