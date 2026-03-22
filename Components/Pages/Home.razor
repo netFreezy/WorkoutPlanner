@@ -1,7 +1,154 @@
-﻿@page "/"
+@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-page">
+    @if (isLoading)
+    {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+        </div>
+    }
+    else if (todaysWorkout != null)
+    {
+        <!-- STATE 1: Today's Workout -->
+        <section class="dashboard-section" aria-label="Today's scheduled workout">
+            <span class="section-label">TODAY'S WORKOUT</span>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="type-dot" style="background: @GetWorkoutTypeDotColor(todaysWorkout)"></span>
+                    <h2 class="workout-name">@todaysWorkout.DisplayName</h2>
+                    <span class="type-label type-label--@GetWorkoutTypeClass(todaysWorkout)">@GetWorkoutTypeLabel(todaysWorkout)</span>
+                </div>
 
-Welcome to your new app.
+                @{
+                    var items = todaysWorkout.WorkoutTemplate?.Items?.OrderBy(i => i.Position).ToList() ?? new();
+                    var visibleItems = showAllExercises ? items : items.Take(5).ToList();
+                }
+
+                @if (items.Count > 0)
+                {
+                    <ol class="exercise-list">
+                        @foreach (var (item, index) in visibleItems.Select((it, i) => (it, i)))
+                        {
+                            <li class="exercise-list__item">
+                                <span class="exercise-pos">@(index + 1).</span>
+                                <span class="exercise-name">@item.Exercise.Name</span>
+                                <span class="exercise-targets">@FormatTargets(item)</span>
+                            </li>
+                        }
+                    </ol>
+
+                    @if (items.Count > 5 && !showAllExercises)
+                    {
+                        <button class="show-more-btn" @onclick="ToggleExerciseList">
+                            +@(GetRemainingExerciseCount(items.Count)) more exercises
+                        </button>
+                    }
+                    else if (showAllExercises && items.Count > 5)
+                    {
+                        <button class="show-more-btn" @onclick="ToggleExerciseList">
+                            Show less
+                        </button>
+                    }
+                }
+
+                <button class="btn-start-session" @onclick="StartSession">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 2.5v11l9-5.5L4 2.5z"/>
+                    </svg>
+                    Start Session
+                </button>
+            </div>
+        </section>
+
+        @if (tomorrowsWorkout != null)
+        {
+            <div class="up-next">
+                <span class="section-label">UP NEXT</span>
+                <span class="up-next__date"> -- Tomorrow</span>
+                <div class="up-next__workout">
+                    <span class="type-dot type-dot--sm" style="background: @GetWorkoutTypeDotColor(tomorrowsWorkout)"></span>
+                    <span class="up-next__name">@tomorrowsWorkout.DisplayName</span>
+                </div>
+            </div>
+        }
+    }
+    else if (lastCompleted != null)
+    {
+        <!-- STATE 2: Last Completed Workout -->
+        <section class="dashboard-section" aria-label="Last completed workout">
+            <span class="section-label">LAST COMPLETED</span>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="type-dot" style="background: @GetHistoryTypeDotColor(lastCompleted.WorkoutType)"></span>
+                    <h2 class="workout-name">@lastCompleted.WorkoutName</h2>
+                    <span class="completed-date">@lastCompleted.CompletedAt.ToString("MMM d, yyyy")</span>
+                </div>
+
+                @if (lastCompleted.Exercises.Count > 0)
+                {
+                    <ol class="exercise-list">
+                        @foreach (var (ex, index) in lastCompleted.Exercises.Take(showAllExercises ? int.MaxValue : 5).Select((e, i) => (e, i)))
+                        {
+                            <li class="exercise-list__item">
+                                <span class="exercise-pos">@(index + 1).</span>
+                                <span class="exercise-name">@ex.ExerciseName</span>
+                                <span class="exercise-targets">@FormatHistoryTargets(ex)</span>
+                            </li>
+                        }
+                    </ol>
+
+                    @if (lastCompleted.Exercises.Count > 5 && !showAllExercises)
+                    {
+                        <button class="show-more-btn" @onclick="ToggleExerciseList">
+                            +@(GetRemainingExerciseCount(lastCompleted.Exercises.Count)) more exercises
+                        </button>
+                    }
+                    else if (showAllExercises && lastCompleted.Exercises.Count > 5)
+                    {
+                        <button class="show-more-btn" @onclick="ToggleExerciseList">
+                            Show less
+                        </button>
+                    }
+                }
+
+                <button class="btn-start-session" @onclick="RepeatWorkout" disabled="@isRepeating">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 8a6 6 0 0 1 10.5-4M14 8a6 6 0 0 1-10.5 4"/>
+                        <path d="M14 2v4h-4M2 14v-4h4"/>
+                    </svg>
+                    @(isRepeating ? "Scheduling..." : "Repeat Workout")
+                </button>
+            </div>
+        </section>
+
+        <div class="or-divider">or</div>
+        <button class="btn-ghost" @onclick="NavigateToTemplates">Browse Templates</button>
+    }
+    else if (!hasAnyTemplates)
+    {
+        <!-- STATE 3: Empty (no workouts ever) -->
+        <div class="empty-state">
+            <h2 class="empty-state__heading">Welcome to Workout Planner</h2>
+            <p class="empty-state__body">Build your first workout template to get started.</p>
+            <div class="empty-state__actions">
+                <button class="btn-ghost" @onclick="NavigateToNewTemplate">Create Template</button>
+                <button class="btn-ghost" @onclick="NavigateToExercises">Browse Exercises</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- STATE 4: Has templates but nothing today and no completed sessions -->
+        <div class="empty-state">
+            <h2 class="empty-state__heading">Nothing scheduled for today</h2>
+            <p class="empty-state__body">Schedule a workout from the calendar or start fresh from a template.</p>
+            <div class="empty-state__actions">
+                <button class="btn-ghost" @onclick="NavigateToCalendar">Go to Calendar</button>
+                <button class="btn-ghost" @onclick="NavigateToTemplates">Browse Templates</button>
+            </div>
+        </div>
+    }
+</div>

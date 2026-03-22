@@ -1,0 +1,300 @@
+/* Home Dashboard Scoped Styles */
+
+.home-page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
+    padding-top: var(--space-2xl);
+}
+
+/* Loading state */
+.loading-state {
+    display: flex;
+    justify-content: center;
+    padding-top: var(--space-3xl);
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-border-subtle);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+}
+
+/* Section label */
+.section-label {
+    font-size: var(--font-size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    font-weight: 400;
+    display: block;
+    margin-bottom: var(--space-sm);
+}
+
+/* Dashboard card */
+.dashboard-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Card header */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+/* Type dot */
+.type-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.type-dot--sm {
+    width: 8px;
+    height: 8px;
+}
+
+/* Workout name */
+.workout-name {
+    font-size: var(--font-size-heading);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+    flex: 1;
+    line-height: var(--line-height-heading);
+}
+
+/* Type label */
+.type-label {
+    font-size: var(--font-size-label);
+    font-weight: 400;
+    flex-shrink: 0;
+}
+
+.type-label--strength {
+    color: var(--color-strength-text);
+}
+
+.type-label--endurance {
+    color: var(--color-endurance-text);
+}
+
+.type-label--mixed {
+    color: var(--color-mixed-text);
+}
+
+.type-label--adhoc {
+    color: var(--color-text-tertiary);
+}
+
+/* Completed date */
+.completed-date {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+}
+
+/* Exercise list */
+.exercise-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.exercise-list__item {
+    display: flex;
+    align-items: baseline;
+    padding: var(--space-sm) 0;
+}
+
+.exercise-pos {
+    font-size: var(--font-size-label);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    width: 24px;
+    flex-shrink: 0;
+}
+
+.exercise-name {
+    font-size: var(--font-size-body);
+    color: var(--color-text-primary);
+    flex: 1;
+}
+
+.exercise-targets {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    margin-left: var(--space-sm);
+}
+
+/* Show more button */
+.show-more-btn {
+    background: none;
+    border: none;
+    color: var(--color-accent);
+    font-size: var(--font-size-body);
+    cursor: pointer;
+    padding: var(--space-sm) 0;
+    transition: opacity var(--transition-fast);
+}
+
+.show-more-btn:hover {
+    opacity: 0.8;
+}
+
+/* Start Session / Repeat Workout CTA */
+.btn-start-session {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    color: #FFFFFF;
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    z-index: var(--z-home-cta);
+}
+
+.btn-start-session:hover:not(:disabled) {
+    box-shadow: 0 0 20px var(--color-accent-glow);
+    transform: translateY(-1px);
+}
+
+.btn-start-session:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn-start-session:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-start-session svg {
+    flex-shrink: 0;
+}
+
+/* Up Next */
+.up-next {
+    margin-top: var(--space-lg);
+}
+
+.up-next__date {
+    font-size: var(--font-size-label);
+    color: var(--color-text-tertiary);
+}
+
+.up-next__workout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.up-next__name {
+    font-size: var(--font-size-body);
+    color: var(--color-text-primary);
+}
+
+/* Ghost button */
+.btn-ghost {
+    background: transparent;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-body);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.btn-ghost:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: var(--color-accent-muted);
+}
+
+/* Or divider */
+.or-divider {
+    text-align: center;
+    color: var(--color-text-tertiary);
+    margin: var(--space-lg) 0;
+    font-size: var(--font-size-label);
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding-top: var(--space-2xl);
+}
+
+.empty-state__heading {
+    font-size: var(--font-size-heading);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-sm) 0;
+    line-height: var(--line-height-heading);
+}
+
+.empty-state__body {
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.empty-state__actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+/* Animations */
+@media (prefers-reduced-motion: no-preference) {
+    .loading-spinner {
+        animation: spin 0.8s linear infinite;
+    }
+
+    .dashboard-card {
+        animation: fadeSlideIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .up-next {
+        animation: fadeSlideIn 350ms cubic-bezier(0.4, 0, 0.2, 1) 60ms both;
+    }
+
+    .empty-state {
+        animation: fadeSlideIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .home-page {
+        padding: 0 var(--space-md);
+        padding-top: var(--space-lg);
+    }
+}
