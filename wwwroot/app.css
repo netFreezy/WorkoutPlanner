@@ -164,6 +164,14 @@
 
     /* --- Z-Index: Analytics --- */
     --z-analytics-tabs: 35;
+
+    /* --- Colors: Home Dashboard --- */
+    --color-suggestion-bg: var(--color-success-bg);
+    --color-suggestion-border: var(--color-success-border);
+    --color-suggestion-text: var(--color-success-text);
+
+    /* --- Z-Index: Home Dashboard --- */
+    --z-home-cta: 5;
 }
 
 body {
