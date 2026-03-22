@@ -23,12 +23,12 @@ A single system where you plan, log, and analyze both strength and endurance tra
 - ✓ Exercise library — Validated in Phase 02: exercise-library
 - ✓ Workout templates — Validated in Phase 03: workout-templates
 - ✓ Calendar scheduler — weekly and monthly views, scheduling with recurrence, materialization — Validated in Phase 04: calendar-scheduling (SCHED-05 conflict detection deferred)
+- ✓ Session tracker — real-time workout logging with incremental persistence, previous performance, RPE/notes, resume on reconnect — Validated in Phase 05: session-tracking (SESS-06 rest timer deferred per D-14)
+- ✓ Workout logging — planned-vs-actual with strength set logging and endurance data entry — Validated in Phase 05: session-tracking
+- ✓ RPE and session notes — RPE 1-10 slider and free-text notes on session finish — Validated in Phase 05: session-tracking
 
 ### Active
-- [ ] Session tracker — open today's workout, log as you go; strength: tap through sets with weight/reps, previous performance shown inline; endurance: timer/stopwatch with distance/pace entry after; mark exercises completed/partial/skipped
-- [ ] Workout logging — separation between planned and actual; strength log entries: actual sets with reps and weight per set; endurance log entries: actual distance, duration, pace, optional HR data; tracks adherence and deviation
 - [ ] Analytics dashboard — volume trends over time (total sets, weight lifted per week), PR tracking with automatic detection, streak and consistency metrics (X/Y planned workouts completed), endurance pace trends and distance per week
-- [ ] RPE and session notes — rate perceived effort (1–10) and free-text notes per session for recovery/trend analysis
 - [ ] Progressive overload suggestions — if target hit consistently (e.g. 3x8 at 20kg for two sessions), nudge to increase weight
 - [ ] Warm-up / cool-down blocks — separate template sections that don't count toward working volume stats
 - [ ] Quick-start repeat last workout — open app, today's recurring workout is right there, one tap to start logging
@@ -87,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-21 after Phase 04 completion — Calendar & scheduling complete (weekly grid, monthly mini-calendar, schedule dialog, recurrence materialization, drag-to-reschedule)*
+*Last updated: 2026-03-22 after Phase 05 completion — Session tracking complete (real-time logging, incremental persistence, previous performance, RPE/notes, resume on reconnect, session summary)*
