@@ -3,6 +3,7 @@
 @using BlazorApp2.Services
 
 @inject SchedulingService SchedulingService
+@inject NavigationManager NavigationManager
 
 <Dialog IsOpen="@IsOpen" Title="@(Workout?.DisplayName ?? "")" OnClose="@OnClose">
     @if (Workout is not null)
@@ -144,6 +145,18 @@
             @if (Workout.WorkoutTemplateId == null)
             {
                 <p class="adhoc-note">Ad-hoc workout</p>
+            }
+
+            @* Start Session action *@
+            @if (Workout.Status == WorkoutStatus.Planned && Workout.WorkoutTemplateId != null)
+            {
+                <div class="detail-divider"></div>
+                <button class="btn-start-session" @onclick="HandleStartSession">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Start Session
+                </button>
             }
 
             @* Footer actions *@
@@ -288,5 +301,11 @@
         showRemoveAllConfirm = false;
         await SchedulingService.RemoveRecurringAsync(Workout.RecurrenceRuleId.Value);
         await OnWorkoutChanged.InvokeAsync();
+    }
+
+    private void HandleStartSession()
+    {
+        if (Workout == null) return;
+        NavigationManager.NavigateTo($"/session/{Workout.Id}");
     }
 }
